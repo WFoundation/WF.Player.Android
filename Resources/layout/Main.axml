@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#ff0099cc">
+    <RelativeLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1"
+        android:background="#ffffffff"
+        android:layout_margin="20dp"
+        android:padding="5dp">
+        <ImageView
+            android:src="@android:drawable/ic_menu_gallery"
+            android:id="@+id/imageUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="textUsername"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/textUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageUser"
+            android:layout_alignTop="@+id/imageUser"
+            android:layout_marginLeft="10dp"
+            android:textColor="#ff000000" />
+        <TextView
+            android:text="textFounds"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textFounds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageUser"
+            android:layout_below="@+id/textUsername"
+            android:layout_alignLeft="@+id/textUsername"
+            android:textColor="#ff000000" />
+        <ImageView
+            android:id="@+id/imageLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#ff000000"
+            android:layout_below="@+id/textFounds"
+            android:maxHeight="1px"
+            android:minHeight="1px"
+            android:layout_margin="5dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true" />
+        <TextView
+            android:text="textCoords"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textCoordText"
+            android:id="@+id/textCoords"
+            android:layout_alignLeft="@+id/imageLine"
+            android:textColor="#ff000000" />
+        <TextView
+            android:text="textAccuracyText"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageLine"
+            android:id="@+id/textAccuracyText"
+            android:layout_alignRight="@+id/imageLine"
+            android:textColor="#ff000000" />
+        <TextView
+            android:text="textAccuracy"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textAccuracyText"
+            android:id="@+id/textAccuracy"
+            android:layout_alignRight="@+id/imageLine"
+            android:textColor="#ff000000" />
+        <TextView
+            android:text="textCoordText"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/textCoordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imageLine"
+            android:layout_alignLeft="@id/imageLine"
+            android:textColor="#ff000000" />
+    </RelativeLayout>
+    <Button
+        android:text="Offline cartridges"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonOffline"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+    <RelativeLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout2"
+        android:layout_margin="20dp">
+        <EditText
+            android:id="@+id/editWGCode"
+            android:hint="WGCode"
+            android:textColor="#ff000000"
+            android:textColorHint="#ffc0c0c0"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffffff"
+            android:layout_centerVertical="true"
+            android:padding="10dp" />
+        <Button
+            android:id="@+id/buttonSearchWGCode"
+            android:background="@android:drawable/ic_menu_search"
+            android:layout_width="48dp"
+            android:layout_alignTop="@+id/editWGCode"
+            android:layout_alignRight="@+id/editWGCode"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <Button
+        android:text="Find cartridges nearby"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonNearby"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+    <Button
+        android:text="Search with parameters"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSearchParam"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+    <Button
+        android:text="Settings"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSettings"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="20dp" />
+</LinearLayout>

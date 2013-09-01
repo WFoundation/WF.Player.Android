@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="hello">Hello World, Click Me!</string>
+	<string name="app_name">WF.Player.Android</string>
+	<string name="ok">Ok</string>
+	<string name="unknown">Unknown</string>
+	<string name="menu_string_search">Search</string>
+	<string name="main_unknown">Unknown</string>
+	<string name="main_founds">{0} founds</string>
+	<string name="main_active_location">Active location</string>
+	<string name="main_last_known_location">Last known position</string>
+	<string name="main_unknown_location">Unknown location</string>
+	<string name="main_accuracy">Accuracy</string>
+	<string name="main_error">Error</string>
+	<string name="main_error_directory_not_found">Directory {0} didn\'t exists.</string>
+	<string name="main_error_no_cartridges">Directory {0} contains no cartridges.</string>
+	<string name="cartridges_title">Cartridges</string>
+	
+	<string name="detail_tab_overview">Overview</string>
+	<string name="detail_tab_description">Description</string>
+	<string name="detail_tab_map">Map</string>
+	<string name="detail_tab_logs">Logs</string>
+	<string name="detail_author_name">Author</string>
+	<string name="detail_author_company">Company</string>
+	<string name="detail_created">Created</string>
+	<string name="detail_version">Version</string>
+	<string name="detail_unique_downloads">Unique Downloads</string>
+	<string name="detail_short_description">Short Description</string>
+	
+	<string name="screen_locations">Locations</string>
+	<string name="screen_yousee">You see</string>
+	<string name="screen_inventory">Inventory</string>
+	<string name="screen_tasks">Tasks</string>
+
+		
+	<string name="menu_detail_save">Save</string>
+	<string name="menu_detail_delete">Delete</string>
+	<string name="menu_detail_start">Start</string>
+	<string name="menu_detail_resume">Resume</string>
+
+	<string name="menu_screen_detail_commands">Commands</string>
+	<string name="menu_screen_detail_map">Map</string>
+	<string name="menu_screen_detail_title">Commands</string>
+	<string name="menu_screen_detail_cancel">Cancel</string>
+	
+</resources>

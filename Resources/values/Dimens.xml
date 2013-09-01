@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <!-- Text sizes -->
+    <dimen name="large_text">20dp</dimen>
+    <dimen name="medium_text">16dp</dimen>
+    <dimen name="small_text">12dp</dimen>
+    <dimen name="tiny_text">10dp</dimen>
+    <dimen name="input">120dp</dimen>
+    <dimen name="input_long">220dp</dimen>
+</resources>
+

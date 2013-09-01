@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ab="http://schemas.android.com/apk/res/WF.Player.Android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="#ff488bdf">
+    <RelativeLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1"
+        android:background="#ffffffff"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:text="By Coordinates"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textByCoords"
+            android:textColor="#ff000000"
+            android:background="#ff95b6df"
+            android:padding="5dp"
+            android:textStyle="bold" />
+        <EditText
+            android:id="@+id/editLat"
+            android:textColor="#ff000000"
+            android:textColorHint="#ffc0c0c0"
+            android:singleLine="true"
+            android:layout_width="@dimen/input"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textByCoords"
+            android:hint="Latitude"
+            android:background="#ffffffff"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_alignLeft="@id/textByCoords" />
+        <EditText
+            android:id="@+id/editLon"
+            android:textColor="#ff000000"
+            android:textColorHint="#ffc0c0c0"
+            android:singleLine="true"
+            android:layout_width="@dimen/input"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textByCoords"
+            android:hint="Longitude"
+            android:background="#ffffffff"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_toLeftOf="@+id/imageButton1"
+            android:layout_toRightOf="@id/editLat" />
+        <ImageButton
+            android:src="@android:drawable/ic_menu_compass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton1"
+            android:layout_below="@id/textByCoords"
+            android:layout_alignRight="@id/textByCoords"
+            android:layout_alignTop="@id/editLat"
+            android:background="#ffffffff" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout2"
+        android:background="#ffffffff"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:text="By Name"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textByName"
+            android:textColor="#ff000000"
+            android:background="#ff95b6df"
+            android:padding="5dp"
+            android:textStyle="bold" />
+        <EditText
+            android:textColor="#ff000000"
+            android:textColorHint="#ffc0c0c0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textByName"
+            android:id="@+id/editName"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:hint="Name"
+            android:layout_alignLeft="@id/textByName" />
+    </RelativeLayout>
+    <Button
+        android:text="Search online"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSearch"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp" />
+    <Button
+        android:text="Search offline"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonSearch"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="0dp" />
+</LinearLayout>
