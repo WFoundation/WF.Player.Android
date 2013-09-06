@@ -1,20 +1,4 @@
 using System;
-/// WF.Player.Android - A Wherigo Player User Interface for Android platform.
-/// Copyright (C) 2012-2013  Dirk Weltz <web@weltz-online.de>
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU Lesser General Public License as
-/// published by the Free Software Foundation, either version 3 of the
-/// License, or (at your option) any later version.
-/// 
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU Lesser General Public License for more details.
-/// 
-/// You should have received a copy of the GNU Lesser General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -40,9 +24,16 @@ namespace WF.Player.Android
 		private string button1;
 		private string button2;
 		private Action<string> callback;
+		private Input input;
 		private ImageView imageView;
+		private EditText editInput;
 		private Button btnView1;
 		private Button btnView2;
+		private Button btnInput;
+		private LinearLayout layoutDialog;
+		private LinearLayout layoutMultipleChoice;
+		private LinearLayout layoutInput;
+
 		private ActionbarSherlock.View.IMenuItem menuMap;
 		private ActionbarSherlock.View.IMenuItem menuCommands;
 
@@ -56,6 +47,13 @@ namespace WF.Player.Android
 			this.button1 = button1;
 			this.button2 = button2;
 			this.callback = callback;
+			this.input = null;
+		}
+
+		public ScreenDialog(Engine engine, Input input)
+		{
+			this.engine = engine;
+			this.input = input;
 		}
 
 		public override void OnCreate(Bundle savedInstanceState)
@@ -80,31 +78,55 @@ namespace WF.Player.Android
 
 			imageView = view.FindViewById<ImageView> (Resource.Id.imageView);
 			textView = view.FindViewById<TextView> (Resource.Id.textView);
+			layoutDialog = view.FindViewById<LinearLayout> (Resource.Id.layoutDialog);
+			layoutMultipleChoice = view.FindViewById<LinearLayout> (Resource.Id.layoutMultipleChoice);
+			layoutInput = view.FindViewById<LinearLayout> (Resource.Id.layoutInput);
 
-			btnView1 = view.FindViewById<Button> (Resource.Id.button1);
-			btnView2 = view.FindViewById<Button> (Resource.Id.button2);
+			if (input == null) {
+				// Normal dialog
+				layoutDialog.Visibility = ViewStates.Visible;
+				layoutMultipleChoice.Visibility = ViewStates.Gone;
+				layoutInput.Visibility = ViewStates.Gone;
 
-			btnView1.Click += OnButtonClicked;
-			btnView2.Click += OnButtonClicked;
+				btnView1 = view.FindViewById<Button> (Resource.Id.button1);
+				btnView2 = view.FindViewById<Button> (Resource.Id.button2);
 
-			return view;
-		}
+				btnView1.Click += OnButtonClicked;
+				btnView2.Click += OnButtonClicked;
+			} else {
+				text = input.Text;
+				media = input.Image;
+				if (input.InputType == InputTypes.MultipleChoice) {
+					// Multiple choice dialog
+					layoutDialog.Visibility = ViewStates.Gone;
+					layoutMultipleChoice.Visibility = ViewStates.Visible;
+					layoutInput.Visibility = ViewStates.Gone;
+				} else {
+					// Input dialog
+					layoutDialog.Visibility = ViewStates.Gone;
+					layoutMultipleChoice.Visibility = ViewStates.Gone;
+					layoutInput.Visibility = ViewStates.Visible;
 
-		public void OnButtonClicked(object sender, EventArgs e)
-		{
-			if (sender is Button && callback != null) {
-				string btnText = ((Button)sender).Text;
-				callback (btnText);
+					editInput = view.FindViewById<EditText> (Resource.Id.editInput);
+					btnInput = view.FindViewById<Button> (Resource.Id.buttonInput);
+
+					btnInput.Click += OnInputClicked;
+
+					editInput.Text = "";
+					btnInput.Text = context.GetString (Resource.String.ok);
+				}
 			}
 
-			FragmentManager.PopBackStackImmediate ();
+			return view;
 		}
 
 		public override void OnResume()
 		{
 			base.OnResume();
 
-			//TODO: Load data
+			this.SherlockActivity.SupportActionBar.Title = "";
+			this.SherlockActivity.SupportActionBar.SetDisplayShowHomeEnabled(false);
+
 			textView.Text = text;
 
 			if (media != null) {
@@ -115,24 +137,67 @@ namespace WF.Player.Android
 				imageView.Visibility = ViewStates.Gone;
 			}
 
-			if (!String.IsNullOrEmpty (button1)) {
-				btnView1.Visibility = ViewStates.Visible;
-				btnView1.Text = button1;
-			} else
-				btnView1.Visibility = ViewStates.Gone;
-
-			if (!String.IsNullOrEmpty (button2)) {
-				btnView2.Visibility = ViewStates.Visible;
-				btnView2.Text = button1;
-			} else
-				btnView2.Visibility = ViewStates.Gone;
-
+			if (input == null) {
+				// Normal dialog
+				if (!String.IsNullOrEmpty (button1)) {
+					btnView1.Visibility = ViewStates.Visible;
+					btnView1.Text = button1;
+				} else
+					btnView1.Visibility = ViewStates.Gone;
+				if (!String.IsNullOrEmpty (button2)) {
+					btnView2.Visibility = ViewStates.Visible;
+					btnView2.Text = button2;
+				} else
+					btnView2.Visibility = ViewStates.Gone;
+			} else {
+				if (input.InputType == InputTypes.MultipleChoice) {
+					// Multiple choice dialog
+					layoutMultipleChoice.RemoveAllViews ();
+					foreach (string s in input.Choices) {
+						Button btnView = new Button (Activity.ApplicationContext);
+						btnView.Text = s;
+						btnView.Click += OnChoiceClicked;
+						layoutMultipleChoice.AddView (btnView);
+					}
+				} else {
+					// Input dialog
+					// ToDo: Clear text field editInput
+				}
+			}
 		}
 
 		public override void OnSaveInstanceState(Bundle outState)
 		{
 			base.OnSaveInstanceState(outState);
 			//TODO: Store instance state data
+		}
+
+		public void OnButtonClicked(object sender, EventArgs e)
+		{
+			// Remove dialog from screen
+			((ScreenActivity)this.Activity).RemoveScreen (ScreenType.DialogScreen);
+
+			// Execute callback if there is one
+			if (sender is Button && callback != null) {
+				string btnText = sender.Equals(btnView1) ? "Button1" : "Button2";
+				callback (btnText);
+			}
+		}
+
+		public void OnChoiceClicked(object sender, EventArgs e)
+		{
+			if (input != null) {
+				string result = ((Button)sender).Text;
+				input.Callback (result);
+			}
+		}
+
+		public void OnInputClicked(object sender, EventArgs e)
+		{
+			if (input != null) {
+				string result = editInput.Text;
+				input.Callback (result);
+			}
 		}
 
 		#region Private Functions

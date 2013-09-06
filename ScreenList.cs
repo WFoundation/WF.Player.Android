@@ -1,20 +1,4 @@
 using System;
-/// WF.Player.Android - A Wherigo Player User Interface for Android platform.
-/// Copyright (C) 2012-2013  Dirk Weltz <web@weltz-online.de>
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU Lesser General Public License as
-/// published by the Free Software Foundation, either version 3 of the
-/// License, or (at your option) any later version.
-/// 
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU Lesser General Public License for more details.
-/// 
-/// You should have received a copy of the GNU Lesser General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -66,7 +50,7 @@ namespace WF.Player.Android
 			var view = inflater.Inflate(Resource.Layout.ScreenList, container, false);
 
 			listView = view.FindViewById<ListView> (Resource.Id.listView);
-			listView.Adapter = new ScreenListAdapter (this.Activity, engine);
+			listView.Adapter = new ScreenListAdapter (this.Activity, engine, screen);
 			listView.ItemClick += OnItemClick;
 
 			updateContent ();
@@ -85,6 +69,8 @@ namespace WF.Player.Android
 
 			//TODO: Load data
 			this.SherlockActivity.SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			this.SherlockActivity.SupportActionBar.SetDisplayShowHomeEnabled(true);
+
 			updateContent ();
 		}
 
@@ -135,14 +121,16 @@ namespace WF.Player.Android
 
 	public class ScreenListAdapter : BaseAdapter
 	{
-		private Activity context;
+		private ScreenActivity context;
 		private Engine engine;
 		private List<UIObject> items;
+		private ScreenType screen;
 
-		public ScreenListAdapter(Activity context, Engine engine) : base()
+		public ScreenListAdapter(Activity context, Engine engine, ScreenType screen) : base()
 		{
-			this.context = context;
+			this.context = (ScreenActivity)context;
 			this.engine = engine;
+			this.screen = screen;
 		}
 
 		public List<UIObject> Items {
@@ -150,7 +138,12 @@ namespace WF.Player.Android
 				return items;
 			}
 			set {
+				if (items != null)
+					foreach (UIObject o in items)
+						o.PropertyChanged -= OnPropertyChanged;
 				items = value;
+				foreach (UIObject o in items)
+					o.PropertyChanged += OnPropertyChanged;
 				NotifyDataSetInvalidated ();																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	
 			}
 		}
@@ -190,10 +183,28 @@ namespace WF.Player.Android
 				imageIcon.SetImageBitmap (bm);
 				imageIcon.Visibility = ViewStates.Visible;
 			} else {
-				imageIcon.Visibility = ViewStates.Invisible;
+				Bitmap bm = Bitmap.CreateBitmap(32, 32, Bitmap.Config.Argb8888);
+				imageIcon.SetImageBitmap (bm);
+				imageIcon.Visibility = ViewStates.Visible;
 			}
 
 			textHeader.SetText(items[position].Name, TextView.BufferType.Normal);
+
+			var textDistance = view.FindViewById<TextView> (Resource.Id.textDistance);
+			var imageDirection = view.FindViewById<ImageView> (Resource.Id.imageDirection);
+
+			if (screen == ScreenType.LocationScreen || screen == ScreenType.ItemScreen) {
+				textDistance.Visibility = ViewStates.Visible;
+				imageDirection.Visibility = ViewStates.Visible;
+				textDistance.Text = engine.GetDistanceTextOf((Thing)items[position]);
+				if (engine.GetDistanceOf((Thing)items[position]) == 0)
+					imageDirection.SetImageBitmap (context.DrawCenter ());
+				else
+					imageDirection.SetImageBitmap (context.DrawArrow (engine.GetBearingOf((Thing)items[position])));
+			} else {
+				textDistance.Visibility = ViewStates.Gone;
+				imageDirection.Visibility = ViewStates.Gone;
+			}
 
 			// Finally return the view
 			return view;
@@ -206,7 +217,11 @@ namespace WF.Player.Android
 
 		public void OnPropertyChanged(object sender,  PropertyChangedEventArgs e)
 		{
-			context.RunOnUiThread (NotifyDataSetChanged);
+			// Check, if one of the visible entries changed
+			string[] properties = {"Name","Media","Distance"};
+
+			if (properties.Contains(e.PropertyName))
+				context.RunOnUiThread (NotifyDataSetChanged);
 		}
 	}
 }
