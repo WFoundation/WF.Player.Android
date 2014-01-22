@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="hello">Hello World, Click Me!</string>
 	<string name="app_name">WF.Player.Android</string>
 	<string name="ok">Ok</string>
 	<string name="unknown">Unknown</string>
@@ -33,14 +32,22 @@
 	<string name="screen_inventory">Inventory</string>
 	<string name="screen_tasks">Tasks</string>
 
+	<string name="screen_save_before_quit">Would you save before quit?</string>
+	<string name="screen_save_before_quit_yes">Yes</string>
+	<string name="screen_save_before_quit_cancel">Cancel</string>
+	<string name="screen_save_before_quit_no">No</string>
 		
 	<string name="menu_detail_save">Save</string>
 	<string name="menu_detail_delete">Delete</string>
 	<string name="menu_detail_start">Start</string>
-	<string name="menu_detail_resume">Resume</string>
+	<string name="menu_detail_resume">Restore</string>
 
+	<string name="menu_screen_main_save">Save</string>
+	<string name="menu_screen_main_quit">Quit</string>
+	
 	<string name="menu_screen_detail_commands">Commands</string>
 	<string name="menu_screen_detail_map">Map</string>
+	<string name="menu_screen_detail_default">Detail</string>
 	<string name="menu_screen_detail_title">Commands</string>
 	<string name="menu_screen_detail_cancel">Cancel</string>
 	

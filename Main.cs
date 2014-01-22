@@ -1,6 +1,6 @@
-using System;
-/// WF.Player.Android - A Wherigo Player User Interface for Android platform.
-/// Copyright (C) 2012-2013  Dirk Weltz <web@weltz-online.de>
+///
+/// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -14,7 +14,9 @@ using System;
 /// 
 /// You should have received a copy of the GNU Lesser General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+///
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,7 +29,9 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Locations;
+using Vernacular;
 using WF.Player.Core;
+using WF.Player.Core.Live;
 
 namespace WF.Player.Android
 {
@@ -36,18 +40,23 @@ namespace WF.Player.Android
 	[Application(Debuggable=true)]
 	public class MainApp : Application
 	{
-		private Activity activeActivity;
-		private Cartridges cartridges;
-		private LocListener locListener;
-		private string path;
+		Activity activeActivity;
+		Cartridges cartridges;
+		LocListener locListener;
+		string path;
 
 		public event EventHandler<LocationChangedEventArgs> LocationChanged;
-		
+
 		public MainApp(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
 		{
 			path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player";
 
-			Directory.CreateDirectory (path);
+			try {
+				if (!Directory.Exists (path))
+					Directory.CreateDirectory (path);
+			}
+			catch {
+			}
 
 			if (!Directory.Exists (path))
 			{
@@ -58,10 +67,6 @@ namespace WF.Player.Android
 				builder.SetNeutralButton(Resource.String.ok,(obj,arg) => { });
 				builder.Show ();
 			}
-
-			// Create LocListener
-			locListener = new LocListener (GetSystemService (Context.LocationService) as LocationManager);
-			locListener.LocationChanged += OnLocationChanged;
 		}
 
 		public Activity ActiveActivity {
@@ -87,6 +92,15 @@ namespace WF.Player.Android
 		public string Path {
 			get {
 				return path;
+			}
+		}
+
+		public LocListener GPS {
+			get { 
+				return locListener;
+			}
+			set {
+				locListener = value;
 			}
 		}
 

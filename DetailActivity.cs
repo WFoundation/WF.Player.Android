@@ -1,6 +1,6 @@
-using System;
-/// WF.Player.Android - A Wherigo Player User Interface for Android platform.
-/// Copyright (C) 2012-2013  Dirk Weltz <web@weltz-online.de>
+///
+/// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -14,7 +14,9 @@ using System;
 /// 
 /// You should have received a copy of the GNU Lesser General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+///
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,24 +29,25 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Webkit;
-using ActionbarSherlock.App;
-using ActionbarSherlock.View;
 using Android.Support.V4.App;
-//using SherlockActionBar = ActionbarSherlock.App.ActionBar;
-//using FragmentTransaction = Android.Support.V4.App.FragmentTransaction;
+using Android.Support.V7.App;
 using WF.Player.Core;
 
 namespace WF.Player.Android
 {
-	[Activity (Label = "DetailActivity", Theme = "@style/Theme.Wfplayer")]			
-	public class DetailActivity : SherlockActivity, ActionBar.ITabListener
+	[Activity (Label = "Cartridge Details", Theme="@style/Theme")]	
+	[MetaData ("android.support.UI_OPTIONS", Value = "splitActionBarWhenNarrow")]		
+	public class DetailActivity : ActionBarActivity, global::Android.Support.V7.App.ActionBar.ITabListener
 	{
 		private Cartridge cart;
-		private ActionbarSherlock.View.IMenuItem menuSave;
-		private ActionbarSherlock.View.IMenuItem menuDelete;
-		private ActionbarSherlock.View.IMenuItem menuStart;
-		private ActionbarSherlock.View.IMenuItem menuResume;
+		private IMenuItem menuSave;
+		private IMenuItem menuDelete;
+		private IMenuItem menuStart;
+		private IMenuItem menuResume;
 //		private WebView webView;
+
+		#region Android Event Handlers
+
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -66,7 +69,7 @@ namespace WF.Player.Android
 //			webView.Settings.JavaScriptEnabled = true;
 //			webView.Settings.BuiltInZoomControls = false;
 
-			SupportActionBar.NavigationMode = ActionBar.NavigationModeTabs;
+			SupportActionBar.NavigationMode = global::Android.Support.V7.App.ActionBar.NavigationModeTabs;
 			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
 
 			// Get cartridge
@@ -78,7 +81,7 @@ namespace WF.Player.Android
 
 			string filename = System.IO.Path.Combine (global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "WF.Player", "poster.png");
 
-			initDetailInfo ();
+			InitDetailInfo ();
 
 //				using (FileStream stream = new FileStream(filename, FileMode.Create))
 //				{
@@ -101,30 +104,30 @@ namespace WF.Player.Android
 
 		}
 
-		public override bool OnCreateOptionsMenu(ActionbarSherlock.View.IMenu menu) 
+		public override bool OnCreateOptionsMenu(IMenu menu) 
 		{
-			SupportMenuInflater.Inflate (Resource.Menu.DetailMenu, menu);
+			MenuInflater.Inflate (Resource.Menu.DetailMenu, menu);
 
 			menuSave = menu.FindItem (Resource.Id.menu_detail_save);
 			menuDelete = menu.FindItem (Resource.Id.menu_detail_delete);
-			menuStart = menu.FindItem (Resource.Id.menu_detail_start);
 			menuResume = menu.FindItem (Resource.Id.menu_detail_resume);
+			menuStart = menu.FindItem (Resource.Id.menu_detail_start);
 
 			if (cart != null) {
 				menuSave.SetVisible (!File.Exists (cart.Filename));
 				menuDelete.SetVisible (File.Exists (cart.Filename));
-				menuStart.SetVisible (File.Exists (cart.Filename));
 				menuResume.SetVisible (File.Exists (cart.SaveFilename));
+				menuStart.SetVisible (File.Exists (cart.Filename));
 			}
 
 			return base.OnCreateOptionsMenu(menu);
 		}
 
-		public override bool OnOptionsItemSelected (ActionbarSherlock.View.IMenuItem item)
+		public override bool OnOptionsItemSelected (IMenuItem item)
 		{
 			Intent intent;
 
-			if (item.ItemId == Android.Resource.Id.abs__up || item.ItemId == 0) {
+			if (item.ItemId == 16908332) {
 				Finish ();
 				return false;
 			}
@@ -148,15 +151,15 @@ namespace WF.Player.Android
 						File.Delete (cart.LogFilename);
 					break;
 				case Resource.Id.menu_detail_start:
-					intent = new Intent (this, typeof(ScreenActivity));
+					intent = new Intent (this, typeof(ScreenController));
 					intent.PutExtra ("cartridge", cart.Filename);
-					intent.PutExtra ("resume", false);
+					intent.PutExtra ("restore", false);
 					StartActivity (intent);
 					break;
 				case Resource.Id.menu_detail_resume:
-					intent = new Intent (this, typeof(ScreenActivity));
+					intent = new Intent (this, typeof(ScreenController));
 					intent.PutExtra ("cartridge", cart.Filename);
-					intent.PutExtra ("resume", true);
+					intent.PutExtra ("restore", true);
 					StartActivity (intent);
 					break;
 				default:
@@ -172,18 +175,19 @@ namespace WF.Player.Android
 			return true;
 		}
 
-		public void OnTabReselected (ActionBar.Tab tab, FragmentTransaction transaction)
+		public void OnTabReselected (global::Android.Support.V7.App.ActionBar.Tab tab, global::Android.Support.V4.App.FragmentTransaction transaction)
 		{
 		}
 
-		public void OnTabSelected (ActionBar.Tab tab, FragmentTransaction transaction)
+		public void OnTabSelected (global::Android.Support.V7.App.ActionBar.Tab tab, global::Android.Support.V4.App.FragmentTransaction transaction)
 		{
 			// TODO: Set new web page for tab.Text;
 //			string baseURL = "file://" + System.IO.Path.Combine (global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "WF.Player", "");
 
-			switch(tab.Position) {
+			switch(tab.Position) 
+			{
 				case 0:
-					initDetailInfo ();
+					InitDetailInfo();
 //				string html;
 //				using (var input = this.Assets.Open("CartridgeDetail.html"))
 //				using (StreamReader sr = new System.IO.StreamReader(input)) {
@@ -196,18 +200,18 @@ namespace WF.Player.Android
 //				webView.LoadDataWithBaseURL (baseURL, html, "text/html", "utf-8", null);
 					break;
 				case 1:
-					initDetailDescription ();
+					InitDetailDescription();
 					break;
 				case 2:
 					// TODO: Map
 					break;
 				case 3:
-					initDetailLogs ();
+					InitDetailLogs();
 					break;
 			}
 		}
 
-		public void OnTabUnselected (ActionBar.Tab tab, FragmentTransaction transaction)
+		public void OnTabUnselected (global::Android.Support.V7.App.ActionBar.Tab tab, global::Android.Support.V4.App.FragmentTransaction transaction)
 		{
 		}
 
@@ -216,7 +220,7 @@ namespace WF.Player.Android
 			var toast = Toast.MakeText (this,"Start clicked.",ToastLength.Short);
 			toast.Show ();
 
-			Intent intent = new Intent (this, typeof(ScreenActivity));
+			Intent intent = new Intent (this, typeof(ScreenController));
 
 			intent.PutExtra ("cartridge", intent.GetIntExtra ("cartridge", 0));
 			intent.PutExtra ("resume", false);
@@ -224,9 +228,11 @@ namespace WF.Player.Android
 			StartActivity (intent);
 		}
 
+		#endregion
+
 		#region Private Functions
 
-		private void initDetailInfo()
+		private void InitDetailInfo()
 		{
 			SetContentView (Resource.Layout.DetailInfo);
 
@@ -254,7 +260,7 @@ namespace WF.Player.Android
 			listView.Adapter = adapter;
 		}
 
-		private void initDetailDescription()
+		private void InitDetailDescription()
 		{
 			SetContentView (Resource.Layout.DetailDescription);
 			TextView textView = FindViewById<TextView> (Resource.Id.textView);
@@ -262,7 +268,7 @@ namespace WF.Player.Android
 		}
 
 
-		private void initDetailLogs()
+		private void InitDetailLogs()
 		{
 			SetContentView (Resource.Layout.DetailLogs);
 		}
@@ -271,52 +277,120 @@ namespace WF.Player.Android
 
 	}
 
+	/// <summary>
+	/// Detail web view client.
+	/// </summary>
 	class DetailWebViewClient : WebViewClient
 	{
-		public override bool ShouldOverrideUrlLoading (WebView view, string url)
+		public override bool ShouldOverrideUrlLoading(WebView view, string url)
 		{
 			return true;
 		}
 	}
 
+	/// <summary>
+	/// Detail info entry.
+	/// </summary>
 	class DetailInfoEntry
 	{
 		public string Description { get; private set; }
 		public string Content { get; private set; }
 
+		#region Constructor
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WF.Player.Android.DetailInfoEntry"/> class.
+		/// </summary>
+		/// <param name="description">Description.</param>
+		/// <param name="content">Content.</param>
 		public DetailInfoEntry(string description, string content)
 		{
 			Description = description;
 			Content = content;
 		}
+
+		#endregion
+
 	}
 
+	/// <summary>
+	/// Detail info adapter for cartridge details list.
+	/// </summary>
 	class DetailInfoAdapter : BaseAdapter
 	{
 		private Activity context;
 		private List<DetailInfoEntry> entries;
 
+		#region Constructor
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WF.Player.Android.DetailInfoAdapter"/> class.
+		/// </summary>
+		/// <param name="context">Context.</param>
+		/// <param name="entries">Entries.</param>
 		public DetailInfoAdapter(Activity context, List<DetailInfoEntry> entries) : base()
 		{
 			this.context = context;
 			this.entries = entries;
 		}
 
+		#endregion
+
+		#region Properties
+
+		/// <summary>
+		/// Gets the number of entries in list.
+		/// </summary>
+		/// <value>The count.</value>
 		public override int Count
 		{
-			get { return entries.Count; }
+			get 
+			{ 
+				return entries.Count; 
+			}
 		}
 
+		#endregion
+
+		#region Methods
+
+		/// <summary>
+		/// Gets the item at given position.
+		/// </summary>
+		/// <returns>The item.</returns>
+		/// <param name="position">Position.</param>
 		public override Java.Lang.Object GetItem(int position)
 		{
 			return position;
 		}
 
+		/// <summary>
+		/// Gets the item at position.
+		/// </summary>
+		/// <returns>The item at position.</returns>
+		/// <param name="position">Position.</param>
+		public DetailInfoEntry GetItemAtPosition(int position)
+		{
+			return entries[position];
+		}
+
+		/// <summary>
+		/// Gets the item id.
+		/// </summary>
+		/// <returns>The item identifier.</returns>
+		/// <param name="position">Position.</param>
 		public override long GetItemId(int position)
 		{
 			return position;
 		}
 
+		/// <summary>
+		/// Gets the view for this position.
+		/// </summary>
+		/// <returns>The view.</returns>
+		/// <param name="position">Position.</param>
+		/// <param name="convertView">Convert view.</param>
+		/// <param name="parent">Parent.</param>
 		public override View GetView(int position, View convertView, ViewGroup parent)
 		{
 			// Try to reuse convertView if it's not  null, otherwise inflate it from our item layout
@@ -329,17 +403,15 @@ namespace WF.Player.Android
 			var tvContent = view.FindViewById(Resource.Id.tvContent) as TextView;
 
 			// Assign this item's values to the various subviews
-			tvDescription.SetText(entries[position].Description, TextView.BufferType.Normal);
+			tvDescription.SetText(Strings.GetString(entries[position].Description), TextView.BufferType.Normal);
 			tvContent.SetText(entries[position].Content, TextView.BufferType.Normal);
 
 			// Finally return the view
 			return view;
 		}
 
-		public DetailInfoEntry GetItemAtPosition(int position)
-		{
-			return entries[position];
-		}
+		#endregion
+
 	}
 
 }

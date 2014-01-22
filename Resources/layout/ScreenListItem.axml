@@ -3,23 +3,63 @@
     p1:minWidth="25px"
     p1:minHeight="25px"
     p1:layout_width="match_parent"
-    p1:layout_height="wrap_content"
+    p1:layout_height="78dp"
     p1:id="@+id/relativeLayout1"
     p1:padding="5dp">
-    <ImageView
-        p1:src="@android:drawable/ic_menu_gallery"
+    <LinearLayout
+        p1:orientation="horizontal"
+        p1:minWidth="25px"
+        p1:minHeight="25px"
+        p1:layout_width="match_parent"
+        p1:layout_height="match_parent"
+        p1:id="@+id/linearLayoutItemText"
+        p1:layout_alignParentLeft="true"
+        p1:layout_marginRight="50dp"
+        p1:layout_centerVertical="true">
+        <ImageView
+            p1:layout_width="48dp"
+            p1:layout_height="48dp"
+            p1:id="@+id/imageIcon"
+            p1:padding="0dp"
+            p1:layout_centerVertical="true"
+            p1:scaleType="fitCenter"
+            p1:layout_marginRight="10dp"
+            p1:layout_marginLeft="10dp"
+            p1:layout_marginTop="10dp" />
+        <TextView
+            p1:text="Large Text"
+            p1:textAppearance="?android:attr/textAppearanceLarge"
+            p1:layout_width="wrap_content"
+            p1:layout_height="wrap_content"
+            p1:id="@+id/textHeader"
+            p1:padding="5dp"
+            p1:ellipsize="end"
+            p1:singleLine="false"
+            p1:maxLines="2"
+            p1:layout_centerVertical="true"
+            p1:layout_gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        p1:orientation="vertical"
+        p1:minWidth="25px"
+        p1:minHeight="25px"
         p1:layout_width="wrap_content"
         p1:layout_height="wrap_content"
-        p1:id="@+id/imageIcon"
-        p1:padding="5dp"
-        p1:layout_marginRight="10dp" />
-    <TextView
-        p1:text="Large Text"
-        p1:textAppearance="?android:attr/textAppearanceLarge"
-        p1:layout_width="wrap_content"
-        p1:layout_height="wrap_content"
-        p1:layout_toRightOf="@id/imageIcon"
-        p1:id="@+id/textHeader"
-        p1:padding="5dp"
-        p1:layout_centerVertical="true" />
+        p1:id="@+id/linearLayout2"
+        p1:layout_alignParentRight="true"
+        p1:layout_centerInParent="true">
+        <ImageView
+            p1:src="@android:drawable/ic_menu_gallery"
+            p1:layout_width="fill_parent"
+            p1:layout_height="wrap_content"
+            p1:id="@+id/imageDirection"
+            p1:scaleType="center" />
+        <TextView
+            p1:text="Small Text"
+            p1:textAppearance="?android:attr/textAppearanceSmall"
+            p1:layout_width="fill_parent"
+            p1:layout_height="wrap_content"
+            p1:id="@+id/textDistance"
+            p1:gravity="center_horizontal" />
+    </LinearLayout>
 </RelativeLayout>

@@ -1,10 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="WF.Player.Android">
-	<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
-	<application android:label="WF.Player.Android" android:uiOptions="splitActionBarWhenNarrow"></application>
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="WF.Player" android:installLocation="preferExternal" android:versionName="0.3" android:versionCode="2">
+	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
+	<application android:label="WF.Player" android:icon="@drawable/icon">
+		<!-- Put your Google Maps V2 API Key here. -->
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCgldJMI1uFzqYWU7kEjRz_-kVkDRZxBN0" />
+	</application>
 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<!-- Google Maps for Android v2 requires OpenGL ES v2 -->
+	<uses-feature android:glEsVersion="0x00020000" android:required="true" />
+	<!-- Allow the application to access Google web-based services. -->
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+	<!-- Permission to receive remote notifications from Google Play Services -->
+	<!-- Notice here that we have the package name of our application as a prefix on the permissions. -->
+	<uses-permission android:name="wf.player.permission.MAPS_RECEIVE" />
+	<permission android:name="wf.player.permission.MAPS_RECEIVE" android:protectionLevel="signature" />
 </manifest>

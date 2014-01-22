@@ -1,6 +1,6 @@
-using System;
-/// WF.Player.Android - A Wherigo Player User Interface for Android platform.
-/// Copyright (C) 2012-2013  Dirk Weltz <web@weltz-online.de>
+///
+/// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -14,28 +14,32 @@ using System;
 /// 
 /// You should have received a copy of the GNU Lesser General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+///
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Android;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android;
+using Android.Hardware;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Locations;
+using Vernacular;
 using WF.Player.Core;
+using WF.Player.Core.Live;
 
 namespace WF.Player.Android
 {
-	[Activity (Label = "WF.Player.Main", MainLauncher = true, Theme="@android:style/Theme.NoTitleBar.Fullscreen")]			
+	[Activity (Label = "WF.Player.Main", Theme="@android:style/Theme.NoTitleBar")]			
 	public class MainActivity : Activity
 	{
-
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -44,6 +48,12 @@ namespace WF.Player.Android
 				Finish ();
 				return;
 			}
+
+			Catalog.Implementation = new Vernacular.AndroidCatalog (Resources, typeof (Resource.String));
+
+			// Create object for location listener
+			((MainApp)this.Application).GPS = new LocListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
+			((MainApp)this.Application).GPS.Start();
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
@@ -80,7 +90,23 @@ namespace WF.Player.Android
 
 			var buttonSearchWGCode = FindViewById<Button>(Resource.Id.buttonSearchWGCode);
 			buttonSearchWGCode.Click += buttonSearchWGCodeClick;
-}
+		}
+
+		protected override void OnResume()
+		{
+			base.OnResume ();
+
+			// Add to location listener
+			((MainApp)this.Application).GPS.LocationChanged += OnLocationChanged;
+		}
+
+		protected override void OnPause()
+		{
+			base.OnPause ();
+
+			// Remove to location listener
+			((MainApp)this.Application).GPS.LocationChanged -= OnLocationChanged;
+		}
 
 		public void buttonOfflineClick(object sender, EventArgs args)
 		{ 
@@ -119,7 +145,6 @@ namespace WF.Player.Android
 				builder.SetCancelable (true);
 				builder.SetNeutralButton(Resource.String.ok,(obj,arg) => { });
 				builder.Show ();
-				return;
 			}
 
 			// Create CartridgesList

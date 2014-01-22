@@ -1,6 +1,6 @@
 ///
-/// WF.Player.Core - A Wherigo Player Core for different platforms.
-/// Copyright (C) 2012-2013  Dirk Weltz <web@weltz-online.de>
+/// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -44,8 +44,8 @@ namespace WF.Player.Android
 	/// <summary>
 	/// Screen activity for player.
 	/// </summary>
-	[Activity (Label = "Screen", ConfigurationChanges = ConfigChanges.KeyboardHidden|ConfigChanges.Orientation|ConfigChanges.ScreenSize)]
-	public class ScreenController : FragmentActivity
+	[Activity (Label = "Screen", Theme = "@style/Theme", ConfigurationChanges = ConfigChanges.KeyboardHidden|ConfigChanges.Orientation|ConfigChanges.ScreenSize)]
+	public class ScreenController : ActionBarActivity
 	{
 		ScreenType activeScreen = ScreenType.Main;
 		UIObject activeObject;
@@ -54,8 +54,8 @@ namespace WF.Player.Android
 		StreamWriter logFile;
 //		private GpxClass gpxFile;
 		LogLevel logLevel = LogLevel.Cartridge;
-		LocListener locListener;
 		MediaPlayer mediaPlayer = new MediaPlayer();
+		bool cartRestore;
 		Paint light = new Paint (PaintFlags.AntiAlias);
 		Paint dark = new Paint (PaintFlags.AntiAlias);
 		Paint black = new Paint (PaintFlags.AntiAlias);
@@ -86,13 +86,10 @@ namespace WF.Player.Android
 		/// </summary>
 		public override void OnBackPressed()
 		{
-			if (activeScreen == ScreenType.Locations || activeScreen == ScreenType.Items 
-			    || activeScreen == ScreenType.Inventory 
-			    || activeScreen == ScreenType.Tasks 
-			    || activeScreen == ScreenType.Details)
-				RemoveScreen (activeScreen);
-			else if (activeScreen == ScreenType.Main)
-				;
+			if (SupportFragmentManager.Fragments [0] is ScreenList || SupportFragmentManager.Fragments [0] is ScreenDetail || SupportFragmentManager.Fragments [0] is ScreenMap)
+				RemoveScreen (ActiveScreenType());
+			else if (SupportFragmentManager.Fragments [0] is ScreenMain)
+				Quit();
 			else
 				base.OnBackPressed ();
 		}
@@ -115,7 +112,7 @@ namespace WF.Player.Android
 			Intent intent = this.Intent;
 
 			string cartFilename = intent.GetStringExtra ("cartridge");
-			bool cartRestore = intent.GetBooleanExtra ("restore", false);
+			cartRestore = intent.GetBooleanExtra ("restore", false);
 
 			// Check, if cartridge files exists, and if yes, create a new cartridge object
 			if (File.Exists (cartFilename)) {
@@ -126,29 +123,34 @@ namespace WF.Player.Android
 			if (cartridge == null)
 				Finish ();
 
-			// Create location manager
-			locListener = new LocListener (GetSystemService (Context.LocationService) as LocationManager);
-			locListener.LocationChanged += OnRefreshLocation;
-			locListener.Start ();
+			// Create CheckLocation
+			CheckLocation checkLocation = new CheckLocation();
 
+			// Show CheckLocation
+			var ft = SupportFragmentManager.BeginTransaction ();
+			ft.SetBreadCrumbTitle (cartridge.Name);
+			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
+			ft.Replace (Resource.Id.fragment, checkLocation);
+			ft.Commit ();
+		}
+
+		public void InitController(bool start)
+		{
 			// Create engine
 			CreateEngine (cartridge);
 
 			// If cartridge contains an icon, than show this as home button
 			if (cartridge.Icon != null) {
 				Bitmap bm = BitmapFactory.DecodeByteArray (cartridge.Icon.Data, 0, cartridge.Icon.Data.Length);
-				this.ActionBar.SetIcon(new BitmapDrawable(this.Resources, bm));
+				SupportActionBar.SetIcon(new BitmapDrawable(this.Resources, bm));
 			}
 
 			// Show main screen
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			ft.SetBreadCrumbTitle (cartridge.Name);
 			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-			ft.AddToBackStack (null);
 			ft.Replace (Resource.Id.fragment, new ScreenMain (engine));
 			ft.Commit ();
-
-//			layoutMain.Invalidate ();
 
 			// Start cartridge
 			if (cartRestore)
@@ -183,10 +185,8 @@ namespace WF.Player.Android
 			if (engine != null)
 				engine.Pause();
 
-			// Stop location listener
-			locListener.LocationChanged -= OnRefreshLocation;
-			locListener.Stop();
-			locListener = null;
+			// Remove from GPS
+			((MainApp)Application).GPS.LocationChanged -= OnRefreshLocation;
 		}
 
 		/// <summary>
@@ -196,16 +196,12 @@ namespace WF.Player.Android
 		{
 			base.OnResume ();
 
-			// Start location listener
-			if (locListener == null)
-			{
-				var locManager = GetSystemService (Context.LocationService) as LocationManager;
+			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			SupportActionBar.SetDisplayShowHomeEnabled(true);
+			SupportActionBar.SetHomeButtonEnabled(true);
 
-				locListener = new LocListener (locManager);
-				locListener.LocationChanged += OnRefreshLocation;
-			}
-
-			locListener.Start ();
+			// Add to GPS
+			((MainApp)Application).GPS.LocationChanged += OnRefreshLocation;
 
 			// Restart engine
 			if (engine != null && engine.GameState == EngineGameState.Paused)
@@ -226,14 +222,6 @@ namespace WF.Player.Android
 		protected override void OnStop()
 		{
 			base.OnStop ();
-
-			// Stop LocListener
-			if (locListener != null)
-			{
-				locListener.LocationChanged -= OnRefreshLocation;
-				locListener.Stop ();
-				locListener = null;
-			}
 
 			// TODO: If engine is running, create an AutoSave file.
 		}
@@ -278,8 +266,9 @@ namespace WF.Player.Android
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.SetTitle(Resource.String.menu_screen_main_quit);
 			builder.SetMessage(Resource.String.screen_save_before_quit);
-			builder.SetCancelable(false);
+			builder.SetCancelable(true);
 			builder.SetPositiveButton(Resource.String.screen_save_before_quit_yes, delegate { engine.Save(new FileStream(cartridge.SaveFilename,FileMode.Create)); DestroyEngine (); Finish(); });
+			builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
 			builder.SetNegativeButton(Resource.String.screen_save_before_quit_no, delegate { DestroyEngine (); Finish(); });
 			builder.Show();
 		}
@@ -290,7 +279,7 @@ namespace WF.Player.Android
 		public void Restore()
 		{
 			if (engine != null) {
-				engine.RefreshLocation(locListener.Latitude, locListener.Longitude, locListener.Altitude, locListener.Accuracy);
+				engine.RefreshLocation(((MainApp)Application).GPS.Latitude, ((MainApp)Application).GPS.Longitude, ((MainApp)Application).GPS.Altitude, ((MainApp)Application).GPS.Accuracy);
 				engine.Restore (new FileStream (cartridge.SaveFilename, FileMode.Open));
 			}
 		}
@@ -309,7 +298,7 @@ namespace WF.Player.Android
 		public void Start()
 		{
 			if (engine != null) {
-				engine.RefreshLocation(locListener.Latitude, locListener.Longitude, locListener.Altitude, locListener.Accuracy);
+				engine.RefreshLocation(((MainApp)Application).GPS.Latitude, ((MainApp)Application).GPS.Longitude, ((MainApp)Application).GPS.Altitude, ((MainApp)Application).GPS.Accuracy);
 				engine.Start ();
 			}
 		}
@@ -318,65 +307,83 @@ namespace WF.Player.Android
 		/// Removes the active screen and show screen before.
 		/// </summary>
 		/// <param name="last">Last screen active.</param>
-		public void RemoveScreen(ScreenType last)
+		public void RemoveScreen(ScreenType type)
 		{
-			switch (last) 
-			{
+			bool remove = true;
+			ScreenType activeType = ActiveScreenType();
+
+			// Check if screen to remove is active screen, instead leave
+			if (type != null) {
+				if (SupportFragmentManager.Fragments [0] is ScreenList)
+					remove &= ((ScreenList)SupportFragmentManager.Fragments [0]).Type == type;
+				if (SupportFragmentManager.Fragments [0] is ScreenDetail)
+					remove &= type == ScreenType.Details;
+				if (SupportFragmentManager.Fragments [0] is ScreenDialog)
+					remove &= type == ScreenType.Dialog;
+				if (SupportFragmentManager.Fragments [0] is ScreenMap)
+					remove &= type == ScreenType.Map;
+			}
+
+			if (!remove)
+				return;
+
+			switch (activeType) {
 				case ScreenType.Main:
-					// ToDo: Main screen is the last screen to show, so stop the cartridge
-					ShowScreen (ScreenType.Main, null);
+					// Don't remove the main screen
 					break;
 				case ScreenType.Locations:
+					ShowScreen (ScreenType.Main, null);
+					break;
 				case ScreenType.Items:
+					ShowScreen (ScreenType.Main, null);
+					break;
 				case ScreenType.Inventory:
+					ShowScreen (ScreenType.Main, null);
+					break;
 				case ScreenType.Tasks:
 					ShowScreen (ScreenType.Main, null);
 					break;
 				case ScreenType.Details:
 					// Show correct list for this zone/item/character/task
-					if (activeObject != null) {
-						UIObject obj = activeObject;
+					if (((ScreenDetail)SupportFragmentManager.Fragments [0]).ActiveObject != null) {
+						// Select the correct list to show
+						UIObject obj = ((ScreenDetail)SupportFragmentManager.Fragments [0]).ActiveObject;
 						activeObject = null;
-						if (obj is Zone) {
-						if (engine.ActiveVisibleZones.Count >= 1)
-								ShowScreen (ScreenType.Locations, null);
-							else
-								ShowScreen (ScreenType.Main, null);
-						}
-						if (obj is Task) {
-						if (engine.ActiveVisibleTasks.Count >= 1)
-								ShowScreen (ScreenType.Tasks, null);
-							else
-								ShowScreen (ScreenType.Main, null);
-						}
+						if (obj is Zone)
+							ShowScreen (ScreenType.Locations, null);
+						if (obj is Task)
+							ShowScreen (ScreenType.Tasks, null);
 						if (obj is Item || obj is Character) {
-							if (((Thing)obj).Container == engine.Player) {
-							if (engine.VisibleInventory.Count >= 1)
-									ShowScreen (ScreenType.Inventory, null);
-								else
-									ShowScreen (ScreenType.Main, null);
-							} else {
-							if (((Thing)obj).Container == null) {
-								// Object is moved to null, so show the old list
-								ShowScreen (ScreenType.Main, null);
-							} else {
-								if (engine.VisibleObjects.Count >= 1)
-									ShowScreen (ScreenType.Items, null);
-								else
-									ShowScreen (ScreenType.Main, null);
-								}
-							}
+							if (engine.VisibleInventory.Contains ((Thing)obj))
+								ShowScreen (ScreenType.Inventory, null);
+							else
+								ShowScreen (ScreenType.Items, null);
 						}
-					}
+					} else
+						ShowScreen (ScreenType.Main, null);
 					break;
 				case ScreenType.Dialog:
-					// Which screen to show
-					if (activeScreen == ScreenType.Details && activeObject != null && !activeObject.Visible)
-						RemoveScreen (ScreenType.Details);
-					else
+				case ScreenType.Map:
+					if (activeScreen == ScreenType.Details && activeObject != null && !activeObject.Visible) {
+						// Object for detail screen is no longer visible, so show correct list
+						// Select the correct list to show
+						UIObject obj = activeObject;
+						activeObject = null;
+						if (obj is Zone)
+							ShowScreen (ScreenType.Locations, null);
+						if (obj is Task)
+							ShowScreen (ScreenType.Tasks, null);
+						if (obj is Item || obj is Character) {
+							if (engine.VisibleInventory.Contains ((Thing)obj))
+								ShowScreen (ScreenType.Inventory, null);
+							else
+								ShowScreen (ScreenType.Items, null);
+						}
+					} else {
 						ShowScreen (activeScreen, activeObject);
+					}
 					break;
-			}
+				}
 		}
 
 		/// <summary>
@@ -386,7 +393,7 @@ namespace WF.Player.Android
 		/// <param name="obj">Object to show if screen is ScreenType.Details.</param>
 		public void ShowScreen(ScreenType screen, UIObject obj)
 		{
-			var bar = this.ActionBar;
+			var bar = SupportActionBar;
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
@@ -397,6 +404,7 @@ namespace WF.Player.Android
 					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
 					ft.Replace (Resource.Id.fragment, new ScreenMain (engine), "active");
 					ft.Commit ();
+				//					SupportFragmentManager.Fragments [0] = new ScreenMain (engine);
 					break;
 				case ScreenType.Locations:
 				case ScreenType.Items:
@@ -406,22 +414,29 @@ namespace WF.Player.Android
 					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
 					ft.Replace (Resource.Id.fragment, new ScreenList (engine, screen), "active");
 					ft.Commit ();
+				//					SupportFragmentManager.Fragments [0] = new ScreenList (engine, screen);
 					break;
 				case ScreenType.Details:
 					bar.SetDisplayHomeAsUpEnabled (true);
 					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-				ft.Replace (Resource.Id.fragment, new ScreenDetail (this, obj), "active");
+					ft.Replace (Resource.Id.fragment, new ScreenDetail (this, obj), "active");
 					ft.Commit ();
+				//					SupportFragmentManager.Fragments [0] = new ScreenDetail (this, obj);
+					break;
+				case ScreenType.Map:
+					bar.SetDisplayHomeAsUpEnabled (true);
+					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
+					ft.Replace (Resource.Id.fragment, new ScreenMap (this, obj), "active");
+					ft.Commit ();
+				//					SupportFragmentManager.Fragments [0] = new ScreenMap (this, obj);
 					break;
 			}
 
-			// Delete last fragment
-//			if (activeFragment != null)
-//				activeFragment.Dispose();
-
 			// Save actuall values for later use
-			activeScreen = screen;
-			activeObject = obj;
+			if (screen != ScreenType.Dialog && screen != ScreenType.Map) {
+				activeScreen = screen;
+				activeObject = obj;
+			}
 		}
 
 		#endregion
@@ -458,7 +473,7 @@ namespace WF.Player.Android
 		/// <param name="e">Event arguments.</param>
 		public void OnGetInput (Object sender, ObjectEventArgs<Input> args)
 		{
-			var bar = this.ActionBar;
+			var bar = SupportActionBar;
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
@@ -543,8 +558,8 @@ namespace WF.Player.Android
 		/// <param name="e">Event arguments.</param>
 		private void OnRefreshLocation(Object sender, LocationChangedEventArgs e)
 		{
-			if (engine != null && (engine.Latitude != locListener.Latitude || engine.Longitude != locListener.Longitude || engine.Altitude != locListener.Altitude || engine.Accuracy != locListener.Accuracy))
-				engine.RefreshLocation (locListener.Latitude, locListener.Longitude, locListener.Altitude, locListener.Accuracy);
+			if (engine != null && (engine.Latitude != ((MainApp)Application).GPS.Latitude || engine.Longitude != ((MainApp)Application).GPS.Longitude || engine.Altitude != ((MainApp)Application).GPS.Altitude || engine.Accuracy != ((MainApp)Application).GPS.Accuracy))
+				engine.RefreshLocation (((MainApp)Application).GPS.Latitude, ((MainApp)Application).GPS.Longitude, ((MainApp)Application).GPS.Altitude, ((MainApp)Application).GPS.Accuracy);
 		}
 
 		/// <summary>
@@ -564,7 +579,7 @@ namespace WF.Player.Android
 		/// <param name="e">Event arguments.</param>
 		public void OnShowMessageBox(Object sender, MessageBoxEventArgs args)
 		{
-			var bar = this.ActionBar;
+			var bar = SupportActionBar;
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
@@ -585,7 +600,7 @@ namespace WF.Player.Android
 		/// <param name="e">Event arguments.</param>
 		public void OnShowScreen(Object sender, ScreenEventArgs e)
 		{
-			ShowScreen (e.Screen, e.Object);
+			ShowScreen ((ScreenType)e.Screen, e.Object);
 		}
 
 		/// <summary>
@@ -778,6 +793,7 @@ namespace WF.Player.Android
 		{
 			if (engine != null) {
 				engine.Stop();
+				engine.Reset();
 
 				engine.AttributeChanged -= OnAttributeChanged;
 				engine.InventoryChanged -= OnInventoryChanged;
@@ -804,6 +820,7 @@ namespace WF.Player.Android
 			if (logFile != null) {
 				logFile.Flush ();
 				logFile.Close ();
+				logFile = null;
 			}
 		}
 
@@ -834,10 +851,29 @@ namespace WF.Player.Android
 		/// <summary>
 		/// Refresh screen, if something changes.
 		/// </summary>
-		private void Refresh()
+		void Refresh()
 		{
 			var view = this.FindViewById(Resource.Id.fragment);
 			view.Invalidate ();
+		}
+
+		ScreenType ActiveScreenType()
+		{
+			ScreenType result = ScreenType.Main;
+
+			// Get active screen type
+			if (SupportFragmentManager.Fragments [0] is ScreenMain)
+				result = ScreenType.Main;
+			if (SupportFragmentManager.Fragments [0] is ScreenList)
+				result = ((ScreenList)SupportFragmentManager.Fragments [0]).Type;
+			if (SupportFragmentManager.Fragments [0] is ScreenDetail)
+				result = ScreenType.Details;
+			if (SupportFragmentManager.Fragments [0] is ScreenDialog)
+				result = ScreenType.Dialog;
+			if (SupportFragmentManager.Fragments [0] is ScreenMap)
+				result = ScreenType.Map;
+
+			return result;
 		}
 
 		#endregion

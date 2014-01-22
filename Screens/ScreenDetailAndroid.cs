@@ -1,3 +1,21 @@
+///
+/// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Lesser General Public License as
+/// published by the Free Software Foundation, either version 3 of the
+/// License, or (at your option) any later version.
+/// 
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Lesser General Public License for more details.
+/// 
+/// You should have received a copy of the GNU Lesser General Public License
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+///
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +31,7 @@ using Android.Views;
 using Android.Webkit;
 using Android.Widget;
 using Android.Support.V4.App;
+using Android.Support.V7.App;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
 
@@ -30,7 +49,6 @@ namespace WF.Player.Android
 		TextView textDescription;
 		TextView textWorksWith;
 		IMenuItem menuMap;
-		IMenuItem menuDefault;
 		Command com;
 
 		#region Constructor
@@ -38,9 +56,9 @@ namespace WF.Player.Android
 		public ScreenDetail(ScreenController ctrl, UIObject obj)
 		{
 			this.ctrl = ctrl;
-			this.obj = obj;
-			if (this.obj != null) {
-				this.obj.PropertyChanged += OnPropertyChanged;
+			this.activeObject = obj;
+			if (this.activeObject != null) {
+				this.activeObject.PropertyChanged += OnPropertyChanged;
 			}
 		}
 
@@ -72,7 +90,7 @@ namespace WF.Player.Android
 			layoutWorksWith.Visibility = ViewStates.Gone;
 			layoutMap.Visibility = ViewStates.Gone;
 
-			HasOptionsMenu = !(obj is Task);
+			HasOptionsMenu = !(activeObject is Task);
 
 			return view;
 		}
@@ -82,14 +100,12 @@ namespace WF.Player.Android
 			inflater.Inflate (Resource.Menu.ScreenDetailMenu, menu);
 
 			menuMap = menu.FindItem (Resource.Id.menu_screen_detail_map);
-			menuDefault = menu.FindItem (Resource.Id.menu_screen_detail_default);
 
-			if (obj != null && obj is Thing && !ctrl.Engine.VisibleInventory.Contains((Thing)obj)) {
+			if (activeObject != null && activeObject is Thing && !ctrl.Engine.VisibleInventory.Contains((Thing)activeObject)) {
 				menuMap.SetVisible (true);
 			} else {
 				menuMap.SetVisible(false);
 			}
-			menuDefault.SetVisible(false);
 
 			base.OnCreateOptionsMenu(menu, inflater);
 		}
@@ -107,8 +123,7 @@ namespace WF.Player.Android
 			textDescription = null;
 			textWorksWith = null;
 			menuMap = null;
-			menuDefault = null;
-			obj = null;
+			activeObject = null;
 			com = null;
 			commands = null;
 			targets = null;
@@ -125,19 +140,20 @@ namespace WF.Player.Android
 			//This uses the imported MenuItem from ActionBarSherlock
 			switch (item.ItemId) {
 				case Resource.Id.menu_screen_detail_map:
-					// TODO: Show map
-					menuMap.SetVisible(false);
-					menuDefault.SetVisible(true);
-					layoutMap.Visibility = ViewStates.Visible;
-					layoutDefault.Visibility = ViewStates.Gone;
+					ctrl.ShowScreen(ScreenType.Map, activeObject);
+				// TODO: Remove, Show map
+//					menuMap.SetVisible(false);
+//					menuDefault.SetVisible(true);
+//					layoutMap.Visibility = ViewStates.Visible;
+//					layoutDefault.Visibility = ViewStates.Gone;
 					break;
-				case Resource.Id.menu_screen_detail_default:
-					// TODO: Show default
-					menuMap.SetVisible(true);
-					menuDefault.SetVisible(false);
-					layoutMap.Visibility = ViewStates.Gone;
-					layoutDefault.Visibility = ViewStates.Visible;
-					break;
+//				case Resource.Id.menu_screen_detail_default:
+//					// TODO: Show default
+//					menuMap.SetVisible(true);
+//					menuDefault.SetVisible(false);
+//					layoutMap.Visibility = ViewStates.Gone;
+//					layoutDefault.Visibility = ViewStates.Visible;
+//					break;
 			}
 
 			return true;
@@ -156,11 +172,11 @@ namespace WF.Player.Android
 			Refresh ();
 		}
 
-		public override void OnStop()
+		public override void OnPause()
 		{
 			StopEvents();
 
-			base.OnStop();
+			base.OnPause();
 		}
 
 		public void OnButtonClicked(object sender, EventArgs e)
@@ -205,47 +221,57 @@ namespace WF.Player.Android
 
 		#region Private Functions
 
-		private void Refresh(string propertyName = null)
+		private void Refresh(string what = "")
 		{
-			if (obj != null && this.Activity != null) {
+			if (activeObject != null && this.Activity != null) {
 				// Assign this item's values to the various subviews
-				this.Activity.ActionBar.Title = obj.Name;
-				this.Activity.ActionBar.SetDisplayShowHomeEnabled(true);
+				((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-				Bitmap bm = null;
+				string name = activeObject.Name == null ? "" : activeObject.Name;
 
-				try {
-					if (obj.Image != null) {
-						bm = BitmapFactory.DecodeByteArray (obj.Image.Data, 0, obj.Image.Data.Length);
-					} else {
-						if (obj is Task) {
-							if (((Task)obj).Complete && (((Task)obj).CorrectState == TaskCorrectness.None || ((Task)obj).CorrectState == TaskCorrectness.Correct))
-								bm = Bitmap.CreateScaledBitmap (BitmapFactory.DecodeResource (Activity.ApplicationContext.Resources, Resource.Drawable.TaskDetailComplete), 128, 128, true);
-							else if (((Task)obj).Complete && ((Task)obj).CorrectState == TaskCorrectness.NotCorrect)
-								bm = Bitmap.CreateScaledBitmap (BitmapFactory.DecodeResource (Activity.ApplicationContext.Resources, Resource.Drawable.TaskDetailFailed), 128, 128, true);
-						}
-					}
-
-					if (bm != null) {
-						imageView.SetImageBitmap (bm);
-						imageView.Visibility = ViewStates.Visible;
-					} else {
-						imageView.Visibility = ViewStates.Gone;
-					}
-				} finally {
-					if (bm != null)
-						bm.Dispose();
+				if (what.Equals ("") || what.Equals ("Name"))
+				{
+					if (activeObject is Task)
+						((ActionBarActivity)Activity).SupportActionBar.Title = (((Task)activeObject).Complete ? (((Task)activeObject).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + name;
+					else
+						((ActionBarActivity)Activity).SupportActionBar.Title = name;
 				}
 
-				// TODO: HTML
-				textDescription.TextFormatted = Html.FromHtml(obj.HTML.Replace("&lt;BR&gt;", "<br>"));
+				if (what.Equals ("") || what.Equals ("Media")) {
+					Bitmap bm = null;
 
-				if (obj is Task)
+					try {
+						if (activeObject.Image != null) {
+							bm = BitmapFactory.DecodeByteArray (activeObject.Image.Data, 0, activeObject.Image.Data.Length);
+						}
+						if (bm != null) {
+							imageView.SetImageBitmap (bm);
+							imageView.Visibility = ViewStates.Visible;
+						} else {
+							imageView.Visibility = ViewStates.Gone;
+						}
+					} finally {
+						if (bm != null)
+							bm.Dispose();
+					}
+				}
+
+				if (what.Equals ("") || what.Equals ("Description")) {
+					if (!String.IsNullOrWhiteSpace (activeObject.Description)) {
+						textDescription.Visibility = ViewStates.Visible;
+						textDescription.TextFormatted = Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>"));
+					} else {
+						textDescription.Visibility = ViewStates.Visible;
+						textDescription.Text = "";
+					}
+				}
+				// Tasks don't have any command button
+				if (activeObject is Task)
 					return;
 
 				if (layoutButtons.Visibility == ViewStates.Visible) {
 					layoutButtons.RemoveAllViews ();
-					commands = ((Thing)obj).ActiveCommands;
+					commands = ((Thing)activeObject).ActiveCommands;
 					for (int i = 0; i < commands.Count; i++) {
 						Button btnView = new Button (Activity.ApplicationContext) {
 							Text = commands[i].Text,
@@ -253,6 +279,7 @@ namespace WF.Player.Android
 						};
 						btnView.SetTextColor(Color.Black);
 						btnView.SetHighlightColor(Color.Black);
+						btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
 						btnView.Click += OnButtonClicked;
 						layoutButtons.AddView (btnView);
 					}
@@ -265,6 +292,7 @@ namespace WF.Player.Android
 						Button btnView = new Button (Activity.ApplicationContext);
 						btnView.SetTextColor(Color.Black);
 						btnView.SetHighlightColor(Color.Black);
+						btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
 						btnView.Text = GetString(Resource.String.ok);
 						btnView.Click += OnNothingClicked;
 						layoutWorksWith.AddView (btnView);
@@ -274,6 +302,7 @@ namespace WF.Player.Android
 							Button btnView = new Button (Activity.ApplicationContext);
 							btnView.SetTextColor(Color.Black);
 							btnView.SetHighlightColor(Color.Black);
+							btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
 							btnView.Text = targets[i].Name;
 							btnView.Tag = i;
 							btnView.Click += OnThingClicked;

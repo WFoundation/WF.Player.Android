@@ -1,3 +1,21 @@
+///
+/// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU Lesser General Public License as
+/// published by the Free Software Foundation, either version 3 of the
+/// License, or (at your option) any later version.
+/// 
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU Lesser General Public License for more details.
+/// 
+/// You should have received a copy of the GNU Lesser General Public License
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+///
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +29,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Support.V4.App;
+using Android.Support.V7.App;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
 
@@ -21,12 +40,13 @@ namespace WF.Player.Android
 	public partial class ScreenList : global::Android.Support.V4.App.Fragment
 	{
 		ListView listView;
+		IMenuItem menuMap;
 
 		#region Constructor
 
 		public ScreenList(Engine engine, ScreenType screen)
 		{
-			this.screen = screen;
+			this.type = screen;
 			this.engine = engine;
 		}
 
@@ -47,13 +67,12 @@ namespace WF.Player.Android
 			var view = inflater.Inflate(Resource.Layout.ScreenList, container, false);
 
 			listView = view.FindViewById<ListView> (Resource.Id.listView);
-			listView.Adapter = new ScreenListAdapter (this, ctrl, screen);
+			listView.Adapter = new ScreenListAdapter (this, ctrl, type);
 			listView.ItemClick += OnItemClick;
 
-			this.Activity.ActionBar.Title = GetContent ();
+			((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
 
-			//			Refresh(true);
-			//			listView.Invalidate ();
+			HasOptionsMenu = (type == ScreenType.Locations || type == ScreenType.Items);
 
 			return view;
 		}
@@ -76,24 +95,65 @@ namespace WF.Player.Android
 			EntrySelected(e.Position);
 		}
 
+		public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater) 
+		{
+			inflater.Inflate (Resource.Menu.ScreenDetailMenu, menu);
+
+			menuMap = menu.FindItem (Resource.Id.menu_screen_detail_map);
+
+			if (type == ScreenType.Locations || type == ScreenType.Items) {
+				menuMap.SetVisible (true);
+			} else {
+				menuMap.SetVisible(false);
+			}
+
+			base.OnCreateOptionsMenu(menu, inflater);
+		}
+
+		/// <summary>
+		/// Raised, when an entry of the options menu is selected.
+		/// </summary>
+		/// <param name="item">Item, which is selected.</param>
+		public override bool OnOptionsItemSelected(IMenuItem item)
+		{
+			if (item == menuMap) {
+				ctrl.ShowScreen(ScreenType.Map, null);
+				return false;
+			}
+
+			return true;
+		}
+
 		public override void OnResume()
 		{
 			base.OnResume();
 
-			this.Activity.ActionBar.SetDisplayHomeAsUpEnabled (true);
-			this.Activity.ActionBar.SetDisplayShowHomeEnabled(true);
+			((ActionBarActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-			this.Activity.ActionBar.Title = GetContent ();
+			((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
+
+			StartEvents();
+
+			if (type == ScreenType.Locations || type == ScreenType.Items)
+				((MainApp)ctrl.Application).GPS.HeadingChanged += OnHeadingChanged;
 
 			Refresh(true);
-			//			listView.Invalidate ();
 		}
 
-		public override void OnStop()
+		public override void OnPause()
 		{
 			base.OnStop();
 
+			if (type == ScreenType.Locations || type == ScreenType.Items)
+				((MainApp)ctrl.Application).GPS.HeadingChanged -= OnHeadingChanged;
+
 			StopEvents();
+		}
+
+		void OnHeadingChanged (object sender, EventArgs e)
+		{
+			Refresh(false);
 		}
 
 		#endregion
@@ -102,10 +162,11 @@ namespace WF.Player.Android
 
 		void Refresh(bool itemsChanged)
 		{
-			if (itemsChanged)
-				this.Activity.ActionBar.Title = GetContent ();
+			if (itemsChanged && Activity != null)
+				((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
 
-			((ScreenListAdapter)listView.Adapter).NotifyDataSetChanged();
+			if (listView != null)
+				((ScreenListAdapter)listView.Adapter).NotifyDataSetChanged();
 		}
 
 		#endregion
@@ -158,51 +219,39 @@ namespace WF.Player.Android
 			var view = (convertView ?? ctrl.LayoutInflater.Inflate(Resource.Layout.ScreenListItem, parent, false)) as RelativeLayout;
 
 			Bitmap bm = null;
-			Bitmap bmIcon = null;
+
+			var layout = view.FindViewById<LinearLayout>(Resource.Id.linearLayoutItemText);
+			var imageIcon = view.FindViewById<ImageView>(Resource.Id.imageIcon);
+			var textHeader = view.FindViewById<TextView>(Resource.Id.textHeader);
+
+			if (!owner.ShowDirections) {
+				var layoutParams = (RelativeLayout.LayoutParams)layout.LayoutParameters;
+				layoutParams.RightMargin = 0;
+				layout.LayoutParameters = layoutParams;
+			}
 
 			try {
-				if (owner.Items[position].Icon != null) {
-					bm = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeByteArray (owner.Items[position].Icon.Data, 0, owner.Items[position].Icon.Data.Length),32,32,true);
-				} else {
-					bm = Bitmap.CreateBitmap(32, 32, Bitmap.Config.Argb8888);
-				}
-
-				if (screen == ScreenType.Tasks) {
-					Canvas canvas;
-					if (owner.Items [position].Icon == null) {
-						// No task icon available
-						bm = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeResource (ctrl.Resources, Resource.Drawable.TaskPending),32,32,true);
+				if (owner.ShowIcons) {
+					if (owner.Items[position].Icon != null) {
+						bm = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeByteArray (owner.Items[position].Icon.Data, 0, owner.Items[position].Icon.Data.Length),32,32,true);
+					} else {
+						bm = Bitmap.CreateBitmap(32, 32, Bitmap.Config.Argb8888);
 					}
-					// Copy icons to a bigger icon, so that the state image has place
-					bmIcon = Bitmap.CreateBitmap (48, 48, Bitmap.Config.Argb8888);
-					canvas = new Canvas (bmIcon);
-					canvas.DrawBitmap (bm, (canvas.Width-bm.Width)/2, (canvas.Height-bm.Height)/2, null);
-					bm.Dispose();
-					Bitmap bmState = null;
-					string s = ((Task)owner.Items [position]).CorrectState.ToString().ToLower();
-					if (((Task)owner.Items [position]).Complete && (((Task)owner.Items [position]).CorrectState == TaskCorrectness.None || ((Task)owner.Items [position]).CorrectState == TaskCorrectness.Correct))
-						bmState = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeResource (ctrl.Resources, Resource.Drawable.TaskComplete),48,48,true);
-					else if (((Task)owner.Items [position]).Complete && ((Task)owner.Items [position]).CorrectState == TaskCorrectness.NotCorrect)
-						bmState = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeResource (ctrl.Resources, Resource.Drawable.TaskFailed),48,48,true);
-					if (bmState != null) {
-						canvas = new Canvas (bmIcon);
-						canvas.DrawBitmap (bmState, (canvas.Width-bmState.Width)/2, (canvas.Height-bmState.Height)/2, null);
-					}
-					bm = bmIcon;
-				}
-
-				using (var imageIcon = view.FindViewById<ImageView>(Resource.Id.imageIcon)) {
 					imageIcon.SetImageBitmap (bm);
 					imageIcon.Visibility = ViewStates.Visible;
+				} else {
+					imageIcon.Visibility = ViewStates.Gone;
 				}
 			} finally {
-				bm.Dispose();
+				if (bm != null)
+					bm.Dispose();
 			}
 
-
-			using(var textHeader = view.FindViewById<TextView>(Resource.Id.textHeader)) {
-				textHeader.SetText(owner.Items[position].Name, TextView.BufferType.Normal);
-			}
+			string name = owner.Items[position].Name == null ? "" : owner.Items[position].Name;
+			if (owner.Items[position] is Task)
+				textHeader.Text = (((Task)owner.Items[position]).Complete ? (((Task)owner.Items[position]).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + name;
+			else
+				textHeader.Text = name;
 
 			using (var textDistance = view.FindViewById<TextView> (Resource.Id.textDistance)) {
 				using(var imageDirection = view.FindViewById<ImageView> (Resource.Id.imageDirection)) {
@@ -215,7 +264,7 @@ namespace WF.Player.Android
 							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0)
 								imageDirection.SetImageBitmap (ctrl.DrawCenter ());
 							else
-								imageDirection.SetImageBitmap (ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value));
+								imageDirection.SetImageBitmap (ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + ((MainApp)ctrl.Application).GPS.Heading));
 						} else {
 							textDistance.Visibility = ViewStates.Gone;
 							imageDirection.Visibility = ViewStates.Gone;

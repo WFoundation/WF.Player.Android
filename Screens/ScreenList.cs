@@ -1,6 +1,6 @@
 ///
-/// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android, iPhone which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2013 Dirk Weltz <web@weltz-online.de>
+/// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android and iPhone, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014 Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -30,12 +30,20 @@ namespace WF.Player.Android
 	{
 		ScreenController ctrl;
 		Engine engine;
-		ScreenType screen;
-		string[] properties = {"Name", "Icon", "Active", "Visible", "ObjectLocation"};
+		ScreenType type;
+		string[] properties = {"Name", "Icon", "Active", "Visible", "ObjectLocation", "VisibleObjects", "VisibleInventory", "ActiveVisibleTasks", "ActiveVisibleZones"};
 
 		public List<UIObject> Items = new List<UIObject>();
 		public bool ShowIcons;
 		public bool ShowDirections;
+
+		#region Properties
+
+		public ScreenType Type {
+			get { return type; }
+		}
+
+		#endregion
 
 		#region Common Functions
 
@@ -64,7 +72,7 @@ namespace WF.Player.Android
 
 			Items = new List<UIObject> ();
 
-			switch (screen)
+			switch (type)
 			{
 			case ScreenType.Locations:
 				header = Strings.GetString("Locations");

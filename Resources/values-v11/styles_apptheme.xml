@@ -11,4 +11,12 @@
 	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
   </style>
 
+  <style name="ImageButtonAppThemeRed" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/apptheme_btn_default_holo_light_red</item>
+  </style>
+
+  <style name="ImageButtonAppThemeGreen" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/apptheme_btn_default_holo_light_green</item>
+  </style>
+
 </resources>

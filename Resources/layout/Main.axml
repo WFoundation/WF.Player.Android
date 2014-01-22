@@ -92,7 +92,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonOffline"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"
+        android:hapticFeedbackEnabled="true"
+        android:soundEffectsEnabled="true" />
     <RelativeLayout
         android:minWidth="25px"
         android:minHeight="25px"
@@ -127,14 +129,18 @@
         android:layout_height="wrap_content"
         android:id="@+id/buttonNearby"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"
+        android:hapticFeedbackEnabled="true"
+        android:soundEffectsEnabled="true" />
     <Button
         android:text="Search with parameters"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonSearchParam"
         android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
+        android:layout_marginRight="16dp"
+        android:hapticFeedbackEnabled="true"
+        android:soundEffectsEnabled="true" />
     <Button
         android:text="Settings"
         android:layout_width="fill_parent"
@@ -142,5 +148,7 @@
         android:id="@+id/buttonSettings"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:hapticFeedbackEnabled="true"
+        android:soundEffectsEnabled="true" />
 </LinearLayout>

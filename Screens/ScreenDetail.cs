@@ -1,6 +1,6 @@
 ///
-/// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android, iPhone which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2013 Dirk Weltz <web@weltz-online.de>
+/// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android and iPhone, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014 Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -31,29 +31,49 @@ namespace WF.Player.Android
 	public partial class ScreenDetail
 	{
 		ScreenController ctrl;
-		UIObject obj;
+		UIObject activeObject;
 		WherigoCollection<Command> commands;
 		WherigoCollection<Thing> targets;
 		string[] properties = {"Name", "Description", "Media", "Commands"};
+
+		#region Object Handling
+
+		public UIObject ActiveObject
+		{
+			get {
+				return activeObject;
+			}
+			set {
+				if (activeObject != value) {
+					activeObject = value;
+					Refresh ();
+				}
+			}
+		}
+
+		#endregion
 
 		#region Common Functions
 
 		void StartEvents()
 		{
-			obj.PropertyChanged += OnPropertyChanged;
+			activeObject.PropertyChanged += OnPropertyChanged;
 		}
 
 		void StopEvents()
 		{
-			obj.PropertyChanged -= OnPropertyChanged;
+			activeObject.PropertyChanged -= OnPropertyChanged;
 		}
 
 		public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			bool remove = false;
 
+			if (activeObject == null)
+				return;
+
 			if (e.PropertyName.Equals("Commands"))
-				commands = ((Thing)obj).ActiveCommands;
+				commands = ((Thing)activeObject).ActiveCommands;
 
 			// Check, if one of the visible entries changed
 			if (!(e is PropertyChangedEventArgs) || (e is PropertyChangedEventArgs && properties.Contains(((PropertyChangedEventArgs)e).PropertyName)))
@@ -61,9 +81,9 @@ namespace WF.Player.Android
 
 			// The object is set to not visible or not active, so it should removed from screen
 			if (e.PropertyName.Equals("Visible") || e.PropertyName.Equals("Active"))
-				remove = !obj.Visible;
+				remove = !activeObject.Visible;
 			// The object is moved to nil, so it should removed from screen
-			if (e.PropertyName.Equals("Container") && !(obj is Task) && ((Thing)obj).Container == null)
+			if (e.PropertyName.Equals("Container") && !(activeObject is Task) && ((Thing)activeObject).Container == null)
 				remove = true;
 
 			if (remove) {

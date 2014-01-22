@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
         android:id="@+id/menu_detail_save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_save"
         android:showAsAction="always"
         android:title="@string/menu_detail_save"/>
 	<item
         android:id="@+id/menu_detail_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/menu_detail_delete"/>
-    <item
-        android:id="@+id/menu_detail_start"
-        android:icon="@android:drawable/ic_menu_directions"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_detail_start"/>
     <item
         android:id="@+id/menu_detail_resume"
         android:icon="@android:drawable/ic_menu_rotate"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/menu_detail_resume"/>
+    <item
+        android:id="@+id/menu_detail_start"
+        android:icon="@android:drawable/ic_menu_directions"
+        android:showAsAction="always"
+        android:title="@string/menu_detail_start"/>
 </menu>

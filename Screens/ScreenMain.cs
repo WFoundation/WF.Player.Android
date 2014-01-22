@@ -1,6 +1,6 @@
 ///
-/// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android, iPhone which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2013 Dirk Weltz <web@weltz-online.de>
+/// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android and iPhone, which use the Wherigo Foundation Core.
+/// Copyright (C) 2012-2014 Dirk Weltz <web@weltz-online.de>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -134,6 +134,13 @@ namespace WF.Player.Android
 
 		public void GetContentEntry(int position, out string header, out string items, out object image)
 		{
+			if (engine.Cartridge == null) {
+				header = "";
+				items = "";
+				image = null;
+				return;
+			}
+
 			List<string> itemsList = new List<string>();
 			string empty = "";
 
@@ -151,7 +158,7 @@ namespace WF.Player.Android
 					image = iconLocation;
 					foreach (UIObject o in engine.ActiveVisibleZones)
 					{
-						itemsList.Add(o.Name);
+						itemsList.Add(o.Name == null ? "" : o.Name);
 					}
 					break;
 				case 1:
@@ -160,7 +167,7 @@ namespace WF.Player.Android
 					image = iconYouSee;
 					foreach (UIObject o in engine.VisibleObjects)
 					{
-						itemsList.Add(o.Name);
+						itemsList.Add(o.Name == null ? "" : o.Name);
 					}
 					break;
 				case 2:
@@ -169,7 +176,7 @@ namespace WF.Player.Android
 					image = iconInventory;
 					foreach (UIObject o in engine.VisibleInventory)
 					{
-						itemsList.Add(o.Name);
+						itemsList.Add(o.Name == null ? "" : o.Name);
 					}
 					break;
 				case 3:
@@ -178,7 +185,7 @@ namespace WF.Player.Android
 					image = iconTask;
 					foreach (UIObject o in engine.ActiveVisibleTasks)
 					{
-						itemsList.Add((((Task)o).Complete ? (((Task)o).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + o.Name);
+						itemsList.Add((((Task)o).Complete ? (((Task)o).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + (o.Name == null ? "" : o.Name));
 					}
 					break;
 				}

@@ -40,16 +40,22 @@
         <TextView
             p1:text="Large Text"
             p1:textAppearance="?android:attr/textAppearanceLarge"
-            p1:id="@+id/textViewTop"
+            p1:id="@+id/textCartName"
             p1:layout_width="fill_parent"
             p1:layout_height="wrap_content"
-            p1:padding="5dp" />
+            p1:paddingTop="5dp"
+            p1:paddingBottom="5dp" />
         <TextView
             p1:text="Small Text"
             p1:textAppearance="?android:attr/textAppearanceSmall"
             p1:layout_width="fill_parent"
             p1:layout_height="wrap_content"
-            p1:id="@+id/textViewBottom"
-            p1:padding="5dp" />
+            p1:id="@+id/textCartVersion" />
+        <TextView
+            p1:text="Small Text"
+            p1:textAppearance="?android:attr/textAppearanceSmall"
+            p1:layout_width="fill_parent"
+            p1:layout_height="wrap_content"
+            p1:id="@+id/textCartAuthor" />
     </LinearLayout>
 </LinearLayout>
