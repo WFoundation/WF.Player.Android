@@ -903,100 +903,103 @@ namespace WF.Player.Android
 			public const int cab_background_top_ = 2130837622;
 			
 			// aapt resource value: 0x7f020077
-			public const int ic_action_search = 2130837623;
+			public const int edit_background = 2130837623;
 			
 			// aapt resource value: 0x7f020078
-			public const int ic_action_search_dark = 2130837624;
+			public const int ic_action_search = 2130837624;
 			
 			// aapt resource value: 0x7f020079
-			public const int ic_inventory = 2130837625;
+			public const int ic_action_search_dark = 2130837625;
 			
 			// aapt resource value: 0x7f02007a
-			public const int ic_locations = 2130837626;
+			public const int ic_inventory = 2130837626;
 			
 			// aapt resource value: 0x7f02007b
-			public const int ic_map = 2130837627;
+			public const int ic_locations = 2130837627;
 			
 			// aapt resource value: 0x7f02007c
-			public const int ic_menu_search = 2130837628;
+			public const int ic_map = 2130837628;
 			
 			// aapt resource value: 0x7f02007d
-			public const int ic_quit = 2130837629;
+			public const int ic_menu_search = 2130837629;
 			
 			// aapt resource value: 0x7f02007e
-			public const int ic_save = 2130837630;
+			public const int ic_quit = 2130837630;
 			
 			// aapt resource value: 0x7f02007f
-			public const int ic_tasks = 2130837631;
+			public const int ic_save = 2130837631;
 			
 			// aapt resource value: 0x7f020080
-			public const int ic_yousee = 2130837632;
+			public const int ic_tasks = 2130837632;
 			
 			// aapt resource value: 0x7f020081
-			public const int icon = 2130837633;
+			public const int ic_yousee = 2130837633;
 			
 			// aapt resource value: 0x7f020082
-			public const int list_focused_ = 2130837634;
+			public const int icon = 2130837634;
 			
 			// aapt resource value: 0x7f020083
-			public const int list_pressed_ = 2130837635;
+			public const int list_focused_ = 2130837635;
 			
 			// aapt resource value: 0x7f020084
-			public const int menu_dropdown_panel_ = 2130837636;
+			public const int list_pressed_ = 2130837636;
 			
 			// aapt resource value: 0x7f020085
-			public const int progress_bg_ = 2130837637;
+			public const int menu_dropdown_panel_ = 2130837637;
 			
 			// aapt resource value: 0x7f020086
-			public const int progress_horizontal_ = 2130837638;
+			public const int progress_bg_ = 2130837638;
 			
 			// aapt resource value: 0x7f020087
-			public const int progress_primary_ = 2130837639;
+			public const int progress_horizontal_ = 2130837639;
 			
 			// aapt resource value: 0x7f020088
-			public const int progress_secondary_ = 2130837640;
+			public const int progress_primary_ = 2130837640;
 			
 			// aapt resource value: 0x7f020089
-			public const int selectable_background_ = 2130837641;
+			public const int progress_secondary_ = 2130837641;
 			
 			// aapt resource value: 0x7f02008a
-			public const int spinner_ab_default_ = 2130837642;
+			public const int selectable_background_ = 2130837642;
 			
 			// aapt resource value: 0x7f02008b
-			public const int spinner_ab_disabled_ = 2130837643;
+			public const int spinner_ab_default_ = 2130837643;
 			
 			// aapt resource value: 0x7f02008c
-			public const int spinner_ab_focused_ = 2130837644;
+			public const int spinner_ab_disabled_ = 2130837644;
 			
 			// aapt resource value: 0x7f02008d
-			public const int spinner_ab_pressed_ = 2130837645;
+			public const int spinner_ab_focused_ = 2130837645;
 			
 			// aapt resource value: 0x7f02008e
-			public const int spinner_background_ab_ = 2130837646;
+			public const int spinner_ab_pressed_ = 2130837646;
 			
 			// aapt resource value: 0x7f02008f
-			public const int splash = 2130837647;
+			public const int spinner_background_ab_ = 2130837647;
 			
 			// aapt resource value: 0x7f020090
-			public const int tab_indicator_ab_ = 2130837648;
+			public const int splash = 2130837648;
 			
 			// aapt resource value: 0x7f020091
-			public const int tab_selected_ = 2130837649;
+			public const int tab_indicator_ab_ = 2130837649;
 			
 			// aapt resource value: 0x7f020092
-			public const int tab_selected_focused_ = 2130837650;
+			public const int tab_selected_ = 2130837650;
 			
 			// aapt resource value: 0x7f020093
-			public const int tab_selected_pressed_ = 2130837651;
+			public const int tab_selected_focused_ = 2130837651;
 			
 			// aapt resource value: 0x7f020094
-			public const int tab_unselected_ = 2130837652;
+			public const int tab_selected_pressed_ = 2130837652;
 			
 			// aapt resource value: 0x7f020095
-			public const int tab_unselected_focused_ = 2130837653;
+			public const int tab_unselected_ = 2130837653;
 			
 			// aapt resource value: 0x7f020096
-			public const int tab_unselected_pressed_ = 2130837654;
+			public const int tab_unselected_focused_ = 2130837654;
+			
+			// aapt resource value: 0x7f020097
+			public const int tab_unselected_pressed_ = 2130837655;
 			
 			static Drawable()
 			{
@@ -1059,11 +1062,11 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f050011
 			public const int beginning = 2131034129;
 			
-			// aapt resource value: 0x7f05006b
-			public const int button1 = 2131034219;
-			
 			// aapt resource value: 0x7f05006c
-			public const int button2 = 2131034220;
+			public const int button1 = 2131034220;
+			
+			// aapt resource value: 0x7f05006d
+			public const int button2 = 2131034221;
 			
 			// aapt resource value: 0x7f050070
 			public const int buttonInput = 2131034224;
@@ -1074,8 +1077,8 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f05005b
 			public const int buttonOffline = 2131034203;
 			
-			// aapt resource value: 0x7f05007e
-			public const int buttonSearch = 2131034238;
+			// aapt resource value: 0x7f05007f
+			public const int buttonSearch = 2131034239;
 			
 			// aapt resource value: 0x7f050060
 			public const int buttonSearchParam = 2131034208;
@@ -1110,14 +1113,14 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f05006f
 			public const int editInput = 2131034223;
 			
-			// aapt resource value: 0x7f050079
-			public const int editLat = 2131034233;
-			
 			// aapt resource value: 0x7f05007a
-			public const int editLon = 2131034234;
+			public const int editLat = 2131034234;
 			
-			// aapt resource value: 0x7f05007d
-			public const int editName = 2131034237;
+			// aapt resource value: 0x7f05007b
+			public const int editLon = 2131034235;
+			
+			// aapt resource value: 0x7f05007e
+			public const int editName = 2131034238;
 			
 			// aapt resource value: 0x7f05005d
 			public const int editWGCode = 2131034205;
@@ -1152,14 +1155,14 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f050025
 			public const int image = 2131034149;
 			
-			// aapt resource value: 0x7f05007b
-			public const int imageButton1 = 2131034235;
+			// aapt resource value: 0x7f05007c
+			public const int imageButton1 = 2131034236;
 			
-			// aapt resource value: 0x7f050075
-			public const int imageDirection = 2131034229;
+			// aapt resource value: 0x7f050076
+			public const int imageDirection = 2131034230;
 			
-			// aapt resource value: 0x7f050072
-			public const int imageIcon = 2131034226;
+			// aapt resource value: 0x7f050073
+			public const int imageIcon = 2131034227;
 			
 			// aapt resource value: 0x7f050058
 			public const int imageLine = 2131034200;
@@ -1176,11 +1179,14 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f05004f
 			public const int ivPoster = 2131034191;
 			
+			// aapt resource value: 0x7f05006a
+			public const int layoutBottom = 2131034218;
+			
 			// aapt resource value: 0x7f050066
 			public const int layoutButtons = 2131034214;
 			
-			// aapt resource value: 0x7f05006a
-			public const int layoutDialog = 2131034218;
+			// aapt resource value: 0x7f05006b
+			public const int layoutDialog = 2131034219;
 			
 			// aapt resource value: 0x7f05006e
 			public const int layoutInput = 2131034222;
@@ -1191,8 +1197,8 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f050069
 			public const int layoutMap = 2131034217;
 			
-			// aapt resource value: 0x7f05006d
-			public const int layoutMultipleChoice = 2131034221;
+			// aapt resource value: 0x7f050071
+			public const int layoutMultipleChoice = 2131034225;
 			
 			// aapt resource value: 0x7f050067
 			public const int layoutWorksWith = 2131034215;
@@ -1203,14 +1209,14 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f050043
 			public const int linearLayout1 = 2131034179;
 			
-			// aapt resource value: 0x7f050074
-			public const int linearLayout2 = 2131034228;
+			// aapt resource value: 0x7f050075
+			public const int linearLayout2 = 2131034229;
 			
 			// aapt resource value: 0x7f050044
 			public const int linearLayoutImage = 2131034180;
 			
-			// aapt resource value: 0x7f050071
-			public const int linearLayoutItemText = 2131034225;
+			// aapt resource value: 0x7f050072
+			public const int linearLayoutItemText = 2131034226;
 			
 			// aapt resource value: 0x7f050046
 			public const int linearLayoutText = 2131034182;
@@ -1227,29 +1233,29 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f050027
 			public const int list_item = 2131034151;
 			
-			// aapt resource value: 0x7f050081
-			public const int menu_detail_delete = 2131034241;
-			
 			// aapt resource value: 0x7f050082
-			public const int menu_detail_resume = 2131034242;
-			
-			// aapt resource value: 0x7f050080
-			public const int menu_detail_save = 2131034240;
+			public const int menu_detail_delete = 2131034242;
 			
 			// aapt resource value: 0x7f050083
-			public const int menu_detail_start = 2131034243;
+			public const int menu_detail_resume = 2131034243;
+			
+			// aapt resource value: 0x7f050081
+			public const int menu_detail_save = 2131034241;
 			
 			// aapt resource value: 0x7f050084
-			public const int menu_screen_detail_map = 2131034244;
-			
-			// aapt resource value: 0x7f050086
-			public const int menu_screen_main_quit = 2131034246;
+			public const int menu_detail_start = 2131034244;
 			
 			// aapt resource value: 0x7f050085
-			public const int menu_screen_main_save = 2131034245;
+			public const int menu_screen_detail_map = 2131034245;
 			
-			// aapt resource value: 0x7f05007f
-			public const int menu_search = 2131034239;
+			// aapt resource value: 0x7f050087
+			public const int menu_screen_main_quit = 2131034247;
+			
+			// aapt resource value: 0x7f050086
+			public const int menu_screen_main_save = 2131034246;
+			
+			// aapt resource value: 0x7f050080
+			public const int menu_search = 2131034240;
 			
 			// aapt resource value: 0x7f050012
 			public const int middle = 2131034130;
@@ -1344,11 +1350,11 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f05005a
 			public const int textAccuracyText = 2131034202;
 			
-			// aapt resource value: 0x7f050078
-			public const int textByCoords = 2131034232;
+			// aapt resource value: 0x7f050079
+			public const int textByCoords = 2131034233;
 			
-			// aapt resource value: 0x7f05007c
-			public const int textByName = 2131034236;
+			// aapt resource value: 0x7f05007d
+			public const int textByName = 2131034237;
 			
 			// aapt resource value: 0x7f050049
 			public const int textCartAuthor = 2131034185;
@@ -1368,17 +1374,17 @@ namespace WF.Player.Android
 			// aapt resource value: 0x7f05004a
 			public const int textDescription = 2131034186;
 			
-			// aapt resource value: 0x7f050076
-			public const int textDistance = 2131034230;
+			// aapt resource value: 0x7f050077
+			public const int textDistance = 2131034231;
 			
 			// aapt resource value: 0x7f050057
 			public const int textFounds = 2131034199;
 			
-			// aapt resource value: 0x7f050073
-			public const int textHeader = 2131034227;
+			// aapt resource value: 0x7f050074
+			public const int textHeader = 2131034228;
 			
-			// aapt resource value: 0x7f050077
-			public const int textItems = 2131034231;
+			// aapt resource value: 0x7f050078
+			public const int textItems = 2131034232;
 			
 			// aapt resource value: 0x7f050056
 			public const int textUsername = 2131034198;

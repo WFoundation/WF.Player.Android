@@ -83,9 +83,6 @@
     <None Include="lib\Vernacular.Android.dll" />
     <None Include="lib\Vernacular.Android.dll.mdb" />
     <None Include="lib\Vernacular.Android.pdb" />
-    <None Include="lib\armeabi\liblua5.1.so" />
-    <None Include="lib\armeabi-v7a\liblua5.1.so" />
-    <None Include="lib\x86\liblua5.1.so" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -239,7 +236,6 @@
     <AndroidResource Include="Resources\drawable-hdpi\ab_bottom_solid_.9.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ab_solid_.9.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ab_stacked_solid_.9.png" />
-    <AndroidResource Include="Resources\drawable-hdpi\ab_texture_tile_.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ab_transparent_.9.png" />
     <AndroidResource Include="Resources\drawable-hdpi\btn_cab_done_default_.9.png" />
     <AndroidResource Include="Resources\drawable-hdpi\btn_cab_done_focused_.9.png" />
@@ -265,7 +261,6 @@
     <AndroidResource Include="Resources\drawable-mdpi\ab_bottom_solid_.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ab_solid_.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ab_stacked_solid_.9.png" />
-    <AndroidResource Include="Resources\drawable-mdpi\ab_texture_tile_.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ab_transparent_.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\btn_cab_done_default_.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\btn_cab_done_focused_.9.png" />
@@ -361,5 +356,16 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_quit.png" />
     <AndroidResource Include="Resources\menu\ScreenList.xml" />
     <AndroidResource Include="Resources\values\Styles.xml" />
+    <AndroidResource Include="Resources\drawable-hdpi\edit_background.9.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\edit_background.9.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\edit_background.9.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\edit_background.9.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ab_texture_tile_.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ab_texture_tile_.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />
+    <AndroidNativeLibrary Include="lib\armeabi-v7a\liblua5.1.so" />
+    <AndroidNativeLibrary Include="lib\x86\liblua5.1.so" />
   </ItemGroup>
 </Project>

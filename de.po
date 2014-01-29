@@ -1,0 +1,332 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-01-04 19:50+0100\n"
+"PO-Revision-Date: 2014-01-04 19:53+0100\n"
+"Last-Translator: Dirk Weltz <web@weltz-online.de>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.3\n"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:271
+#: /Entwicklung/WF.Player.iOS/CartridgeList.cs:281 CartridgeDetail.cs:298
+#: CartridgeList.cs:281
+#, csharp-format
+msgid "Version {0}"
+msgstr "Version {0}"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:281
+#: /Entwicklung/WF.Player.iOS/CartridgeList.cs:285 CartridgeDetail.cs:308
+#: CartridgeList.cs:285
+#, csharp-format
+msgid "By {0}"
+msgstr "Von {0}"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:297 CartridgeDetail.cs:324
+msgid "Author"
+msgstr "Author"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:302 CartridgeDetail.cs:329
+msgid "Company"
+msgstr "Firma"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:307 CartridgeDetail.cs:334
+msgid "Version"
+msgstr "Version"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:312 CartridgeDetail.cs:339
+msgid "Designed for"
+msgstr "Lauffähig auf"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:317 CartridgeDetail.cs:344
+msgid "Create Date"
+msgstr "Erstellt am"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:322 CartridgeDetail.cs:349
+msgid "Last Update"
+msgstr "Letztes Update"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:327 CartridgeDetail.cs:354
+msgid "Upload Date"
+msgstr "Hochgeladen"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:334 CartridgeDetail.cs:149
+#: CartridgeDetail.cs:361
+msgid "Delete"
+msgstr "Löschen"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:334
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:586
+#: CartridgeDetail.cs:361 Screens/ScreenController.cs:117
+#: Screens/ScreenController.cs:751
+msgid "Save"
+msgstr "Sichern"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:335 CartridgeDetail.cs:362
+msgid "Restore"
+msgstr "Fortsetzen"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeDetail.cs:337
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:122 CartridgeDetail.cs:364
+#: CheckLocation.cs:122
+msgid "Start"
+msgstr "Starten"
+
+#: /Entwicklung/WF.Player.iOS/CartridgeList.cs:86 CartridgeList.cs:85
+msgid "Cartridges"
+msgstr "Cartridges"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:41 CheckLocation.cs:41
+msgid "GPS Check"
+msgstr "GPS überprüfen"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:43
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:107
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:568
+#: CheckLocation.cs:43 Screens/ScreenController.cs:110
+#: Screens/ScreenController.cs:730
+msgid "Quit"
+msgstr "Beenden"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:64 CheckLocation.cs:64
+msgid ""
+"For much fun with the cartridge, you should wait for a good accuracy of your "
+"GPS signal."
+msgstr ""
+"Um die besten Ergebnisse beim arbeiten mit der Cartridge zu haben, sollte "
+"man warten, bis man ein hinreichend genaues GPS Signal hat."
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:73
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:115 CheckLocation.cs:73
+#: CheckLocation.cs:115
+#, csharp-format
+msgid ""
+"Current Coordinates\n"
+"{0}"
+msgstr ""
+"Aktuelle Koordinaten\n"
+"{0}"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:82
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:90 CheckLocation.cs:82
+#: CheckLocation.cs:90
+#, csharp-format
+msgid ""
+"Current Accuracy\n"
+"{0} m"
+msgstr ""
+"Aktuelle Genauigkeit\n"
+"{0} m"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:94
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:118 CheckLocation.cs:94
+#: CheckLocation.cs:118
+msgid "Start anyway"
+msgstr "Trotzdem starten"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:175 CheckLocation.cs:175
+msgid "N"
+msgstr "N"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:175 CheckLocation.cs:175
+msgid "S"
+msgstr "S"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:176 CheckLocation.cs:176
+msgid "E"
+msgstr "E"
+
+#: /Entwicklung/WF.Player.iOS/CheckLocation.cs:176 CheckLocation.cs:176
+msgid "W"
+msgstr "W"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:113
+msgid "Menu"
+msgstr "Menü"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:496
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:616
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenListiOS.cs:77
+#: Screens/ScreenController.cs:781 Screens/ScreenDetailiOS.cs:74
+#: Screens/ScreenListiOS.cs:77 Screens/ScreenMap.cs:102
+msgid "Back"
+msgstr "Zurück"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:500
+#: Screens/ScreenDetailiOS.cs:241 Screens/ScreenListiOS.cs:79
+msgid "Map"
+msgstr "Karte"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:569
+#: Screens/ScreenController.cs:731
+msgid "Would you save before quit?"
+msgstr "Abspeichern vor dem Beenden?"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:570
+#: CartridgeDetail.cs:151 Screens/ScreenController.cs:732
+msgid "Yes"
+msgstr "Ja"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:571
+#: CartridgeDetail.cs:152 Screens/ScreenController.cs:733
+msgid "No"
+msgstr "Nein"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:587
+#: Screens/ScreenController.cs:752
+msgid "About"
+msgstr "Über WF.Player"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:588
+#: Screens/ScreenController.cs:734 Screens/ScreenController.cs:753
+#: Screens/ScreenMap.cs:306 Screens/ScreenMap.cs:360
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:597
+#: Screens/ScreenController.cs:762
+msgid "WF.Player.iOS"
+msgstr "WF.Player.iOS"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:598
+#: Screens/ScreenController.cs:763
+#, csharp-format
+msgid ""
+"Copyright 2012-2013 by Wherigo Foundation, Dirk Weltz, Brice Clocher\n"
+"\n"
+"Version\n"
+"iPhone {0}\n"
+"Core {1}\n"
+"\n"
+"Used parts of following products (copyrights see at product):\n"
+"Groundspeak, NLua, KeraLua, KopiLua, Lua "
+msgstr ""
+"Copyright 2012-2013 by Wherigo Foundation, Dirk Weltz, Brice Clocher\n"
+"\n"
+"Version\n"
+"iPhone {0}\n"
+"Core {1}\n"
+"\n"
+"Benutzt Teile anderer Produkte (Copyrights siehe dort):\n"
+"Groundspeak, NLua, KeraLua, KopiLua, Lua "
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenController.cs:599
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenDetailiOS.cs:293
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenDialog.cs:75
+#: Screens/ScreenController.cs:764 Screens/ScreenDetailiOS.cs:317
+#: Screens/ScreenDialog.cs:75
+msgid "Ok"
+msgstr "Ok"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenList.cs:70
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenMain.cs:149
+#: Screens/ScreenList.cs:78 Screens/ScreenMain.cs:149
+msgid "Locations"
+msgstr "Orte"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenList.cs:79
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenMain.cs:158
+#: Screens/ScreenList.cs:87 Screens/ScreenMain.cs:158
+msgid "You see"
+msgstr "Umgebung"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenList.cs:88
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenMain.cs:167
+#: Screens/ScreenList.cs:96 Screens/ScreenMain.cs:167
+msgid "Inventory"
+msgstr "Inhalt"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenList.cs:96
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenMain.cs:176
+#: Screens/ScreenList.cs:104 Screens/ScreenMain.cs:176
+msgid "Tasks"
+msgstr "Aufgaben"
+
+#: /Entwicklung/WF.Player.iOS/Screens/ScreenListiOS.cs:304
+#: Screens/ScreenListiOS.cs:303
+msgid "Inside"
+msgstr "Innerhalb"
+
+#: /Entwicklung/WF.Player.iOS/WF.Player.Core/Core/Cartridge.cs:365
+msgid "No items"
+msgstr "Keine Dinge"
+
+#: /Entwicklung/WF.Player.iOS/WF.Player.Core/Core/Cartridge.cs:377
+msgid "No new tasks"
+msgstr "Keine neuen Aufgaben"
+
+#: /Entwicklung/WF.Player.iOS/WF.Player.Core/Core/Cartridge.cs:389
+msgid "Nothing of interest"
+msgstr "Nichts von Interesse"
+
+#: /Entwicklung/WF.Player.iOS/WF.Player.Core/Core/Cartridge.cs:401
+msgid "Nowhere to go"
+msgstr "Keine Orte"
+
+#: /Entwicklung/WF.Player.iOS/WF.Player.Core/Core/Command.cs:77
+msgid "Nothing available"
+msgstr "Nichts verfügbar"
+
+#: CartridgeDetail.cs:150
+#, csharp-format
+msgid "Would you delete the cartridge {0} and all log/save files?"
+msgstr ""
+"Soll die Cartridge {0} und alle Log-/Sicherungs-Dateien gelöscht werden?"
+
+#: Screens/ScreenMap.cs:299
+msgid "Focus on"
+msgstr "Fokussieren auf"
+
+#: Screens/ScreenMap.cs:304
+msgid "Playing area"
+msgstr "Spielbereich"
+
+#: Screens/ScreenMap.cs:305
+msgid "Location"
+msgstr "Standort"
+
+#: Screens/ScreenMap.cs:352
+msgid "Type of map"
+msgstr "Art der Karte"
+
+#: Screens/ScreenMap.cs:353
+msgid "Google Maps"
+msgstr "Google Maps"
+
+#: Screens/ScreenMap.cs:354
+msgid "Google Satellite"
+msgstr "Google Satellit"
+
+#: Screens/ScreenMap.cs:355
+msgid "Google Terrain"
+msgstr "Google Gelände"
+
+#: Screens/ScreenMap.cs:356
+msgid "Google Hybrid"
+msgstr "Google Hybrid"
+
+#: Screens/ScreenMap.cs:357
+msgid "OpenStreetMap"
+msgstr "OpenStreetMap"
+
+#: Screens/ScreenMap.cs:358
+msgid "OpenCycleMap"
+msgstr "OpenCycleMap"
+
+#: Screens/ScreenMap.cs:359
+msgid "None"
+msgstr "Keine"
+
+#: Screens/ScreenMap.cs:608
+msgid "Contains {0}"
+msgstr "Enthält {0}"
+

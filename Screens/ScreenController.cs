@@ -86,7 +86,8 @@ namespace WF.Player.Android
 		/// </summary>
 		public override void OnBackPressed()
 		{
-			if (SupportFragmentManager.Fragments [0] is ScreenList || SupportFragmentManager.Fragments [0] is ScreenDetail || SupportFragmentManager.Fragments [0] is ScreenMap)
+			if (SupportFragmentManager.Fragments [0] is ScreenList || SupportFragmentManager.Fragments [0] is ScreenDetail 
+				|| SupportFragmentManager.Fragments [0] is ScreenMap || SupportFragmentManager.Fragments[0] is ScreenDialog)
 				RemoveScreen (ActiveScreenType());
 			else if (SupportFragmentManager.Fragments [0] is ScreenMain)
 				Quit();
