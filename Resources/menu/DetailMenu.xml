@@ -13,12 +13,12 @@
         android:title="@string/menu_detail_delete"/>
     <item
         android:id="@+id/menu_detail_resume"
-        android:icon="@android:drawable/ic_menu_rotate"
+        android:icon="@drawable/ic_menu_restart"
         android:title="@string/menu_detail_resume"
         wfplayer:showAsAction="always"/>
     <item
         android:id="@+id/menu_detail_start"
-        android:icon="@android:drawable/ic_menu_directions"
+        android:icon="@drawable/ic_menu_start"
         android:title="@string/menu_detail_start"
         wfplayer:showAsAction="always"/>
 </menu>

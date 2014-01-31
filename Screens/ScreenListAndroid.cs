@@ -136,7 +136,7 @@ namespace WF.Player.Android
 			StartEvents();
 
 			if (type == ScreenType.Locations || type == ScreenType.Items)
-				((MainApp)ctrl.Application).GPS.HeadingChanged += OnHeadingChanged;
+				MainApp.Instance.GPS.HeadingChanged += OnHeadingChanged;
 
 			Refresh(true);
 		}
@@ -146,7 +146,7 @@ namespace WF.Player.Android
 			base.OnStop();
 
 			if (type == ScreenType.Locations || type == ScreenType.Items)
-				((MainApp)ctrl.Application).GPS.HeadingChanged -= OnHeadingChanged;
+				MainApp.Instance.GPS.HeadingChanged -= OnHeadingChanged;
 
 			StopEvents();
 		}
@@ -264,7 +264,7 @@ namespace WF.Player.Android
 							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0)
 								imageDirection.SetImageBitmap (ctrl.DrawCenter ());
 							else
-								imageDirection.SetImageBitmap (ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + ((MainApp)ctrl.Application).GPS.Heading));
+								imageDirection.SetImageBitmap (ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + MainApp.Instance.GPS.Heading));
 						} else {
 							textDistance.Visibility = ViewStates.Gone;
 							imageDirection.Visibility = ViewStates.Gone;

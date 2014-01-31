@@ -187,7 +187,7 @@ namespace WF.Player.Android
 				engine.Pause();
 
 			// Remove from GPS
-			((MainApp)Application).GPS.LocationChanged -= OnRefreshLocation;
+			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
 		}
 
 		/// <summary>
@@ -202,7 +202,7 @@ namespace WF.Player.Android
 			SupportActionBar.SetHomeButtonEnabled(true);
 
 			// Add to GPS
-			((MainApp)Application).GPS.LocationChanged += OnRefreshLocation;
+			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
 
 			// Restart engine
 			if (engine != null && engine.GameState == EngineGameState.Paused)
@@ -269,7 +269,9 @@ namespace WF.Player.Android
 			builder.SetMessage(Resource.String.screen_save_before_quit);
 			builder.SetCancelable(true);
 			builder.SetPositiveButton(Resource.String.screen_save_before_quit_yes, delegate { engine.Save(new FileStream(cartridge.SaveFilename,FileMode.Create)); DestroyEngine (); Finish(); });
-			builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
+			// TODO: Works this also on devices with API < 14 (Pre 4.0)
+			// var test = Build.VERSION.SdkInt;
+			// builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
 			builder.SetNegativeButton(Resource.String.screen_save_before_quit_no, delegate { DestroyEngine (); Finish(); });
 			builder.Show();
 		}
@@ -280,7 +282,7 @@ namespace WF.Player.Android
 		public void Restore()
 		{
 			if (engine != null) {
-				engine.RefreshLocation(((MainApp)Application).GPS.Latitude, ((MainApp)Application).GPS.Longitude, ((MainApp)Application).GPS.Altitude, ((MainApp)Application).GPS.Accuracy);
+				engine.RefreshLocation(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 				engine.Restore (new FileStream (cartridge.SaveFilename, FileMode.Open));
 			}
 		}
@@ -299,7 +301,7 @@ namespace WF.Player.Android
 		public void Start()
 		{
 			if (engine != null) {
-				engine.RefreshLocation(((MainApp)Application).GPS.Latitude, ((MainApp)Application).GPS.Longitude, ((MainApp)Application).GPS.Altitude, ((MainApp)Application).GPS.Accuracy);
+				engine.RefreshLocation(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 				engine.Start ();
 			}
 		}
@@ -440,6 +442,37 @@ namespace WF.Player.Android
 			}
 		}
 
+		public Bitmap ConvertMediaToBitmap(Media media, int maxWidth = -1)
+		{
+			Bitmap result = BitmapFactory.DecodeByteArray (media.Data, 0, media.Data.Length);
+
+			// We need to adjust the height if the width of the bitmap is
+			// smaller than the view width, otherwise the image will be boxed.
+			if (result.Width > 0) {
+				var metrics = Resources.DisplayMetrics;
+				int width = (int)(result.Width * metrics.Density);
+				int height = (int)(result.Height * metrics.Density);
+
+				maxWidth = maxWidth < 0 ? (int)(metrics.WidthPixels - 2 * Resources.GetDimension(Resource.Dimension.screen_frame)) : maxWidth;
+				int maxHeight = (int)(0.5 * metrics.HeightPixels);
+
+				if (width > maxWidth) {
+					double factor = (double)maxWidth / (double)width;
+					width = maxWidth;
+					height = (int)(height * factor);
+				}
+
+				if (height > maxHeight) {
+					double factor = (double)maxHeight / (double)height;
+					height = maxHeight;
+					width = (int)(width * factor);
+				}
+
+				result = Bitmap.CreateScaledBitmap(result, width, height, true);
+			}
+			return result;
+		}
+
 		#endregion
 
 		#region Events of Engine
@@ -559,8 +592,8 @@ namespace WF.Player.Android
 		/// <param name="e">Event arguments.</param>
 		private void OnRefreshLocation(Object sender, LocationChangedEventArgs e)
 		{
-			if (engine != null && (engine.Latitude != ((MainApp)Application).GPS.Latitude || engine.Longitude != ((MainApp)Application).GPS.Longitude || engine.Altitude != ((MainApp)Application).GPS.Altitude || engine.Accuracy != ((MainApp)Application).GPS.Accuracy))
-				engine.RefreshLocation (((MainApp)Application).GPS.Latitude, ((MainApp)Application).GPS.Longitude, ((MainApp)Application).GPS.Altitude, ((MainApp)Application).GPS.Accuracy);
+			if (engine != null && (engine.Latitude != MainApp.Instance.GPS.Latitude || engine.Longitude != MainApp.Instance.GPS.Longitude || engine.Altitude != MainApp.Instance.GPS.Altitude || engine.Accuracy != MainApp.Instance.GPS.Accuracy))
+				engine.RefreshLocation (MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 		}
 
 		/// <summary>

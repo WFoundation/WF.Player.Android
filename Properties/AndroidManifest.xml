@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="WF.Player" android:installLocation="preferExternal" android:versionName="0.3" android:versionCode="2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="WF.Player" android:installLocation="preferExternal" android:versionName="0.3" android:versionCode="3">
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
 	<application android:label="WF.Player" android:icon="@drawable/icon">
 		<!-- Put your Google Maps V2 API Key here. -->

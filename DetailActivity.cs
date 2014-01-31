@@ -60,15 +60,6 @@ namespace WF.Player.Android
 
 			base.OnCreate (bundle);
 
-			// Create your application here
-			// Set our view from the "main" layout resource
-
-//			webView = FindViewById<WebView> (Resource.Id.webView);
-//			webView.SetWebViewClient (new DetailWebViewClient ());
-//			webView.Settings.AllowFileAccess = true;
-//			webView.Settings.JavaScriptEnabled = true;
-//			webView.Settings.BuiltInZoomControls = false;
-
 			SupportActionBar.NavigationMode = global::Android.Support.V7.App.ActionBar.NavigationModeTabs;
 			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
 
@@ -116,8 +107,12 @@ namespace WF.Player.Android
 			if (cart != null) {
 				menuSave.SetVisible (!File.Exists (cart.Filename));
 				menuDelete.SetVisible (File.Exists (cart.Filename));
-				menuResume.SetVisible (File.Exists (cart.SaveFilename));
-				menuStart.SetVisible (File.Exists (cart.Filename));
+				menuResume.SetVisible (true);
+				menuResume.SetEnabled(File.Exists (cart.SaveFilename));
+				menuResume.Icon.SetAlpha(menuResume.IsEnabled ? 255 : 96);
+				menuStart.SetVisible (true);
+				menuStart.SetEnabled(File.Exists (cart.Filename));
+				menuStart.Icon.SetAlpha(menuStart.IsEnabled ? 255 : 96);
 			}
 
 			return base.OnCreateOptionsMenu(menu);
@@ -143,24 +138,35 @@ namespace WF.Player.Android
 					}
 					break;
 				case Resource.Id.menu_detail_delete:
-					if (!String.IsNullOrEmpty(cart.Filename) && File.Exists (cart.Filename))
-						File.Delete (cart.Filename);
-					if (!String.IsNullOrEmpty(cart.SaveFilename) && File.Exists (cart.SaveFilename))
-						File.Delete (cart.SaveFilename);
-					if (!String.IsNullOrEmpty(cart.LogFilename) && File.Exists (cart.LogFilename))
-						File.Delete (cart.LogFilename);
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.SetTitle(Strings.GetString("Delete"));
+					builder.SetMessage(Strings.GetStringFmt("Would you delete the cartridge {0} and all log/save files?", cart.Name));
+					builder.SetCancelable(true);
+					builder.SetPositiveButton(Strings.GetString("Yes"), delegate { 
+						if (!String.IsNullOrEmpty(cart.Filename) && File.Exists (cart.Filename))
+							File.Delete (cart.Filename);
+						if (!String.IsNullOrEmpty(cart.SaveFilename) && File.Exists (cart.SaveFilename))
+							File.Delete (cart.SaveFilename);
+						if (!String.IsNullOrEmpty(cart.LogFilename) && File.Exists (cart.LogFilename))
+							File.Delete (cart.LogFilename);
+					});
+					// TODO: Works this also on devices with API < 14 (Pre 4.0)
+					// var test = Build.VERSION.SdkInt;
+					// builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
+					builder.SetNegativeButton(Strings.GetString("No"), delegate { });
+					builder.Show();
 					break;
 				case Resource.Id.menu_detail_start:
 					intent = new Intent (this, typeof(ScreenController));
 					intent.PutExtra ("cartridge", cart.Filename);
 					intent.PutExtra ("restore", false);
-					StartActivity (intent);
+					Start(intent);
 					break;
 				case Resource.Id.menu_detail_resume:
 					intent = new Intent (this, typeof(ScreenController));
 					intent.PutExtra ("cartridge", cart.Filename);
 					intent.PutExtra ("restore", true);
-					StartActivity (intent);
+					Start(intent);
 					break;
 				default:
 					Toast.MakeText (this, "Got click: " + item.ToString (), ToastLength.Long).Show ();
@@ -169,8 +175,12 @@ namespace WF.Player.Android
 
 			menuSave.SetVisible (!File.Exists (cart.Filename));
 			menuDelete.SetVisible (File.Exists (cart.Filename));
-			menuStart.SetVisible (File.Exists (cart.Filename));
-			menuResume.SetVisible (File.Exists (cart.SaveFilename));
+			menuResume.SetVisible (true);
+			menuResume.SetEnabled(File.Exists (cart.SaveFilename));
+			menuResume.Icon.SetAlpha(menuResume.IsEnabled ? 255 : 96);
+			menuStart.SetVisible (true);
+			menuStart.SetEnabled(File.Exists (cart.Filename));
+			menuStart.Icon.SetAlpha(menuStart.IsEnabled ? 255 : 96);
 
 			return true;
 		}
@@ -217,9 +227,6 @@ namespace WF.Player.Android
 
 		public void OnButtonStartClick(object sender, EventArgs e)
 		{
-			var toast = Toast.MakeText (this,"Start clicked.",ToastLength.Short);
-			toast.Show ();
-
 			Intent intent = new Intent (this, typeof(ScreenController));
 
 			intent.PutExtra ("cartridge", intent.GetIntExtra ("cartridge", 0));
@@ -257,20 +264,40 @@ namespace WF.Player.Android
 			ListView listView = FindViewById<ListView> (Resource.Id.listView);
 			DetailInfoAdapter adapter = new DetailInfoAdapter(this, entries);
 
-			listView.Adapter = adapter;
+			if (entries.Count == 0 && cart.Poster == null) {
+				LinearLayout ll = FindViewById<LinearLayout> (Resource.Id.layoutDetailInfo);
+				ll.RemoveAllViews();
+				TextView tv = new TextView(this);
+				tv.Text = Strings.GetString("No info availible");
+				ll.AddView(tv);
+			} else
+				listView.Adapter = adapter;
 		}
 
 		private void InitDetailDescription()
 		{
 			SetContentView (Resource.Layout.DetailDescription);
 			TextView textView = FindViewById<TextView> (Resource.Id.textView);
-			textView.Text = cart.LongDescription;
+			if (String.IsNullOrEmpty(cart.LongDescription))
+				textView.Text = Strings.GetString("No description availible");
+			else
+				textView.Text = cart.LongDescription;
 		}
 
 
 		private void InitDetailLogs()
 		{
 			SetContentView (Resource.Layout.DetailLogs);
+		}
+
+		void Start(Intent i)
+		{
+			try {
+				StartActivity (i);
+			}
+			catch (Exception e)
+			{
+			}
 		}
 
 		#endregion

@@ -52,8 +52,8 @@ namespace WF.Player.Android
 			Catalog.Implementation = new Vernacular.AndroidCatalog (Resources, typeof (Resource.String));
 
 			// Create object for location listener
-			((MainApp)this.Application).GPS = new LocListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
-			((MainApp)this.Application).GPS.Start();
+			MainApp.Instance.GPS = new LocListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
+			MainApp.Instance.GPS.Start();
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
@@ -62,7 +62,7 @@ namespace WF.Player.Android
 
 			pref.GetString ("Username", GetString (Resource.String.main_unknown));
 
-			((MainApp)Application).LocationChanged += OnLocationChanged;
+			MainApp.Instance.GPS.LocationChanged += OnLocationChanged;
 
 			var textUsername = FindViewById<TextView> (Resource.Id.textUsername);
 			textUsername.Text = "charlenni";
@@ -97,7 +97,7 @@ namespace WF.Player.Android
 			base.OnResume ();
 
 			// Add to location listener
-			((MainApp)this.Application).GPS.LocationChanged += OnLocationChanged;
+			MainApp.Instance.GPS.LocationChanged += OnLocationChanged;
 		}
 
 		protected override void OnPause()
@@ -105,7 +105,7 @@ namespace WF.Player.Android
 			base.OnPause ();
 
 			// Remove to location listener
-			((MainApp)this.Application).GPS.LocationChanged -= OnLocationChanged;
+			MainApp.Instance.GPS.LocationChanged -= OnLocationChanged;
 		}
 
 		public void buttonOfflineClick(object sender, EventArgs args)

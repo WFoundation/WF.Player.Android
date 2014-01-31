@@ -169,11 +169,11 @@ namespace WF.Player.Android
 		/// <param name="item">Item, which is selected.</param>
 		public override bool OnOptionsItemSelected(IMenuItem item)
 		{
-			if (item == menuSave) {
+			if (item.ItemId == menuSave.ItemId) {
 				ctrl.Save();
 				return false;
 			}
-			if (item == menuQuit) {
+			if (item.ItemId == menuQuit.ItemId) {
 				ctrl.Quit();
 				return false;
 			}

@@ -30,26 +30,42 @@ using Android.Views;
 using Android.Widget;
 using Android.Locations;
 using Vernacular;
+using Com.TestFlightApp.Lib;
 using WF.Player.Core;
 using WF.Player.Core.Live;
 
 namespace WF.Player.Android
 {
-//	public delegate void LocationChangedEventHandler(Object IntentSender, LocationChangedEventArgs e);
-
 	[Application(Debuggable=true)]
 	public class MainApp : Application
 	{
+		static MainApp instance;
+
 		Activity activeActivity;
+		ISharedPreferences preferences;
 		Cartridges cartridges;
 		LocListener locListener;
 		string path;
 
-		public event EventHandler<LocationChangedEventArgs> LocationChanged;
-
 		public MainApp(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
 		{
-			path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player";
+			// Save instance for later use
+			instance = this;
+
+			TestFlight.TakeOff(this, "0596e62a-e3cb-4107-8d05-96fa7ae0c26a");
+
+			// Catch unhandled exceptions
+			// Found at http://xandroid4net.blogspot.de/2013/11/how-to-capture-unhandled-exceptions.html
+			// Add an exception handler for all uncaught exceptions.
+			AndroidEnvironment.UnhandledExceptionRaiser += AndroidUnhandledExceptionHandler;
+			AppDomain.CurrentDomain.UnhandledException += ApplicationUnhandledExceptionHandler;
+
+			preferences = Application.Context.GetSharedPreferences("WF.Player.preferences", FileCreationMode.MultiProcess);
+
+			path = preferences.GetString("path", "");
+
+			if (String.IsNullOrEmpty(path))
+				path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player";
 
 			try {
 				if (!Directory.Exists (path))
@@ -62,21 +78,12 @@ namespace WF.Player.Android
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder (this);
 				builder.SetTitle (GetString (Resource.String.main_error));
-				builder.SetMessage(String.Format(GetString(Resource.String.main_error_directory_not_found),path));
+				builder.SetMessage(String.Format(GetString(Resource.String.main_error_directory_not_found), path));
 				builder.SetCancelable (true);
 				builder.SetNeutralButton(Resource.String.ok,(obj,arg) => { });
 				builder.Show ();
-			}
-		}
-
-		public Activity ActiveActivity {
-			get {
-				return activeActivity;
-			}
-			set {
-				if (activeActivity != value) {
-					activeActivity = value;
-				}
+			} else {
+				preferences.Edit().PutString("path", path).Commit();
 			}
 		}
 
@@ -87,6 +94,11 @@ namespace WF.Player.Android
 			set {
 				cartridges = value;
 			}
+		}
+
+		public static MainApp Instance
+		{
+			get { return instance; }
 		}
 
 		public string Path {
@@ -104,12 +116,59 @@ namespace WF.Player.Android
 			}
 		}
 
-		private void OnLocationChanged(Object sender, LocationChangedEventArgs e)
-		{
-			if (LocationChanged != null)
-				LocationChanged (this, e);
+		#region Events
 
+		protected override void Dispose(bool disposing)
+		{
+			// Remove the exception handler.
+			AndroidEnvironment.UnhandledExceptionRaiser -= AndroidUnhandledExceptionHandler;
+			AppDomain.CurrentDomain.UnhandledException -= ApplicationUnhandledExceptionHandler;
+
+			base.Dispose(disposing);
 		}
+
+		void AndroidUnhandledExceptionHandler(object sender, RaiseThrowableEventArgs e)
+		{
+			//				
+			// When the UI Thread crashes this is the code that will be executed. There is no context at this point
+			// and no way to recover from the exception. This is where you would capture the error and log it to a
+			// file for example. You might be able to post to a web handler, I have not tried that.
+			//
+			// You can access the information about the exception in the args.Exception object.
+			//
+	
+			// Send the Exception to TestFlight.
+			TestFlight.SendCrash(e.Exception);
+
+			throw e.Exception;
+		}
+
+		void ApplicationUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+		{
+			//				
+			// When a background thread crashes this is the code that will be executed. You can
+			// recover from this.
+			// You might for example:
+			//  _CurrentActivity.RunOnUiThread(() => Toast.MakeText(_CurrentActivity, "Unhadled Exception was thrown", ToastLength.Short).Show());
+			// 
+			// or
+			//
+			// _CurrentActivity.StartActivity(typeof(SomeClass));
+			// _CurrentActivity.Finish();
+			//
+			// It is up to the developer as to what he/she wants to do here.
+			//
+			// If you are requiring a minimum version less than API 14, you would have to set _CurrentActivity in each time
+			// the a different activity is brought to the foreground.
+			//
+
+			// Send the Exception to TestFlight.
+			TestFlight.SendCrash(e.ToString());
+
+			throw new System.Exception(e.ToString());
+		}
+
+		#endregion
 	}
 }
 

@@ -50,6 +50,9 @@
     <Reference Include="Xamarin.Android.Support.v7.AppCompat">
       <HintPath>Components\xamandroidsupportv7appcompat-7.18.0\lib\android\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
     </Reference>
+    <Reference Include="TestFlightBindings">
+      <HintPath>lib\TestFlightBindings.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="CheckLocation.cs" />
     <Compile Include="LocListener.cs" />
     <Compile Include="Screens\ScreenMap.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -83,6 +87,8 @@
     <None Include="lib\Vernacular.Android.dll" />
     <None Include="lib\Vernacular.Android.dll.mdb" />
     <None Include="lib\Vernacular.Android.pdb" />
+    <None Include="lib\TestFlightBindings.dll" />
+    <None Include="lib\TestFlightBindings.pdb" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -362,6 +368,15 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\edit_background.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ab_texture_tile_.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ab_texture_tile_.png" />
+    <AndroidResource Include="Resources\layout\Settings.axml" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_menu_restart.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_menu_start.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_restart.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_menu_start.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_menu_restart.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_menu_start.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_restart.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_start.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

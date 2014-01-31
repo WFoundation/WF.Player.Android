@@ -76,7 +76,7 @@ namespace WF.Player.Android
 			base.OnResume();
 
 			// Add to GPS
-			((MainApp)Activity.Application).GPS.LocationChanged += OnRefreshLocation;
+			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
 
 			Refresh();
 		}
@@ -86,7 +86,7 @@ namespace WF.Player.Android
 			base.OnPause ();
 
 			// Remove from GPS
-			((MainApp)Activity.Application).GPS.LocationChanged -= OnRefreshLocation;
+			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
 		}
 
 		void OnButtonClicked (object sender, EventArgs e)
@@ -96,8 +96,6 @@ namespace WF.Player.Android
 
 		void OnRefreshLocation (object sender, global::Android.Locations.LocationChangedEventArgs e)
 		{
-			activeLocation = e.Location;
-
 			Refresh();
 		}
 
@@ -106,15 +104,15 @@ namespace WF.Player.Android
 			((ScreenController)Activity).SupportActionBar.Title = Strings.GetString("GPS Check");
 
 			textDescription.Text = Strings.GetString("For much fun with the cartridge, you should wait for a good accuracy of your GPS signal.");
-			if (activeLocation != null) {
-				textCoordinates.Text = Strings.GetStringFmt("Current Coordinates\n{0}", coordinatesToString(activeLocation.Latitude, activeLocation.Longitude));
-				textAccuracy.Text = Strings.GetStringFmt("Current Accuracy\n{0} m", (int)activeLocation.Accuracy);
+			if (MainApp.Instance.GPS.IsValid) {
+				textCoordinates.Text = Strings.GetStringFmt("Current Coordinates\n{0}", coordinatesToString(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude));
+				textAccuracy.Text = Strings.GetStringFmt("Current Accuracy\n{0} m", (int)MainApp.Instance.GPS.Accuracy);
 			} else {
 				textCoordinates.Text = Strings.GetStringFmt("Current Coordinates\n{0}", Strings.GetString("unknown"));
 				textAccuracy.Text = Strings.GetStringFmt("Current Accuracy\n{0} m", Strings.Infinite);
 			}
 
-			if (activeLocation != null && activeLocation.Accuracy < 30) {
+			if (MainApp.Instance.GPS.IsValid &&MainApp.Instance.GPS.Accuracy < 30) {
 				button.Text = Strings.GetString("Start");
 				button.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light_green);
 			} else {

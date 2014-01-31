@@ -205,10 +205,10 @@ namespace WF.Player.Android
 			if (input == null) {
 				// Normal dialog
 				// TODO: HTML
-				textDescription.TextFormatted = Html.FromHtml(messageBox.HTML.Replace("&lt;BR&gt;", "<br>"));
+				textDescription.Text = messageBox.Text; // Html.FromHtml(messageBox.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
+				textDescription.Gravity = GravityFlags.Left;
 				if (messageBox.Image != null) {
-					Bitmap bm = BitmapFactory.DecodeByteArray (messageBox.Image.Data, 0, messageBox.Image.Data.Length);
-					imageView.SetImageBitmap (bm);
+					imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(messageBox.Image));
 					imageView.Visibility = ViewStates.Visible;
 				} else {
 					imageView.Visibility = ViewStates.Gone;
@@ -225,10 +225,10 @@ namespace WF.Player.Android
 					btnView2.Visibility = ViewStates.Gone;
 			} else {
 				// TODO: HTML
-				textDescription.TextFormatted = Html.FromHtml(input.HTML.Replace("&lt;BR&gt;", "<br>"));
+				textDescription.Text = input.Text; // Html.FromHtml(input.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
+				textDescription.Gravity = GravityFlags.Left;
 				if (input.Image != null) {
-					Bitmap bm = BitmapFactory.DecodeByteArray (input.Image.Data, 0, input.Image.Data.Length);
-					imageView.SetImageBitmap (bm);
+					imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(input.Image));
 					imageView.Visibility = ViewStates.Visible;
 				} else {
 					imageView.Visibility = ViewStates.Gone;

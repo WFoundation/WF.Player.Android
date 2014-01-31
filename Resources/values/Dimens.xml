@@ -7,5 +7,7 @@
     <dimen name="tiny_text">10dp</dimen>
     <dimen name="input">120dp</dimen>
     <dimen name="input_long">220dp</dimen>
+
+    <dimen name="screen_frame">10dp</dimen>
 </resources>
 

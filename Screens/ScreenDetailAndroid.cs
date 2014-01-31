@@ -240,29 +240,23 @@ namespace WF.Player.Android
 				if (what.Equals ("") || what.Equals ("Media")) {
 					Bitmap bm = null;
 
-					try {
-						if (activeObject.Image != null) {
-							bm = BitmapFactory.DecodeByteArray (activeObject.Image.Data, 0, activeObject.Image.Data.Length);
-						}
-						if (bm != null) {
-							imageView.SetImageBitmap (bm);
-							imageView.Visibility = ViewStates.Visible;
-						} else {
-							imageView.Visibility = ViewStates.Gone;
-						}
-					} finally {
-						if (bm != null)
-							bm.Dispose();
+					if (activeObject.Image != null) {
+						imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(activeObject.Image));
+						imageView.Visibility = ViewStates.Visible;
+					} else {
+						imageView.Visibility = ViewStates.Gone;
 					}
 				}
 
 				if (what.Equals ("") || what.Equals ("Description")) {
 					if (!String.IsNullOrWhiteSpace (activeObject.Description)) {
 						textDescription.Visibility = ViewStates.Visible;
-						textDescription.TextFormatted = Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>"));
+						textDescription.Text = activeObject.Description; // Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
+						textDescription.Gravity = GravityFlags.Left;
 					} else {
 						textDescription.Visibility = ViewStates.Visible;
 						textDescription.Text = "";
+						textDescription.Gravity = GravityFlags.Left;
 					}
 				}
 				// Tasks don't have any command button
