@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using Android.App;
 using Android.Content;
 using Android.Hardware;
@@ -35,6 +36,7 @@ namespace WF.Player.Android
 	{
 		LocationManager locManager;
 		SensorManager sensorManager;
+		Timer timer;
 		Sensor accelerometer;
 		Sensor magnetometer;
 		string locationProvider;
@@ -112,6 +114,12 @@ namespace WF.Player.Android
 
 		public void Start()
 		{
+			// If there is a timer for stop, than remove it
+			if (timer != null) {
+				timer.Stop();
+				timer = null;
+			}
+
 			// Now activate location updates
 			locManager.RequestLocationUpdates(locationProvider, 500, 1, this);
 
@@ -123,14 +131,31 @@ namespace WF.Player.Android
 
 		public void Stop()
 		{
-			locManager.RemoveUpdates(this);
+			if (timer != null) {
+				timer.Stop();
+			} else {
+				timer = new Timer();
+			}
 
-			sensorManager.UnregisterListener(this);
-
-			valid = false;
+			// Set interval to 3 seconds. This is the time while running GPS in background
+			timer.Interval = 3000;
+			timer.Elapsed += OnTimerTick;
+			timer.Start();
 		}
 
 		#region LocationListener Events
+
+		void OnTimerTick (object sender, ElapsedEventArgs e)
+		{
+			locManager.RemoveUpdates(this);
+			sensorManager.UnregisterListener(this);
+
+			valid = false;
+
+			timer.Stop();
+			timer.Elapsed -= OnTimerTick;
+			timer = null;
+		}
 
 		/// <summary>
 		/// Called when the location has changed.

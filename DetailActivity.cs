@@ -235,11 +235,41 @@ namespace WF.Player.Android
 			StartActivity (intent);
 		}
 
+		/// <summary>
+		/// Raised, when the activity lost the focus.
+		/// </summary>
+		protected override void OnPause()
+		{
+			base.OnPause ();
+
+			// Remove from GPS
+			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
+			MainApp.Instance.GPS.Stop();
+		}
+
+		/// <summary>
+		/// Raised, when the activity get the focus.
+		/// </summary>
+		protected override void OnResume()
+		{
+			base.OnResume();
+
+			// Add to GPS
+			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
+			MainApp.Instance.GPS.Start();
+
+			Refresh();
+		}
+
+		void OnRefreshLocation (object sender, global::Android.Locations.LocationChangedEventArgs e)
+		{
+		}
+
 		#endregion
 
 		#region Private Functions
 
-		private void InitDetailInfo()
+		void InitDetailInfo()
 		{
 			SetContentView (Resource.Layout.DetailInfo);
 
@@ -274,7 +304,7 @@ namespace WF.Player.Android
 				listView.Adapter = adapter;
 		}
 
-		private void InitDetailDescription()
+		void InitDetailDescription()
 		{
 			SetContentView (Resource.Layout.DetailDescription);
 			TextView textView = FindViewById<TextView> (Resource.Id.textView);
@@ -285,7 +315,7 @@ namespace WF.Player.Android
 		}
 
 
-		private void InitDetailLogs()
+		void InitDetailLogs()
 		{
 			SetContentView (Resource.Layout.DetailLogs);
 		}
@@ -298,6 +328,10 @@ namespace WF.Player.Android
 			catch (Exception e)
 			{
 			}
+		}
+
+		void Refresh()
+		{
 		}
 
 		#endregion

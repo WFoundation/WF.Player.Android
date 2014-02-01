@@ -90,6 +90,41 @@ namespace WF.Player.Android
 			return base.OnOptionsItemSelected(item); 
 		}
 
+		protected override void OnPause()
+		{
+			base.OnPause ();
+
+			// Remove from GPS
+			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
+			MainApp.Instance.GPS.Stop();
+		}
+
+		/// <summary>
+		/// Raised, when the activity get the focus.
+		/// </summary>
+		protected override void OnResume()
+		{
+			base.OnResume();
+
+			// Add to GPS
+			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
+			MainApp.Instance.GPS.Start();
+
+			Refresh();
+		}
+
+		void OnRefreshLocation (object sender, global::Android.Locations.LocationChangedEventArgs e)
+		{
+		}
+
+		#endregion
+
+		#region Private Functions
+
+		void Refresh()
+		{
+		}
+
 		#endregion
 
 	}

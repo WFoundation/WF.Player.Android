@@ -188,6 +188,7 @@ namespace WF.Player.Android
 
 			// Remove from GPS
 			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
+			MainApp.Instance.GPS.Stop();
 		}
 
 		/// <summary>
@@ -203,6 +204,7 @@ namespace WF.Player.Android
 
 			// Add to GPS
 			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
+			MainApp.Instance.GPS.Start();
 
 			// Restart engine
 			if (engine != null && engine.GameState == EngineGameState.Paused)

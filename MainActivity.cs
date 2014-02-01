@@ -53,7 +53,6 @@ namespace WF.Player.Android
 
 			// Create object for location listener
 			MainApp.Instance.GPS = new LocListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
-			MainApp.Instance.GPS.Start();
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
@@ -61,8 +60,6 @@ namespace WF.Player.Android
 			ISharedPreferences pref = GetPreferences (FileCreationMode.WorldWriteable);
 
 			pref.GetString ("Username", GetString (Resource.String.main_unknown));
-
-			MainApp.Instance.GPS.LocationChanged += OnLocationChanged;
 
 			var textUsername = FindViewById<TextView> (Resource.Id.textUsername);
 			textUsername.Text = "charlenni";
@@ -80,7 +77,7 @@ namespace WF.Player.Android
 			textAccuracyText.Text = GetString (Resource.String.main_accuracy);
 
 			var textAccuracy = FindViewById<TextView> (Resource.Id.textAccuracy);
-			textAccuracy.Text = String.Format ("{0:0} m", 0);
+			textAccuracy.Text = String.Format ("{0} m", Strings.Infinite);
 
 			var buttonOffline = FindViewById<Button>(Resource.Id.buttonOffline);
 			buttonOffline.Click += buttonOfflineClick;
@@ -98,6 +95,7 @@ namespace WF.Player.Android
 
 			// Add to location listener
 			MainApp.Instance.GPS.LocationChanged += OnLocationChanged;
+			MainApp.Instance.GPS.Start();
 		}
 
 		protected override void OnPause()
@@ -106,6 +104,7 @@ namespace WF.Player.Android
 
 			// Remove to location listener
 			MainApp.Instance.GPS.LocationChanged -= OnLocationChanged;
+			MainApp.Instance.GPS.Stop();
 		}
 
 		public void buttonOfflineClick(object sender, EventArgs args)
