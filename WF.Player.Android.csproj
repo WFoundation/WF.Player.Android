@@ -377,6 +377,10 @@
     <AndroidResource Include="Resources\drawable-xhdpi\ic_menu_start.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_restart.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_menu_start.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_position.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_position.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_position.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_position.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

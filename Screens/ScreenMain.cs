@@ -40,6 +40,7 @@ namespace WF.Player.Android
 		object iconYouSee;
 		object iconInventory;
 		object iconTask;
+		object iconPosition;
 
 		#region Common Functions
 
@@ -128,6 +129,8 @@ namespace WF.Player.Android
 					}
 				}
 				break;
+			case 4:
+				break;
 			}
 
 		}
@@ -188,9 +191,14 @@ namespace WF.Player.Android
 						itemsList.Add((((Task)o).Complete ? (((Task)o).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + (o.Name == null ? "" : o.Name));
 					}
 					break;
+				case 4:
+					header = Strings.GetString("Position");
+					image = iconPosition;
+					break;
 				}
 
-				header = String.Format("{0} [{1}]", header, itemsList.Count);
+				if (position < 4)
+					header = String.Format("{0} [{1}]", header, itemsList.Count);
 
 				if (itemsList.Count == 0)
 					items = empty;

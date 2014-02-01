@@ -123,6 +123,7 @@ namespace WF.Player.Android
 			iconYouSee = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_yousee);
 			iconInventory = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_inventory);
 			iconTask = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_tasks);
+			iconPosition = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_position);
 
 			// Load layout
 			var view = inflater.Inflate(Resource.Layout.ScreenMain, container, false);
@@ -146,6 +147,7 @@ namespace WF.Player.Android
 			iconYouSee = null;
 			iconInventory = null;
 			iconTask = null;
+			iconPosition = null;
 			menuQuit = null;
 			menuSave = null;
 			listView = null;
@@ -194,6 +196,8 @@ namespace WF.Player.Android
 
 			StartEvents();
 
+			MainApp.Instance.GPS.LocationChanged += OnLocationChanged;
+
 			listView.Invalidate ();
 		}
 
@@ -204,7 +208,14 @@ namespace WF.Player.Android
 		{
 			base.OnStop();
 
+			MainApp.Instance.GPS.LocationChanged -= OnLocationChanged;
+
 			StopEvents();
+		}
+
+		void OnLocationChanged (object sender, global::Android.Locations.LocationChangedEventArgs e)
+		{
+			listView.Invalidate ();
 		}
 
 		#endregion
@@ -256,7 +267,7 @@ namespace WF.Player.Android
 		{
 			get 
 			{ 
-				return 4; 
+				return 5; 
 			}
 		}
 
@@ -315,6 +326,16 @@ namespace WF.Player.Android
 			object image;
 
 			owner.GetContentEntry(position, out header, out items, out image);
+
+			// For position we must generate text here
+			if (position == 4) {
+				var gps = MainApp.Instance.GPS;
+				var location = gps.IsValid ? gps.CoordinatesToString(gps.Latitude, gps.Longitude) : Strings.GetString("unknown");
+				var altitude = gps.HasAltitude ? String.Format("{0:0}", gps.Altitude) : "\u0335";
+				var accuracy = gps.HasAccuracy ? String.Format("{0:0}", gps.Accuracy) : Strings.Infinite;
+				var status = gps.IsValid ? Strings.GetString("valid") : Strings.GetString("invalid");
+				items = Strings.GetStringFmt("{0}\n\nAltitude:\t\t\t{1} m\nAccuracy:\t\t{2} m\nStatus:\t\t\t{3}", location, altitude, accuracy, status);;
+			}
 
 			using (var textHeader = view.FindViewById<TextView>(Resource.Id.textHeader)) {
 				textHeader.SetText(header, TextView.BufferType.Normal);

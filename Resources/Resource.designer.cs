@@ -933,82 +933,85 @@ namespace WF.Player.Android
 			public const int ic_menu_start = 2130837631;
 			
 			// aapt resource value: 0x7f020080
-			public const int ic_quit = 2130837632;
+			public const int ic_position = 2130837632;
 			
 			// aapt resource value: 0x7f020081
-			public const int ic_save = 2130837633;
+			public const int ic_quit = 2130837633;
 			
 			// aapt resource value: 0x7f020082
-			public const int ic_tasks = 2130837634;
+			public const int ic_save = 2130837634;
 			
 			// aapt resource value: 0x7f020083
-			public const int ic_yousee = 2130837635;
+			public const int ic_tasks = 2130837635;
 			
 			// aapt resource value: 0x7f020084
-			public const int icon = 2130837636;
+			public const int ic_yousee = 2130837636;
 			
 			// aapt resource value: 0x7f020085
-			public const int list_focused_ = 2130837637;
+			public const int icon = 2130837637;
 			
 			// aapt resource value: 0x7f020086
-			public const int list_pressed_ = 2130837638;
+			public const int list_focused_ = 2130837638;
 			
 			// aapt resource value: 0x7f020087
-			public const int menu_dropdown_panel_ = 2130837639;
+			public const int list_pressed_ = 2130837639;
 			
 			// aapt resource value: 0x7f020088
-			public const int progress_bg_ = 2130837640;
+			public const int menu_dropdown_panel_ = 2130837640;
 			
 			// aapt resource value: 0x7f020089
-			public const int progress_horizontal_ = 2130837641;
+			public const int progress_bg_ = 2130837641;
 			
 			// aapt resource value: 0x7f02008a
-			public const int progress_primary_ = 2130837642;
+			public const int progress_horizontal_ = 2130837642;
 			
 			// aapt resource value: 0x7f02008b
-			public const int progress_secondary_ = 2130837643;
+			public const int progress_primary_ = 2130837643;
 			
 			// aapt resource value: 0x7f02008c
-			public const int selectable_background_ = 2130837644;
+			public const int progress_secondary_ = 2130837644;
 			
 			// aapt resource value: 0x7f02008d
-			public const int spinner_ab_default_ = 2130837645;
+			public const int selectable_background_ = 2130837645;
 			
 			// aapt resource value: 0x7f02008e
-			public const int spinner_ab_disabled_ = 2130837646;
+			public const int spinner_ab_default_ = 2130837646;
 			
 			// aapt resource value: 0x7f02008f
-			public const int spinner_ab_focused_ = 2130837647;
+			public const int spinner_ab_disabled_ = 2130837647;
 			
 			// aapt resource value: 0x7f020090
-			public const int spinner_ab_pressed_ = 2130837648;
+			public const int spinner_ab_focused_ = 2130837648;
 			
 			// aapt resource value: 0x7f020091
-			public const int spinner_background_ab_ = 2130837649;
+			public const int spinner_ab_pressed_ = 2130837649;
 			
 			// aapt resource value: 0x7f020092
-			public const int splash = 2130837650;
+			public const int spinner_background_ab_ = 2130837650;
 			
 			// aapt resource value: 0x7f020093
-			public const int tab_indicator_ab_ = 2130837651;
+			public const int splash = 2130837651;
 			
 			// aapt resource value: 0x7f020094
-			public const int tab_selected_ = 2130837652;
+			public const int tab_indicator_ab_ = 2130837652;
 			
 			// aapt resource value: 0x7f020095
-			public const int tab_selected_focused_ = 2130837653;
+			public const int tab_selected_ = 2130837653;
 			
 			// aapt resource value: 0x7f020096
-			public const int tab_selected_pressed_ = 2130837654;
+			public const int tab_selected_focused_ = 2130837654;
 			
 			// aapt resource value: 0x7f020097
-			public const int tab_unselected_ = 2130837655;
+			public const int tab_selected_pressed_ = 2130837655;
 			
 			// aapt resource value: 0x7f020098
-			public const int tab_unselected_focused_ = 2130837656;
+			public const int tab_unselected_ = 2130837656;
 			
 			// aapt resource value: 0x7f020099
-			public const int tab_unselected_pressed_ = 2130837657;
+			public const int tab_unselected_focused_ = 2130837657;
+			
+			// aapt resource value: 0x7f02009a
+			public const int tab_unselected_pressed_ = 2130837658;
 			
 			static Drawable()
 			{

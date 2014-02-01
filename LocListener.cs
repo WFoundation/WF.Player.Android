@@ -40,11 +40,14 @@ namespace WF.Player.Android
 		Sensor accelerometer;
 		Sensor magnetometer;
 		string locationProvider;
+		Location location;
 		double lat;
 		double lon;
 		double alt;
 		double accuracy;
 		bool valid;
+		bool hasAltitude;
+		bool hasAccuracy;
 
 		public event EventHandler<LocationChangedEventArgs> LocationChanged;
 		public event EventHandler<EventArgs> HeadingChanged;
@@ -92,6 +95,12 @@ namespace WF.Player.Android
 			magnetometer = sensorManager.GetDefaultSensor(SensorType.MagneticField);
 		}
 
+		#region Members
+
+		public Location Location {
+			get { return location; }
+		}
+
 		public double Latitude {
 			get { return lat; }
 		}
@@ -111,6 +120,18 @@ namespace WF.Player.Android
 		public bool IsValid {
 			get { return valid; }
 		}
+
+		public bool HasAltitude {
+			get { return hasAltitude; }
+		}
+
+		public bool HasAccuracy {
+			get { return hasAccuracy; }
+		}
+
+		#endregion
+
+		#region Methods
 
 		public void Start()
 		{
@@ -143,7 +164,76 @@ namespace WF.Player.Android
 			timer.Start();
 		}
 
-		#region LocationListener Events
+		public string CoordinatesToString(double lat, double lon)
+		{
+			string latDirect;
+			string lonDirect;
+			int latDegrees;
+			int lonDegrees;
+			int latMin;
+			int lonMin;
+			int latSec;
+			int lonSec;
+			double latDecimalMin;
+			double lonDecimalMin;
+
+			latDirect = lat > 0 ? Strings.GetString("N") : Strings.GetString("S");
+			lonDirect = lon > 0 ? Strings.GetString("E") : Strings.GetString("W");
+
+			latDegrees = Convert.ToInt32 (Math.Floor(lat));
+			lonDegrees = Convert.ToInt32 (Math.Floor(lon));
+
+			latMin = Convert.ToInt32 (Math.Floor((lat - latDegrees) * 60.0));
+			lonMin = Convert.ToInt32 (Math.Floor((lon - lonDegrees) * 60.0));
+
+			latSec = Convert.ToInt32 (Math.Floor((((lat - latDegrees) * 60.0) - latMin) * 60.0));
+			lonSec = Convert.ToInt32 (Math.Floor((((lon - lonDegrees) * 60.0) - lonMin) * 60.0));
+
+			latDecimalMin = Math.Round((lat - latDegrees) * 60.0, 3);
+			lonDecimalMin = Math.Round((lon - lonDegrees) * 60.0, 3);
+
+			var format = 1; // NSUserDefaults.StandardUserDefaults.IntForKey("CoordFormat");
+			string result = "";
+
+			switch (format) {
+			case 0:
+				result = String.Format ("{0} {1:0.00000}° {2} {3:0.00000}°", new object[] {
+					latDirect,
+					lat,
+					lonDirect,
+					lon
+				});
+				break;
+			case 1:
+				result = String.Format ("{0} {1:00}° {2:00.000}' {3} {4:000}° {5:00.000}'", new object[] {
+					latDirect,
+					latDegrees,
+					latDecimalMin,
+					lonDirect,
+					lonDegrees,
+					lonDecimalMin
+				});
+				break;
+			case 2:
+				result = String.Format ("{0} {1:00}° {2:00}' {3:00.0}\" {4} {5:000}° {6:00}' {7:00.0}\"", new object[] {
+					latDirect,
+					latDegrees,
+					latMin,
+					latSec,
+					lonDirect,
+					lonDegrees,
+					lonMin,
+					lonSec
+				});
+				break;
+			}
+
+			return result;
+		}
+
+		#endregion
+
+		#region Events
 
 		void OnTimerTick (object sender, ElapsedEventArgs e)
 		{
@@ -157,16 +247,23 @@ namespace WF.Player.Android
 			timer = null;
 		}
 
+		#endregion
+
+		#region LocationListener Events
+
 		/// <summary>
 		/// Called when the location has changed.
 		/// </summary>
 		/// <param name="location">The new location, as a Location object.</param>
-		public void OnLocationChanged (Location location)
+		public void OnLocationChanged (Location l)
 		{
+			location = l;
 			lat = location.Latitude;
 			lon = location.Longitude;
+			hasAltitude = location.HasAltitude;
 			if (location.HasAltitude)
 				alt = location.Altitude;
+			hasAccuracy = location.HasAccuracy;
 			if (location.HasAccuracy)
 				accuracy = location.Accuracy;
 			valid = true;
@@ -182,8 +279,6 @@ namespace WF.Player.Android
 		public void OnProviderDisabled (string provider)
 		{
 			valid = false;
-			// TODO: Remove
-			Console.WriteLine ("Provider disabled");
 		}
 
 		/// <summary>
@@ -194,8 +289,6 @@ namespace WF.Player.Android
 		public void OnProviderEnabled (string provider)
 		{
 			valid = false;
-			// TODO: Remove
-			Console.WriteLine ("Provider endisabled");
 		}
 
 		/// <summary>
