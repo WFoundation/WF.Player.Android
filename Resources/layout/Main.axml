@@ -87,7 +87,7 @@
             android:textColor="#ff000000" />
     </RelativeLayout>
     <Button
-        android:text="Offline cartridges"
+        android:text="@string/main_offline"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonOffline"
@@ -124,7 +124,7 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
     <Button
-        android:text="Find cartridges nearby"
+        android:text="@string/main_nearby"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonNearby"
@@ -133,7 +133,7 @@
         android:hapticFeedbackEnabled="true"
         android:soundEffectsEnabled="true" />
     <Button
-        android:text="Search with parameters"
+        android:text="@string/main_searchparams"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonSearchParam"
@@ -142,7 +142,7 @@
         android:hapticFeedbackEnabled="true"
         android:soundEffectsEnabled="true" />
     <Button
-        android:text="Settings"
+        android:text="@string/main_settings"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttonSettings"

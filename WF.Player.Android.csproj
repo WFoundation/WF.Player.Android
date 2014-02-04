@@ -381,8 +381,9 @@
     <AndroidResource Include="Resources\drawable-xhdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_position.png" />
     <AndroidResource Include="Resources\layout\Preferences.axml" />
-    <AndroidResource Include="Resources\values\array.xml" />
     <AndroidResource Include="Resources\menu\ScreenListMenu.xml" />
+    <AndroidResource Include="Resources\values\array.xml" />
+    <AndroidResource Include="Resources\values-de\vernacular_strings.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

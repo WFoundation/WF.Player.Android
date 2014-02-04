@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
 
@@ -75,7 +76,7 @@ namespace WF.Player.Android
 			switch (type)
 			{
 			case ScreenType.Locations:
-				header = Strings.GetString("Locations");
+				header = Catalog.GetString("Locations");
 				ShowDirections = true;
 				foreach (UIObject item in engine.ActiveVisibleZones)
 				{
@@ -84,7 +85,7 @@ namespace WF.Player.Android
 				}
 				break;
 			case ScreenType.Items:
-				header = Strings.GetString("You see");
+				header = Catalog.GetString("You see");
 				ShowDirections = true;
 				foreach (UIObject item in engine.VisibleObjects)
 				{
@@ -93,7 +94,7 @@ namespace WF.Player.Android
 				}
 				break;
 			case ScreenType.Inventory:
-				header = Strings.GetString("Inventory");
+				header = Catalog.GetString("Inventory");
 				foreach (UIObject item in engine.VisibleInventory)
 				{
 					ShowIcons |= item.Icon != null;
@@ -101,7 +102,7 @@ namespace WF.Player.Android
 				}
 				break;
 			case ScreenType.Tasks:
-				header = Strings.GetString("Tasks");
+				header = Catalog.GetString("Tasks");
 				foreach (UIObject item in engine.ActiveVisibleTasks)
 				{
 					ShowIcons |= item.Icon != null;

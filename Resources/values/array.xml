@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <resources>
-    <string-array name="text_alignment_key">
-        <item name="0">Left align</item>
-        <item name="1">Center align</item>
-        <item name="2">Right align</item>
+
+	<string-array name="text_alignment_key">
+        <item name="0">@string/pref_text_alignment_left</item>
+        <item name="1">@string/pref_text_alignment_center</item>
+        <item name="2">@string/pref_text_alignment_right</item>
     </string-array>
 	<string-array name="text_alignment_value">
         <item name="0">0</item>
         <item name="1">1</item>
         <item name="2">2</item>
     </string-array>
+
     <string-array name="image_size_key">
-        <item name="0">No resizing</item>
-        <item name="1">Shrink to width of screen</item>
-        <item name="2">Width of screen</item>
-        <item name="3">Half height of screen</item>
+        <item name="0">@string/pref_image_size_noresize</item>
+        <item name="1">@string/pref_image_size_shrink</item>
+        <item name="2">@string/pref_image_size_width</item>
+        <item name="3">@string/pref_image_size_height</item>
     </string-array>
    	<string-array name="image_size_value">
         <item name="0">0</item>
@@ -23,4 +25,5 @@
         <item name="2">2</item>
         <item name="3">3</item>
     </string-array>
+
 </resources>

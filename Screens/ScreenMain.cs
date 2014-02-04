@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
 
@@ -156,8 +157,8 @@ namespace WF.Player.Android
 				switch (position)
 				{
 				case 0:
-					header = Strings.GetString("Locations");
-					empty = Strings.GetString(engine.Cartridge.EmptyZonesListText);
+					header = Catalog.GetString("Locations");
+					empty = Catalog.GetString(engine.Cartridge.EmptyZonesListText);
 					image = iconLocation;
 					foreach (UIObject o in engine.ActiveVisibleZones)
 					{
@@ -165,8 +166,8 @@ namespace WF.Player.Android
 					}
 					break;
 				case 1:
-					header = Strings.GetString("You see");
-					empty = Strings.GetString(engine.Cartridge.EmptyYouSeeListText);
+					header = Catalog.GetString("You see");
+					empty = Catalog.GetString(engine.Cartridge.EmptyYouSeeListText);
 					image = iconYouSee;
 					foreach (UIObject o in engine.VisibleObjects)
 					{
@@ -174,8 +175,8 @@ namespace WF.Player.Android
 					}
 					break;
 				case 2:
-					header = Strings.GetString("Inventory");
-					empty = Strings.GetString(engine.Cartridge.EmptyInventoryListText);
+					header = Catalog.GetString("Inventory");
+					empty = Catalog.GetString(engine.Cartridge.EmptyInventoryListText);
 					image = iconInventory;
 					foreach (UIObject o in engine.VisibleInventory)
 					{
@@ -183,8 +184,8 @@ namespace WF.Player.Android
 					}
 					break;
 				case 3:
-					header = Strings.GetString("Tasks");
-					empty = Strings.GetString(engine.Cartridge.EmptyTasksListText);
+					header = Catalog.GetString("Tasks");
+					empty = Catalog.GetString(engine.Cartridge.EmptyTasksListText);
 					image = iconTask;
 					foreach (UIObject o in engine.ActiveVisibleTasks)
 					{
@@ -192,7 +193,7 @@ namespace WF.Player.Android
 					}
 					break;
 				case 4:
-					header = Strings.GetString("Position");
+					header = Catalog.GetString("Position");
 					image = iconPosition;
 					break;
 				}

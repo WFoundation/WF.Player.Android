@@ -31,6 +31,7 @@ using Android.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Support.V7.App;
+using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
 
@@ -334,11 +335,11 @@ namespace WF.Player.Android
 			// For position we must generate text here
 			if (position == 4) {
 				var gps = MainApp.Instance.GPS;
-				var location = gps.IsValid ? gps.CoordinatesToString(gps.Latitude, gps.Longitude) : Strings.GetString("unknown");
+				var location = gps.IsValid ? gps.CoordinatesToString(gps.Latitude, gps.Longitude) : Catalog.GetString("unknown");
 				var altitude = gps.HasAltitude ? String.Format("{0:0}", gps.Altitude) : "\u0335";
 				var accuracy = gps.HasAccuracy ? String.Format("{0:0}", gps.Accuracy) : Strings.Infinite;
-				var status = gps.IsValid ? Strings.GetString("valid") : Strings.GetString("invalid");
-				items = Strings.GetStringFmt("{0}\n\nAltitude:\t\t\t{1} m\nAccuracy:\t\t{2} m\nStatus:\t\t\t{3}", location, altitude, accuracy, status);;
+				var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
+				items = Catalog.Format(Catalog.GetString("{0}\n\nAltitude:\t\t\t{1} m\nAccuracy:\t\t{2} m\nStatus:\t\t\t{3}"), location, altitude, accuracy, status);;
 			}
 
 			using (var textHeader = view.FindViewById<TextView>(Resource.Id.textHeader)) {

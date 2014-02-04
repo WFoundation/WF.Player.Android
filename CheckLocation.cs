@@ -29,6 +29,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Vernacular;
 
 namespace WF.Player.Android
 {
@@ -112,22 +113,22 @@ namespace WF.Player.Android
 
 		void Refresh()
 		{
-			((ScreenController)Activity).SupportActionBar.Title = Strings.GetString("GPS Check");
+			((ScreenController)Activity).SupportActionBar.Title = Catalog.GetString("GPS Check");
 
-			textDescription.Text = Strings.GetString("For much fun with the cartridge, you should wait for a good accuracy of your GPS signal.");
+			textDescription.Text = Catalog.GetString("For much fun with the cartridge, you should wait for a good accuracy of your GPS signal.");
 			if (MainApp.Instance.GPS.IsValid) {
-				textCoordinates.Text = Strings.GetStringFmt("Current Coordinates\n{0}", coordinatesToString(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude));
-				textAccuracy.Text = Strings.GetStringFmt("Current Accuracy\n{0} m", (int)MainApp.Instance.GPS.Accuracy);
+				textCoordinates.Text = Catalog.Format(Catalog.GetString("Current Coordinates\n{0}"), coordinatesToString(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude));
+				textAccuracy.Text = Catalog.Format(Catalog.GetString("Current Accuracy\n{0} m"), (int)MainApp.Instance.GPS.Accuracy);
 			} else {
-				textCoordinates.Text = Strings.GetStringFmt("Current Coordinates\n{0}", Strings.GetString("unknown"));
-				textAccuracy.Text = Strings.GetStringFmt("Current Accuracy\n{0} m", Strings.Infinite);
+				textCoordinates.Text = Catalog.Format(Catalog.GetString("Current Coordinates\n{0}"), Catalog.GetString("unknown"));
+				textAccuracy.Text = Catalog.Format(Catalog.GetString("Current Accuracy\n{0} m"), Strings.Infinite);
 			}
 
 			if (MainApp.Instance.GPS.IsValid &&MainApp.Instance.GPS.Accuracy < 30) {
-				button.Text = Strings.GetString("Start");
+				button.Text = Catalog.GetString("Start");
 				button.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light_green);
 			} else {
-				button.Text = Strings.GetString("Start anyway");
+				button.Text = Catalog.GetString("Start anyway");
 				button.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light_red);
 			}
 		}
@@ -145,8 +146,8 @@ namespace WF.Player.Android
 			double latDecimalMin;
 			double lonDecimalMin;
 
-			latDirect = lat > 0 ? Strings.GetString("N") : Strings.GetString("S");
-			lonDirect = lon > 0 ? Strings.GetString("E") : Strings.GetString("W");
+			latDirect = lat > 0 ? Catalog.GetString("N") : Catalog.GetString("S");
+			lonDirect = lon > 0 ? Catalog.GetString("E") : Catalog.GetString("W");
 
 			latDegrees = Convert.ToInt32 (Math.Floor(lat));
 			lonDegrees = Convert.ToInt32 (Math.Floor(lon));

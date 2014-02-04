@@ -1,0 +1,1 @@
+S:\Entwicklung\CSharp\vernacular\Vernacular.Tool\bin\Debug\Vernacular.exe --verbose --log --source-root=.\ --generator=po --output=wf.player.android.pot --input=.\Resources\values\Strings.xml --input=.\Resources\values \array.xml --input=bin\Debug

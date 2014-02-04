@@ -11,6 +11,10 @@
 	<string name="main_last_known_location">Last known position</string>
 	<string name="main_unknown_location">Unknown location</string>
 	<string name="main_accuracy">Accuracy</string>
+	<string name="main_offline">Offline cartridges</string>
+	<string name="main_nearby">Find cartridges nearby</string>
+	<string name="main_searchparams">Search with parameters</string>
+	<string name="main_settings">Settings</string>
 	<string name="main_error">Error</string>
 	<string name="main_error_directory_not_found">Directory {0} didn\'t exists.</string>
 	<string name="main_error_no_cartridges">Directory {0} contains no cartridges.</string>
@@ -62,6 +66,9 @@
 	<string name="pref_text">Text</string>
 	<string name="pref_text_alignment">Alignment</string>
 	<string name="pref_text_alignment_detail">Alignment of text</string>
+	<string name="pref_text_alignment_left">Left align</string>
+	<string name="pref_text_alignment_center">Center align</string>
+	<string name="pref_text_alignment_right">Right align</string>
 	<string name="pref_text_size">Fontsize</string>
 	<string name="pref_text_size_detail">Font size of dialog text</string>
 	<string name="pref_text_size_dialog">Font size of text in sp. Default is 18.</string>
@@ -71,4 +78,9 @@
 	<string name="pref_image">Image</string>
 	<string name="pref_image_size">Resize</string>
 	<string name="pref_image_size_detail">Resize image when displaying</string>
+	<string name="pref_image_size_noresize">No resize</string>
+	<string name="pref_image_size_shrink">Shrink to width of screen</string>
+	<string name="pref_image_size_width">Width of screen</string>
+	<string name="pref_image_size_height">Half height of screen</string>
+
 </resources>

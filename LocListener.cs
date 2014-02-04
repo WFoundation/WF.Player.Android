@@ -29,6 +29,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Locations;
+using Vernacular;
 
 namespace WF.Player.Android
 {
@@ -177,8 +178,8 @@ namespace WF.Player.Android
 			double latDecimalMin;
 			double lonDecimalMin;
 
-			latDirect = lat > 0 ? Strings.GetString("N") : Strings.GetString("S");
-			lonDirect = lon > 0 ? Strings.GetString("E") : Strings.GetString("W");
+			latDirect = lat > 0 ? Catalog.GetString("N", comment: "Direction North") : Catalog.GetString("S", comment: "Direction South");
+			lonDirect = lon > 0 ? Catalog.GetString("E", comment: "Direction East") : Catalog.GetString("W", comment: "Direction West");
 
 			latDegrees = Convert.ToInt32 (Math.Floor(lat));
 			lonDegrees = Convert.ToInt32 (Math.Floor(lon));

@@ -28,6 +28,7 @@ using Android.Widget;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
+using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Live;
 
@@ -262,7 +263,7 @@ namespace WF.Player.Android
 			textCartName.SetText(cart.Name, TextView.BufferType.Normal);
 			if (!String.IsNullOrWhiteSpace(cart.Version)) {
 				textCartVersion.Visibility = ViewStates.Visible;
-				string ver = Strings.GetStringFmt("Version {0}",cart.Version);
+				string ver = Catalog.Format(Catalog.GetString("Version {0}"),cart.Version);
 				if (!String.IsNullOrWhiteSpace(cart.CreateDate.ToString()))
 					ver += " / " + cart.CreateDate.ToString();
 				textCartVersion.SetText(ver, TextView.BufferType.Normal);
@@ -276,7 +277,7 @@ namespace WF.Player.Android
 					author = cart.AuthorName;
 				if (!String.IsNullOrWhiteSpace(cart.AuthorCompany))
 					author = (!String.IsNullOrWhiteSpace(author) ? author + " / " : "") + cart.AuthorCompany;
-				textCartAuthor.SetText(Strings.GetStringFmt("By {0}", author), TextView.BufferType.Normal);
+				textCartAuthor.SetText(Catalog.Format(Catalog.GetString("By {0}"), author), TextView.BufferType.Normal);
 			}
 			else
 				textCartAuthor.Visibility = ViewStates.Gone;

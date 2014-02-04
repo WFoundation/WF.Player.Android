@@ -1,0 +1,395 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: 2014-02-04 10:57+01\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Vernacular"
+
+#: .\Resources\values\Strings.xml:9
+msgid "{0} founds"
+msgstr "{0} founds"
+
+#: Screens/ScreenMainAndroid.cs:342
+msgid ""
+"{0}\n"
+"Altitude:\t\t\t{1} m\n"
+"Accuracy:\t\t{2} m\n"
+"Status:\t\t\t{3}"
+msgstr ""
+"{0}\n"
+"Altitude:\t\t\t{1} m\n"
+"Accuracy:\t\t{2} m\n"
+"Status:\t\t\t{3}"
+
+#: .\Resources\values\Strings.xml:13
+msgid "Accuracy"
+msgstr "Accuracy"
+
+#: .\Resources\values\Strings.xml:10
+msgid "Active location"
+msgstr "Active location"
+
+#: .\Resources\values\Strings.xml:67
+msgid "Alignment"
+msgstr "Alignment"
+
+#: .\Resources\values\Strings.xml:68
+msgid "Alignment of text"
+msgstr "Alignment of text"
+
+#: .\Resources\values\Strings.xml:27
+msgid "Author"
+msgstr "Author"
+
+#: CartridgesActivity.cs:280
+msgid "By {0}"
+msgstr "By {0}"
+
+#: .\Resources\values\Strings.xml:41
+#: .\Resources\values\Strings.xml:56
+msgid "Cancel"
+msgstr "Cancel"
+
+#: .\Resources\values\Strings.xml:21
+msgid "Cartridges"
+msgstr "Cartridges"
+
+#: .\Resources\values\Strings.xml:70
+msgid "Center align"
+msgstr "Center align"
+
+#: .\Resources\values\Strings.xml:52
+#: .\Resources\values\Strings.xml:55
+msgid "Commands"
+msgstr "Commands"
+
+#: .\Resources\values\Strings.xml:28
+msgid "Company"
+msgstr "Company"
+
+#: .\Resources\values\Strings.xml:29
+msgid "Created"
+msgstr "Created"
+
+#: CheckLocation.cs:121
+#: CheckLocation.cs:124
+msgid ""
+"Current Accuracy\n"
+"{0} m"
+msgstr ""
+"Current Accuracy\n"
+"{0} m"
+
+#: CheckLocation.cs:120
+#: CheckLocation.cs:123
+msgid ""
+"Current Coordinates\n"
+"{0}"
+msgstr ""
+"Current Coordinates\n"
+"{0}"
+
+#: DetailActivity.cs:143
+#: .\Resources\values\Strings.xml:45
+msgid "Delete"
+msgstr "Delete"
+
+#: .\Resources\values\Strings.xml:24
+msgid "Description"
+msgstr "Description"
+
+#: .\Resources\values\Strings.xml:54
+msgid "Detail"
+msgstr "Detail"
+
+#: .\Resources\values\Strings.xml:20
+msgid "Directory {0} contains no cartridges."
+msgstr "Directory {0} contains no cartridges."
+
+#: .\Resources\values\Strings.xml:19
+msgid "Directory {0} didn't exists."
+msgstr "Directory {0} didn't exists."
+
+#: .\Resources\values\Strings.xml:5
+msgid "Done"
+msgstr "Done"
+
+#. Direction East
+msgid "E"
+msgstr "E"
+
+#: .\Resources\values\Strings.xml:18
+msgid "Error"
+msgstr "Error"
+
+#: .\Resources\values\Strings.xml:61
+msgid "Feedback"
+msgstr "Feedback"
+
+#: .\Resources\values\Strings.xml:15
+msgid "Find cartridges nearby"
+msgstr "Find cartridges nearby"
+
+#: .\Resources\values\Strings.xml:76
+msgid "Focus"
+msgstr "Focus"
+
+#: .\Resources\values\Strings.xml:77
+msgid "Focus input field when dialog appears"
+msgstr "Focus input field when dialog appears"
+
+#: .\Resources\values\Strings.xml:73
+msgid "Font size of dialog text"
+msgstr "Font size of dialog text"
+
+#: .\Resources\values\Strings.xml:74
+msgid "Font size of text in sp. Default is 18."
+msgstr "Font size of text in sp. Default is 18."
+
+#: .\Resources\values\Strings.xml:72
+msgid "Fontsize"
+msgstr "Fontsize"
+
+#: CheckLocation.cs:118
+msgid "For much fun with the cartridge, you should wait for a good accuracy of your GPS signal."
+msgstr "For much fun with the cartridge, you should wait for a good accuracy of your GPS signal."
+
+#: CheckLocation.cs:116
+msgid "GPS Check"
+msgstr "GPS Check"
+
+#: .\Resources\values\Strings.xml:84
+msgid "Half height of screen"
+msgstr "Half height of screen"
+
+#: .\Resources\values\Strings.xml:78
+msgid "Image"
+msgstr "Image"
+
+#: .\Resources\values\Strings.xml:75
+msgid "Input"
+msgstr "Input"
+
+#: Screens/ScreenMainAndroid.cs:341
+msgid "invalid"
+msgstr "invalid"
+
+#: Screens/ScreenList.cs:97
+#: Screens/ScreenMain.cs:178
+#: .\Resources\values\Strings.xml:36
+msgid "Inventory"
+msgstr "Inventory"
+
+#: .\Resources\values\Strings.xml:11
+msgid "Last known position"
+msgstr "Last known position"
+
+#: .\Resources\values\Strings.xml:69
+msgid "Left align"
+msgstr "Left align"
+
+#: Screens/ScreenList.cs:79
+#: Screens/ScreenMain.cs:160
+#: .\Resources\values\Strings.xml:34
+msgid "Locations"
+msgstr "Locations"
+
+#: .\Resources\values\Strings.xml:26
+msgid "Logs"
+msgstr "Logs"
+
+#: .\Resources\values\Strings.xml:25
+#: .\Resources\values\Strings.xml:53
+#: .\Resources\values\Strings.xml:58
+msgid "Map"
+msgstr "Map"
+
+#. Direction North
+msgid "N"
+msgstr "N"
+
+#: DetailActivity.cs:157
+#: .\Resources\values\Strings.xml:42
+msgid "No"
+msgstr "No"
+
+#: DetailActivity.cs:313
+msgid "No description availible"
+msgstr "No description availible"
+
+#: DetailActivity.cs:302
+msgid "No info availible"
+msgstr "No info availible"
+
+#: .\Resources\values\Strings.xml:81
+msgid "No resize"
+msgstr "No resize"
+
+#: .\Resources\values\Strings.xml:14
+msgid "Offline cartridges"
+msgstr "Offline cartridges"
+
+#: .\Resources\values\Strings.xml:4
+msgid "Ok"
+msgstr "Ok"
+
+#: .\Resources\values\Strings.xml:23
+msgid "Overview"
+msgstr "Overview"
+
+#: .\Resources\values\Strings.xml:63
+msgid "Play a sound each time a button is pressed"
+msgstr "Play a sound each time a button is pressed"
+
+#: Screens/ScreenMain.cs:196
+msgid "Position"
+msgstr "Position"
+
+#: .\Resources\values\Strings.xml:50
+msgid "Quit"
+msgstr "Quit"
+
+#: .\Resources\values\Strings.xml:79
+msgid "Resize"
+msgstr "Resize"
+
+#: .\Resources\values\Strings.xml:80
+msgid "Resize image when displaying"
+msgstr "Resize image when displaying"
+
+#: .\Resources\values\Strings.xml:47
+msgid "Restore"
+msgstr "Restore"
+
+#: .\Resources\values\Strings.xml:71
+msgid "Right align"
+msgstr "Right align"
+
+#. Direction South
+#: CheckLocation.cs:149
+#: LocListener.cs:181
+msgid "S"
+msgstr "S"
+
+#: .\Resources\values\Strings.xml:44
+#: .\Resources\values\Strings.xml:49
+msgid "Save"
+msgstr "Save"
+
+#: .\Resources\values\Strings.xml:7
+msgid "Search"
+msgstr "Search"
+
+#: .\Resources\values\Strings.xml:16
+msgid "Search with parameters"
+msgstr "Search with parameters"
+
+#: .\Resources\values\Strings.xml:17
+#: .\Resources\values\Strings.xml:60
+msgid "Settings"
+msgstr "Settings"
+
+#: .\Resources\values\Strings.xml:32
+msgid "Short Description"
+msgstr "Short Description"
+
+#: .\Resources\values\Strings.xml:82
+msgid "Shrink to width of screen"
+msgstr "Shrink to width of screen"
+
+#: .\Resources\values\Strings.xml:62
+msgid "Sound"
+msgstr "Sound"
+
+#: CheckLocation.cs:128
+#: .\Resources\values\Strings.xml:46
+msgid "Start"
+msgstr "Start"
+
+#: CheckLocation.cs:131
+msgid "Start anyway"
+msgstr "Start anyway"
+
+#: Screens/ScreenList.cs:105
+#: Screens/ScreenMain.cs:187
+#: .\Resources\values\Strings.xml:37
+msgid "Tasks"
+msgstr "Tasks"
+
+#: .\Resources\values\Strings.xml:66
+msgid "Text"
+msgstr "Text"
+
+#: .\Resources\values\Strings.xml:31
+msgid "Unique Downloads"
+msgstr "Unique Downloads"
+
+#: Screens/ScreenMainAndroid.cs:338
+msgid "unknown"
+msgstr "unknown"
+
+#: .\Resources\values\Strings.xml:6
+#: .\Resources\values\Strings.xml:8
+msgid "Unknown"
+msgstr "Unknown"
+
+#: .\Resources\values\Strings.xml:12
+msgid "Unknown location"
+msgstr "Unknown location"
+
+msgid "valid"
+msgstr "valid"
+
+#: .\Resources\values\Strings.xml:30
+msgid "Version"
+msgstr "Version"
+
+#: CartridgesActivity.cs:266
+msgid "Version {0}"
+msgstr "Version {0}"
+
+#: .\Resources\values\Strings.xml:64
+msgid "Vibrate"
+msgstr "Vibrate"
+
+#: .\Resources\values\Strings.xml:65
+msgid "Vibrate each time a button is pressed"
+msgstr "Vibrate each time a button is pressed"
+
+#. Direction West
+#: CheckLocation.cs:150
+#: LocListener.cs:182
+msgid "W"
+msgstr "W"
+
+#: .\Resources\values\Strings.xml:3
+msgid "WF.Player.Android"
+msgstr "WF.Player.Android"
+
+#: .\Resources\values\Strings.xml:83
+msgid "Width of screen"
+msgstr "Width of screen"
+
+#: DetailActivity.cs:144
+msgid "Would you delete the cartridge {0} and all log/save files?"
+msgstr "Would you delete the cartridge {0} and all log/save files?"
+
+#: .\Resources\values\Strings.xml:39
+msgid "Would you save before quit?"
+msgstr "Would you save before quit?"
+
+#: DetailActivity.cs:146
+#: .\Resources\values\Strings.xml:40
+msgid "Yes"
+msgstr "Yes"
+
+#: Screens/ScreenList.cs:88
+#: Screens/ScreenMain.cs:169
+#: .\Resources\values\Strings.xml:35
+msgid "You see"
+msgstr "You see"

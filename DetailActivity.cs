@@ -31,6 +31,7 @@ using Android.Widget;
 using Android.Webkit;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
+using Vernacular;
 using WF.Player.Core;
 
 namespace WF.Player.Android
@@ -139,10 +140,10 @@ namespace WF.Player.Android
 					break;
 				case Resource.Id.menu_detail_delete:
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.SetTitle(Strings.GetString("Delete"));
-					builder.SetMessage(Strings.GetStringFmt("Would you delete the cartridge {0} and all log/save files?", cart.Name));
+				builder.SetTitle(Catalog.GetString("Delete"));
+				builder.SetMessage(Catalog.Format(Catalog.GetString("Would you delete the cartridge {0} and all log/save files?"), cart.Name));
 					builder.SetCancelable(true);
-					builder.SetPositiveButton(Strings.GetString("Yes"), delegate { 
+				builder.SetPositiveButton(Catalog.GetString("Yes"), delegate { 
 						if (!String.IsNullOrEmpty(cart.Filename) && File.Exists (cart.Filename))
 							File.Delete (cart.Filename);
 						if (!String.IsNullOrEmpty(cart.SaveFilename) && File.Exists (cart.SaveFilename))
@@ -153,7 +154,7 @@ namespace WF.Player.Android
 					// TODO: Works this also on devices with API < 14 (Pre 4.0)
 					// var test = Build.VERSION.SdkInt;
 					// builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
-					builder.SetNegativeButton(Strings.GetString("No"), delegate { });
+				builder.SetNegativeButton(Catalog.GetString("No"), delegate { });
 					builder.Show();
 					break;
 				case Resource.Id.menu_detail_start:
@@ -298,7 +299,7 @@ namespace WF.Player.Android
 				LinearLayout ll = FindViewById<LinearLayout> (Resource.Id.layoutDetailInfo);
 				ll.RemoveAllViews();
 				TextView tv = new TextView(this);
-				tv.Text = Strings.GetString("No info availible");
+				tv.Text = Catalog.GetString("No info availible");
 				ll.AddView(tv);
 			} else
 				listView.Adapter = adapter;
@@ -308,8 +309,10 @@ namespace WF.Player.Android
 		{
 			SetContentView (Resource.Layout.DetailDescription);
 			TextView textView = FindViewById<TextView> (Resource.Id.textView);
+			textView.Gravity = PrefHelper.TextAlignment;
+			textView.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 			if (String.IsNullOrEmpty(cart.LongDescription))
-				textView.Text = Strings.GetString("No description availible");
+				textView.Text = Catalog.GetString("No description availible");
 			else
 				textView.Text = cart.LongDescription;
 		}
@@ -464,7 +467,7 @@ namespace WF.Player.Android
 			var tvContent = view.FindViewById(Resource.Id.tvContent) as TextView;
 
 			// Assign this item's values to the various subviews
-			tvDescription.SetText(Strings.GetString(entries[position].Description), TextView.BufferType.Normal);
+			tvDescription.SetText(Catalog.GetString(entries[position].Description), TextView.BufferType.Normal);
 			tvContent.SetText(entries[position].Content, TextView.BufferType.Normal);
 
 			// Finally return the view

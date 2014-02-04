@@ -1,0 +1,1 @@
+S:\Entwicklung\CSharp\vernacular\Vernacular.Tool\bin\Debug\Vernacular.exe --input=.\Resources\values-de\de.po --output=.\Resources\values-de\vernacular_strings.xml --generator=android --android-input-strings-xml=.\Resources\values\strings.xml --android-output-strings-xml=.\Resources\values-de\strings.xml
