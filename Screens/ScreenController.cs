@@ -679,8 +679,11 @@ namespace WF.Player.Android
 					case MediaType.WAV:
 						PlayMedia (args.Object);
 						break;
+				case MediaType.OGG:
+						PlayMedia (args.Object);
+						break;
 					case MediaType.FDL:
-					break;
+						break;
 				}
 			}
 		}
