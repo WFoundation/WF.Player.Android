@@ -162,6 +162,8 @@ namespace WF.Player.Android
 		/// <param name="e">Event arguments.</param>
 		void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
 		{
+			ctrl.Feedback();
+
 			EntrySelected(e.Position);
 		}
 
@@ -171,6 +173,8 @@ namespace WF.Player.Android
 		/// <param name="item">Item, which is selected.</param>
 		public override bool OnOptionsItemSelected(IMenuItem item)
 		{
+			ctrl.Feedback();
+
 			if (item.ItemId == menuSave.ItemId) {
 				ctrl.Save();
 				return false;

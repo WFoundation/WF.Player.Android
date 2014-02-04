@@ -55,6 +55,8 @@ namespace WF.Player.Android
 //		private GpxClass gpxFile;
 		LogLevel logLevel = LogLevel.Cartridge;
 		MediaPlayer mediaPlayer = new MediaPlayer();
+		AudioManager audioManager;
+		Vibrator vibrator;
 		bool cartRestore;
 		Paint light = new Paint (PaintFlags.AntiAlias);
 		Paint dark = new Paint (PaintFlags.AntiAlias);
@@ -123,6 +125,9 @@ namespace WF.Player.Android
 			// If cartridge object don't exist, than close activity
 			if (cartridge == null)
 				Finish ();
+
+			audioManager = (AudioManager)GetSystemService(Context.AudioService);
+			vibrator = (Vibrator)GetSystemService(Context.VibratorService);
 
 			// Create CheckLocation
 			CheckLocation checkLocation = new CheckLocation();
@@ -451,28 +456,48 @@ namespace WF.Player.Android
 			// We need to adjust the height if the width of the bitmap is
 			// smaller than the view width, otherwise the image will be boxed.
 			if (result.Width > 0) {
-				var metrics = Resources.DisplayMetrics;
-				int width = (int)(result.Width * metrics.Density);
-				int height = (int)(result.Height * metrics.Density);
+				if (PrefHelper.ImageResize != ImageResize.NoResize) {
+					var metrics = Resources.DisplayMetrics;
+					int width = (int)(result.Width * metrics.Density);
+					int height = (int)(result.Height * metrics.Density);
+						
+					maxWidth = maxWidth < 0 ? (int)(metrics.WidthPixels - 2 * Resources.GetDimension(Resource.Dimension.screen_frame)) : maxWidth;
+					int maxHeight = (int)(0.5 * metrics.HeightPixels);
+						
+					if (width > maxWidth && (PrefHelper.ImageResize == ImageResize.ResizeWidth || PrefHelper.ImageResize == ImageResize.ShrinkWidth)) {
+						double factor = (double)maxWidth / (double)width;
+						width = maxWidth;
+						height = (int)(height * factor);
+					}
 
-				maxWidth = maxWidth < 0 ? (int)(metrics.WidthPixels - 2 * Resources.GetDimension(Resource.Dimension.screen_frame)) : maxWidth;
-				int maxHeight = (int)(0.5 * metrics.HeightPixels);
+					if (width < maxWidth && PrefHelper.ImageResize == ImageResize.ResizeWidth) {
+						double factor = (double)maxWidth / (double)width;
+						width = maxWidth;
+						height = (int)(height * factor);
+					}
 
-				if (width > maxWidth) {
-					double factor = (double)maxWidth / (double)width;
-					width = maxWidth;
-					height = (int)(height * factor);
+					if (height != maxHeight && PrefHelper.ImageResize == ImageResize.ResizeHeight) {
+						double factor = (double)maxHeight / (double)height;
+						height = maxHeight;
+						width = (int)(width * factor);
+					}
+
+					result = Bitmap.CreateScaledBitmap(result, width, height, true);
 				}
-
-				if (height > maxHeight) {
-					double factor = (double)maxHeight / (double)height;
-					height = maxHeight;
-					width = (int)(width * factor);
-				}
-
-				result = Bitmap.CreateScaledBitmap(result, width, height, true);
 			}
 			return result;
+		}
+
+		public void Feedback()
+		{
+			if (PrefHelper.FeedbackSound) {
+				// This will be half of the default system sound
+				float vol = 1.0f; 
+				audioManager.PlaySoundEffect(SoundEffect.KeyClick, vol);
+			}
+			if (PrefHelper.FeedbackVibration) {
+				vibrator.Vibrate(120);
+			}
 		}
 
 		#endregion
@@ -768,7 +793,7 @@ namespace WF.Player.Android
 		/// <param name="cart">Cart.</param>
 		public void CreateEngine (Cartridge cart)
 		{
-			var helper = new AndroidPlatformHelper();
+			var helper = new AndroidPlatformHelper(ApplicationContext);
 			helper.Ctrl = this;
 
 			engine = new Engine (helper);

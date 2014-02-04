@@ -50,4 +50,16 @@ namespace WF.Player.Android
 		Cartridge,
 		None
 	}
+
+	/// <summary>
+	/// Image resize types.
+	/// </summary>
+	public enum ImageResize : int
+	{
+		NoResize = 0,
+		ShrinkWidth,
+		ResizeWidth,
+		ResizeHeight
+	}
+
 }

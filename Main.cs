@@ -25,6 +25,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Preferences;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
@@ -60,9 +61,11 @@ namespace WF.Player.Android
 			AndroidEnvironment.UnhandledExceptionRaiser += AndroidUnhandledExceptionHandler;
 			AppDomain.CurrentDomain.UnhandledException += ApplicationUnhandledExceptionHandler;
 
-			preferences = Application.Context.GetSharedPreferences("WF.Player.preferences", FileCreationMode.MultiProcess);
+			// Save prefernces instance
+			preferences = PreferenceManager.GetDefaultSharedPreferences(this);
+			PrefHelper.Preferences = preferences;
 
-			path = preferences.GetString("path", "");
+			path = preferences.GetString("path", null);
 
 			if (String.IsNullOrEmpty(path))
 				path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player";

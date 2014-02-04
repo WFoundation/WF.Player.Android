@@ -27,8 +27,8 @@ using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Text;
+using Android.Views.InputMethods;
 using Android.Views;
-using Android.Webkit;
 using Android.Widget;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
@@ -74,8 +74,10 @@ namespace WF.Player.Android
 
 		public void OnButtonClicked(object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
 			// Remove dialog from screen
-			((ScreenController)this.Activity).RemoveScreen (ScreenType.Dialog);
+			ctrl.RemoveScreen (ScreenType.Dialog);
 
 			// Execute callback if there is one
 			if (sender is Button) {
@@ -85,8 +87,10 @@ namespace WF.Player.Android
 
 		public void OnChoiceClicked(object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
 			// Remove dialog from screen
-			((ScreenController)this.Activity).RemoveScreen (ScreenType.Dialog);
+			ctrl.RemoveScreen (ScreenType.Dialog);
 
 			if (input != null) {
 				string result = ((Button)sender).Text;
@@ -146,7 +150,7 @@ namespace WF.Player.Android
 					editInput.Text = "";
 					editInput.EditorAction += HandleEditorAction;  
 
-					btnInput.Text = ctrl.Resources.GetString(Resource.String.ok);
+					btnInput.Text = ctrl.Resources.GetString(Resource.String.done);
 				}
 			}
 
@@ -176,9 +180,21 @@ namespace WF.Player.Android
 
 		public void OnInputClicked(object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
+			// Remove keyboard
+			new Handler().Post(delegate
+				{
+					var view = ctrl.CurrentFocus;
+					if (view != null)
+					{
+						InputMethodManager manager = (InputMethodManager)ctrl.GetSystemService(Context.InputMethodService);
+						manager.HideSoftInputFromWindow(view.WindowToken, 0);
+					}
+				});
 
 			// Remove dialog from screen
-			((ScreenController)this.Activity).RemoveScreen (ScreenType.Dialog);
+			ctrl.RemoveScreen (ScreenType.Dialog);
 
 			if (input != null) {
 				string result = editInput.Text;
@@ -190,8 +206,8 @@ namespace WF.Player.Android
 		{
 			base.OnResume();
 
-			((ActionBarActivity)Activity).SupportActionBar.Title = "";
-			((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(false);
+			ctrl.SupportActionBar.Title = "";
+			ctrl.SupportActionBar.SetDisplayShowHomeEnabled(false);
 
 			Refresh();
 		}
@@ -206,7 +222,8 @@ namespace WF.Player.Android
 				// Normal dialog
 				// TODO: HTML
 				textDescription.Text = messageBox.Text; // Html.FromHtml(messageBox.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-				textDescription.Gravity = GravityFlags.Left;
+				textDescription.Gravity = PrefHelper.TextAlignment;
+				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 				if (messageBox.Image != null) {
 					imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(messageBox.Image));
 					imageView.Visibility = ViewStates.Visible;
@@ -226,7 +243,8 @@ namespace WF.Player.Android
 			} else {
 				// TODO: HTML
 				textDescription.Text = input.Text; // Html.FromHtml(input.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-				textDescription.Gravity = GravityFlags.Left;
+				textDescription.Gravity = PrefHelper.TextAlignment;
+				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 				if (input.Image != null) {
 					imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(input.Image));
 					imageView.Visibility = ViewStates.Visible;
@@ -248,6 +266,10 @@ namespace WF.Player.Android
 				} else {
 					// Input dialog
 					// ToDo: Clear text field editInput
+					if (PrefHelper.InputFocus) {
+						editInput.RequestFocus();
+						((InputMethodManager)ctrl.GetSystemService(Context.InputMethodService)).ShowSoftInput(editInput, ShowFlags.Implicit);
+					}
 				}
 			}
 		}

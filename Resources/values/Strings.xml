@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
 	<string name="app_name">WF.Player.Android</string>
 	<string name="ok">Ok</string>
+	<string name="done">Done</string>
 	<string name="unknown">Unknown</string>
 	<string name="menu_string_search">Search</string>
 	<string name="main_unknown">Unknown</string>
@@ -50,5 +50,25 @@
 	<string name="menu_screen_detail_default">Detail</string>
 	<string name="menu_screen_detail_title">Commands</string>
 	<string name="menu_screen_detail_cancel">Cancel</string>
-	
+
+	<string name="menu_screen_list_map">Map</string>
+
+	<string name="pref_header">Settings</string>
+	<string name="pref_feedback">Feedback</string>
+	<string name="pref_feedback_sound">Sound</string>
+	<string name="pref_feedback_sound_detail">Play a sound each time a button is pressed</string>
+	<string name="pref_feedback_vibration">Vibrate</string>
+	<string name="pref_feedback_vibration_detail">Vibrate each time a button is pressed</string>
+	<string name="pref_text">Text</string>
+	<string name="pref_text_alignment">Alignment</string>
+	<string name="pref_text_alignment_detail">Alignment of text</string>
+	<string name="pref_text_size">Fontsize</string>
+	<string name="pref_text_size_detail">Font size of dialog text</string>
+	<string name="pref_text_size_dialog">Font size of text in sp. Default is 18.</string>
+	<string name="pref_input">Input</string>
+	<string name="pref_input_focus">Focus</string>
+	<string name="pref_input_focus_detail">Focus input field when dialog appears</string>
+	<string name="pref_image">Image</string>
+	<string name="pref_image_size">Resize</string>
+	<string name="pref_image_size_detail">Resize image when displaying</string>
 </resources>

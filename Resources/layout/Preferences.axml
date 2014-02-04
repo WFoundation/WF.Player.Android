@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_feedback"
+        android:key="pref_key_feedback">
+        <CheckBoxPreference
+            android:key="feedback_sound"
+            android:title="@string/pref_feedback_sound"
+            android:summary="@string/pref_feedback_sound_detail"
+            android:defaultValue="false" />
+        <CheckBoxPreference
+            android:key="feedback_vibration"
+            android:title="@string/pref_feedback_vibration"
+            android:summary="@string/pref_feedback_vibration_detail"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_text"
+        android:key="pref_key_text">
+        <ListPreference
+            android:key="text_alignment"
+            android:title="@string/pref_text_alignment"
+            android:summary="@string/pref_text_alignment_detail"
+            android:entries="@array/text_alignment_key"
+            android:entryValues="@array/text_alignment_value"
+            android:defaultValue="1"
+            android:dialogTitle="@string/pref_text_alignment" />
+        <EditTextPreference
+            android:id="@+id/text_size"
+            android:key="text_size"
+            android:title="@string/pref_text_size"
+            android:summary="@string/pref_text_size_detail"
+            android:dialogTitle="@string/pref_text_size"
+            android:dialogMessage="@string/pref_text_size_dialog"
+            android:defaultValue="14"
+            android:digits="0123456789"
+            android:inputType="number" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_input"
+        android:key="pref_key_input">
+        <CheckBoxPreference
+            android:key="input_focus"
+            android:title="@string/pref_input_focus"
+            android:summary="@string/pref_input_focus_detail"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/pref_image"
+        android:key="pref_key_image">
+        <ListPreference
+            android:key="image_size"
+            android:title="@string/pref_image_size"
+            android:summary="@string/pref_image_size_detail"
+            android:entries="@array/image_size_key"
+            android:entryValues="@array/image_size_value"
+            android:defaultValue="0"
+            android:dialogTitle="@string/pref_image_size" />
+    </PreferenceCategory>
+</PreferenceScreen>

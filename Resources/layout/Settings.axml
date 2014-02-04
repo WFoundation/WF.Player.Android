@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="@string/unknown"
+        android:title="@string/pref_text"
         android:key="pref_key_storage_settings">
+        <Preference
+            android:key="pref_key_mms_delete_limit"
+            android:dependency="pref_key_auto_delete"
+            android:summary="@string/unknown"
+            android:title="@string/unknown" />
+        <ListPreference
+            android:key="text_alignment"
+            android:title="@string/pref_text_alignment"
+            android:summary="@string/pref_text_alignment_detail"
+            android:entries="@array/text_alignment_key"
+            android:entryValues="@array/text_alignment_value"
+            android:dialogTitle="@string/pref_text_alignment" />
         <CheckBoxPreference
             android:key="pref_key_auto_delete"
-            android:summary="@string/unknown"
+            android:summary="@string/menu_screen_main_save"
             android:title="@string/unknown"
             android:defaultValue="false" />
         <Preference
             android:key="pref_key_sms_delete_limit"
-            android:dependency="pref_key_auto_delete"
-            android:summary="@string/unknown"
-            android:title="@string/unknown" />
-        <Preference
-            android:key="pref_key_mms_delete_limit"
             android:dependency="pref_key_auto_delete"
             android:summary="@string/unknown"
             android:title="@string/unknown" />

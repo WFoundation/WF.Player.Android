@@ -16,8 +16,8 @@
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AssemblyName>WF.Player.Android</AssemblyName>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
-    <AndroidLinkMode>None</AndroidLinkMode>
     <TargetFrameworkVersion>v4.0.3</TargetFrameworkVersion>
+    <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,7 +36,6 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
-    <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
     <DefineConstants>MONODROID</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
@@ -76,7 +75,8 @@
     <Compile Include="CheckLocation.cs" />
     <Compile Include="LocListener.cs" />
     <Compile Include="Screens\ScreenMap.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="PreferencesActivity.cs" />
+    <Compile Include="Utils\PrefHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -116,6 +116,7 @@
     <Folder Include="Resources\drawable-xxhdpi\" />
     <Folder Include="Resources\values-v11\" />
     <Folder Include="lib\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ic_action_search.png" />
@@ -360,7 +361,6 @@
     <AndroidResource Include="Resources\drawable-mdpi\ic_quit.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_quit.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_quit.png" />
-    <AndroidResource Include="Resources\menu\ScreenList.xml" />
     <AndroidResource Include="Resources\values\Styles.xml" />
     <AndroidResource Include="Resources\drawable-hdpi\edit_background.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\edit_background.9.png" />
@@ -368,7 +368,6 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\edit_background.9.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ab_texture_tile_.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ab_texture_tile_.png" />
-    <AndroidResource Include="Resources\layout\Settings.axml" />
     <AndroidResource Include="Resources\drawable-mdpi\ic_menu_restart.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ic_menu_start.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ic_menu_restart.png" />
@@ -381,6 +380,9 @@
     <AndroidResource Include="Resources\drawable-hdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_position.png" />
+    <AndroidResource Include="Resources\layout\Preferences.axml" />
+    <AndroidResource Include="Resources\values\array.xml" />
+    <AndroidResource Include="Resources\menu\ScreenListMenu.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

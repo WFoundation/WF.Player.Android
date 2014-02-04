@@ -19,7 +19,7 @@
             <Button
                 android:text="Button"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:id="@+id/button1"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"
@@ -32,7 +32,7 @@
             <Button
                 android:text="Button"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:id="@+id/button2"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="0dp"

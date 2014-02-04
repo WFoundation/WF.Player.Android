@@ -61,8 +61,17 @@ namespace WF.Player.Android
 			var view = inflater.Inflate(Resource.Layout.CheckLocation, container, false);
 
 			textDescription = view.FindViewById<TextView> (Resource.Id.textDescription);
+			textDescription.Gravity = PrefHelper.TextAlignment;
+			textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+
 			textCoordinates = view.FindViewById<TextView> (Resource.Id.textCoords);
+			textCoordinates.Gravity = PrefHelper.TextAlignment;
+			textCoordinates.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+
 			textAccuracy = view.FindViewById<TextView> (Resource.Id.textAccuracy);
+			textAccuracy.Gravity = PrefHelper.TextAlignment;
+			textAccuracy.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+
 			button = view.FindViewById<Button> (Resource.Id.buttonStart);
 
 			button.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light_red);
@@ -91,6 +100,8 @@ namespace WF.Player.Android
 
 		void OnButtonClicked (object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
 			ctrl.InitController(true);
 		}
 

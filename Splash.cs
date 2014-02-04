@@ -40,7 +40,6 @@ namespace WF.Player.Android
 			this.RequestWindowFeature(WindowFeatures.NoTitle);
 
 			// Create your application here
-			//			Thread.Sleep(500); // Simulate a long loading process on app startup.
 			StartActivity(typeof(MainActivity));
 		}
 	}

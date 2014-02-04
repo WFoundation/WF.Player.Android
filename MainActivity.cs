@@ -82,11 +82,20 @@ namespace WF.Player.Android
 			var buttonOffline = FindViewById<Button>(Resource.Id.buttonOffline);
 			buttonOffline.Click += buttonOfflineClick;
 
+			var buttonNearby = FindViewById<Button>(Resource.Id.buttonNearby);
+			buttonNearby.Enabled = false;
+			buttonNearby.Click += buttonNearbyClick;
+
 			var buttonSearchParam = FindViewById<Button>(Resource.Id.buttonSearchParam);
+			buttonSearchParam.Enabled = false;
 			buttonSearchParam.Click += buttonSearchParamClick;
 
 			var buttonSearchWGCode = FindViewById<Button>(Resource.Id.buttonSearchWGCode);
+			buttonSearchWGCode.Enabled = false;
 			buttonSearchWGCode.Click += buttonSearchWGCodeClick;
+
+			var buttonSettings = FindViewById<Button>(Resource.Id.buttonSettings);
+			buttonSettings.Click += buttonSettingsClick;
 		}
 
 		protected override void OnResume()
@@ -171,6 +180,17 @@ namespace WF.Player.Android
 		public void buttonSearchParamClick(object sender, EventArgs args)
 		{ 
 			Intent intent = new Intent (this, typeof(SearchActivity));
+			intent.PutExtra ("Cartridges", "Test");
+			StartActivity (intent);
+		}
+
+		void buttonNearbyClick (object sender, EventArgs e)
+		{
+		}
+
+		void buttonSettingsClick (object sender, EventArgs e)
+		{
+			Intent intent = new Intent (this, typeof(PreferencesActivity));
 			intent.PutExtra ("Cartridges", "Test");
 			StartActivity (intent);
 		}

@@ -70,7 +70,7 @@ namespace WF.Player.Android
 			listView.Adapter = new ScreenListAdapter (this, ctrl, type);
 			listView.ItemClick += OnItemClick;
 
-			((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
+			ctrl.SupportActionBar.Title = GetContent ();
 
 			HasOptionsMenu = (type == ScreenType.Locations || type == ScreenType.Items);
 
@@ -92,14 +92,16 @@ namespace WF.Player.Android
 
 		public void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
 		{
+			ctrl.Feedback();
+
 			EntrySelected(e.Position);
 		}
 
 		public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater) 
 		{
-			inflater.Inflate (Resource.Menu.ScreenDetailMenu, menu);
+			inflater.Inflate (Resource.Menu.ScreenListMenu, menu);
 
-			menuMap = menu.FindItem (Resource.Id.menu_screen_detail_map);
+			menuMap = menu.FindItem (Resource.Id.menu_screen_list_map);
 
 			if (type == ScreenType.Locations || type == ScreenType.Items) {
 				menuMap.SetVisible (true);
@@ -116,6 +118,8 @@ namespace WF.Player.Android
 		/// <param name="item">Item, which is selected.</param>
 		public override bool OnOptionsItemSelected(IMenuItem item)
 		{
+			ctrl.Feedback();
+
 			if (item == menuMap) {
 				ctrl.ShowScreen(ScreenType.Map, null);
 				return false;
@@ -128,10 +132,10 @@ namespace WF.Player.Android
 		{
 			base.OnResume();
 
-			((ActionBarActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled (true);
-			((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(true);
+			ctrl.SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			ctrl.SupportActionBar.SetDisplayShowHomeEnabled(true);
 
-			((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
+			ctrl.SupportActionBar.Title = GetContent ();
 
 			StartEvents();
 

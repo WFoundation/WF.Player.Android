@@ -28,7 +28,6 @@ using Android.OS;
 using Android.Runtime;
 using Android.Text;
 using Android.Views;
-using Android.Webkit;
 using Android.Widget;
 using Android.Support.V4.App;
 using Android.Support.V7.App;
@@ -137,6 +136,8 @@ namespace WF.Player.Android
 
 		public override bool OnOptionsItemSelected (IMenuItem item)
 		{
+			ctrl.Feedback();
+
 			//This uses the imported MenuItem from ActionBarSherlock
 			switch (item.ItemId) {
 				case Resource.Id.menu_screen_detail_map:
@@ -181,6 +182,8 @@ namespace WF.Player.Android
 
 		public void OnButtonClicked(object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
 			int tag = (int)((Button)sender).Tag;
 
 			Command c = commands [tag];
@@ -201,6 +204,8 @@ namespace WF.Player.Android
 
 		public void OnThingClicked(object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
 			layoutButtons.Visibility = ViewStates.Visible;
 			layoutWorksWith.Visibility = ViewStates.Gone;
 
@@ -211,6 +216,8 @@ namespace WF.Player.Android
 
 		public void OnNothingClicked(object sender, EventArgs e)
 		{
+			ctrl.Feedback();
+
 			layoutButtons.Visibility = ViewStates.Visible;
 			layoutWorksWith.Visibility = ViewStates.Gone;
 
@@ -225,16 +232,16 @@ namespace WF.Player.Android
 		{
 			if (activeObject != null && this.Activity != null) {
 				// Assign this item's values to the various subviews
-				((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(true);
+				ctrl.SupportActionBar.SetDisplayShowHomeEnabled(true);
 
 				string name = activeObject.Name == null ? "" : activeObject.Name;
 
 				if (what.Equals ("") || what.Equals ("Name"))
 				{
 					if (activeObject is Task)
-						((ActionBarActivity)Activity).SupportActionBar.Title = (((Task)activeObject).Complete ? (((Task)activeObject).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + name;
+						ctrl.SupportActionBar.Title = (((Task)activeObject).Complete ? (((Task)activeObject).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + name;
 					else
-						((ActionBarActivity)Activity).SupportActionBar.Title = name;
+						ctrl.SupportActionBar.Title = name;
 				}
 
 				if (what.Equals ("") || what.Equals ("Media")) {
@@ -252,11 +259,13 @@ namespace WF.Player.Android
 					if (!String.IsNullOrWhiteSpace (activeObject.Description)) {
 						textDescription.Visibility = ViewStates.Visible;
 						textDescription.Text = activeObject.Description; // Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-						textDescription.Gravity = GravityFlags.Left;
+						textDescription.Gravity = PrefHelper.TextAlignment;
+						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 					} else {
 						textDescription.Visibility = ViewStates.Visible;
 						textDescription.Text = "";
-						textDescription.Gravity = GravityFlags.Left;
+						textDescription.Gravity = PrefHelper.TextAlignment;
+						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 					}
 				}
 				// Tasks don't have any command button
