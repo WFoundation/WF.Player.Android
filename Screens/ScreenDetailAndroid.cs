@@ -116,6 +116,7 @@ namespace WF.Player.Android
 		{
 			base.OnDestroyView();
 
+			imageView.SetImageBitmap(null);
 			imageView = null;
 			layoutButtons = null;
 			layoutWorksWith = null;
@@ -147,17 +148,11 @@ namespace WF.Player.Android
 //					menuDefault.SetVisible(true);
 //					layoutMap.Visibility = ViewStates.Visible;
 //					layoutDefault.Visibility = ViewStates.Gone;
+					return false;
 					break;
-//				case Resource.Id.menu_screen_detail_default:
-//					// TODO: Show default
-//					menuMap.SetVisible(true);
-//					menuDefault.SetVisible(false);
-//					layoutMap.Visibility = ViewStates.Gone;
-//					layoutDefault.Visibility = ViewStates.Visible;
-//					break;
 			}
 
-			return true;
+			return base.OnOptionsItemSelected(item);;
 		}
 
 		public override void OnResume()
@@ -245,10 +240,11 @@ namespace WF.Player.Android
 				}
 
 				if (what.Equals ("") || what.Equals ("Media")) {
-					Bitmap bm = null;
-
 					if (activeObject.Image != null) {
-						imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(activeObject.Image));
+						imageView.SetImageBitmap(null);
+						using (Bitmap bm = ctrl.ConvertMediaToBitmap(activeObject.Image)) {
+							imageView.SetImageBitmap (bm);
+						}
 						imageView.Visibility = ViewStates.Visible;
 					} else {
 						imageView.Visibility = ViewStates.Gone;

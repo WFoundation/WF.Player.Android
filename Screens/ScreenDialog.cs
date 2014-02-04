@@ -164,6 +164,7 @@ namespace WF.Player.Android
 		{
 			base.OnDestroyView();
 
+			imageView.SetImageBitmap(null);
 			imageView = null;
 			messageBox = null;
 			input = null;
@@ -225,7 +226,10 @@ namespace WF.Player.Android
 				textDescription.Gravity = PrefHelper.TextAlignment;
 				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 				if (messageBox.Image != null) {
-					imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(messageBox.Image));
+					imageView.SetImageBitmap(null);
+					using (Bitmap bm = ctrl.ConvertMediaToBitmap(messageBox.Image)) {
+						imageView.SetImageBitmap (bm);
+					}
 					imageView.Visibility = ViewStates.Visible;
 				} else {
 					imageView.Visibility = ViewStates.Gone;
@@ -246,7 +250,10 @@ namespace WF.Player.Android
 				textDescription.Gravity = PrefHelper.TextAlignment;
 				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
 				if (input.Image != null) {
-					imageView.SetImageBitmap (ctrl.ConvertMediaToBitmap(input.Image));
+					imageView.SetImageBitmap(null);
+					using (Bitmap bm = ctrl.ConvertMediaToBitmap(input.Image)) {
+						imageView.SetImageBitmap (bm);
+					}
 					imageView.Visibility = ViewStates.Visible;
 				} else {
 					imageView.Visibility = ViewStates.Gone;

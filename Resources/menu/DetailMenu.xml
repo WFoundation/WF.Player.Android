@@ -4,21 +4,25 @@
 	<item
         android:id="@+id/menu_detail_save"
         android:icon="@drawable/ic_save"
+        android:showAsAction="never"
         wfplayer:showAsAction="never"
         android:title="@string/menu_detail_save"/>
 	<item
         android:id="@+id/menu_detail_delete"
         android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="never"
         wfplayer:showAsAction="never"
         android:title="@string/menu_detail_delete"/>
     <item
         android:id="@+id/menu_detail_resume"
         android:icon="@drawable/ic_menu_restart"
         android:title="@string/menu_detail_resume"
+        android:showAsAction="always"
         wfplayer:showAsAction="always"/>
     <item
         android:id="@+id/menu_detail_start"
         android:icon="@drawable/ic_menu_start"
         android:title="@string/menu_detail_start"
+        android:showAsAction="always"
         wfplayer:showAsAction="always"/>
 </menu>

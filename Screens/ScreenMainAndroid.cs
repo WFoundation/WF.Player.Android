@@ -144,10 +144,15 @@ namespace WF.Player.Android
 		{
 			base.OnDestroyView();
 
+			((Bitmap)iconLocation).Recycle();
 			iconLocation = null;
+			((Bitmap)iconYouSee).Recycle();
 			iconYouSee = null;
+			((Bitmap)iconInventory).Recycle();
 			iconInventory = null;
+			((Bitmap)iconTask).Recycle();
 			iconTask = null;
+			((Bitmap)iconPosition).Recycle();
 			iconPosition = null;
 			menuQuit = null;
 			menuSave = null;
@@ -184,7 +189,7 @@ namespace WF.Player.Android
 				ctrl.Quit();
 				return false;
 			}
-			return true;
+			return base.OnOptionsItemSelected(item);
 		}
 
 		/// <summary>
@@ -335,11 +340,28 @@ namespace WF.Player.Android
 			// For position we must generate text here
 			if (position == 4) {
 				var gps = MainApp.Instance.GPS;
-				var location = gps.IsValid ? gps.CoordinatesToString(gps.Latitude, gps.Longitude) : Catalog.GetString("unknown");
+				var location = gps.IsValid ? gps.CoordinatesToString(gps.Latitude, gps.Longitude) : Catalog.GetString("Unknown");
 				var altitude = gps.HasAltitude ? String.Format("{0:0}", gps.Altitude) : "\u0335";
 				var accuracy = gps.HasAccuracy ? String.Format("{0:0}", gps.Accuracy) : Strings.Infinite;
 				var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
-				items = Catalog.Format(Catalog.GetString("{0}\n\nAltitude:\t\t\t{1} m\nAccuracy:\t\t{2} m\nStatus:\t\t\t{3}"), location, altitude, accuracy, status);;
+
+				StringBuilder sb = new StringBuilder();
+
+				sb.AppendLine(location);
+				sb.AppendLine("");
+				sb.Append(Catalog.GetString("Altitude"));
+				sb.Append(":\t\t\t\t");
+				sb.Append(altitude);
+				sb.AppendLine(" m");
+				sb.Append(Catalog.GetString("Accuracy"));
+				sb.Append(":\t\t");
+				sb.Append(accuracy);
+				sb.AppendLine(" m");
+				sb.Append(Catalog.GetString("Status"));
+				sb.Append(":\t\t\t\t");
+				sb.AppendLine(status);
+
+				items = sb.ToString();
 			}
 
 			using (var textHeader = view.FindViewById<TextView>(Resource.Id.textHeader)) {
@@ -351,8 +373,10 @@ namespace WF.Player.Android
 			}
 
 			using (var imageIcon = view.FindViewById<ImageView>(Resource.Id.imageIcon)) {
-				if (image != null) 
+				if (image != null) {
+					imageIcon.SetImageBitmap(null);
 					imageIcon.SetImageBitmap((Bitmap)image);
+				}
 			}
 
 			// Finally return the view

@@ -161,13 +161,37 @@ namespace WF.Player.Android
 					intent = new Intent (this, typeof(ScreenController));
 					intent.PutExtra ("cartridge", cart.Filename);
 					intent.PutExtra ("restore", false);
-					Start(intent);
+					try {
+						Start(intent);
+					} 
+					catch (Exception ex) {
+						AlertDialog.Builder adb = new AlertDialog.Builder(this);
+						adb.SetTitle(Catalog.GetString("Error"));
+						adb.SetMessage(ex.Message);
+						adb.SetPositiveButton(Catalog.GetString("Ok"),  (sender, args) =>
+							{
+								// Do something when this button is clicked.
+							});
+						adb.Show();
+					}
 					break;
 				case Resource.Id.menu_detail_resume:
 					intent = new Intent (this, typeof(ScreenController));
 					intent.PutExtra ("cartridge", cart.Filename);
 					intent.PutExtra ("restore", true);
-					Start(intent);
+					try {
+						Start(intent);
+					} 
+					catch (Exception ex) {
+						AlertDialog.Builder adb = new AlertDialog.Builder(this);
+						adb.SetTitle(Catalog.GetString("Error"));
+						adb.SetMessage(ex.Message);
+						adb.SetPositiveButton(Catalog.GetString("Ok"),  (sender, args) =>
+							{
+								// Do something when this button is clicked.
+							});
+						adb.Show();
+					}
 					break;
 				default:
 					Toast.MakeText (this, "Got click: " + item.ToString (), ToastLength.Long).Show ();
@@ -224,16 +248,6 @@ namespace WF.Player.Android
 
 		public void OnTabUnselected (global::Android.Support.V7.App.ActionBar.Tab tab, global::Android.Support.V4.App.FragmentTransaction transaction)
 		{
-		}
-
-		public void OnButtonStartClick(object sender, EventArgs e)
-		{
-			Intent intent = new Intent (this, typeof(ScreenController));
-
-			intent.PutExtra ("cartridge", intent.GetIntExtra ("cartridge", 0));
-			intent.PutExtra ("resume", false);
-
-			StartActivity (intent);
 		}
 
 		/// <summary>

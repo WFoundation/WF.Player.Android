@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	  xmlns:wfplayer="http://schemas.android.com/apk/res-auto" >
 	<item
         android:id="@+id/menu_screen_main_save"
         android:icon="@drawable/ic_save"
-        android:showAsAction="always"
-        android:title="@string/menu_screen_main_save"/>
+        android:title="@string/menu_screen_main_save"
+        android:showAsAction="never"
+        wfplayer:showAsAction="never" />
 	<item
         android:id="@+id/menu_screen_main_quit"
         android:icon="@drawable/ic_quit"
-        android:showAsAction="always"
-        android:title="@string/menu_screen_main_quit"/>
+        android:title="@string/menu_screen_main_quit"
+        android:showAsAction="never"
+        wfplayer:showAsAction="never" />
 </menu>

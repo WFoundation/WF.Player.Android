@@ -120,12 +120,13 @@ namespace WF.Player.Android
 		{
 			ctrl.Feedback();
 
-			if (item == menuMap) {
-				ctrl.ShowScreen(ScreenType.Map, null);
-				return false;
+			switch (item.ItemId) {
+				case Resource.Id.menu_screen_list_map:
+					ctrl.ShowScreen(ScreenType.Map, null);
+					return false;
 			}
 
-			return true;
+			return base.OnOptionsItemSelected(item);
 		}
 
 		public override void OnResume()
@@ -222,8 +223,6 @@ namespace WF.Player.Android
 			// This will sound familiar to MonoTouch developers with UITableViewCell.DequeueReusableCell()
 			var view = (convertView ?? ctrl.LayoutInflater.Inflate(Resource.Layout.ScreenListItem, parent, false)) as RelativeLayout;
 
-			Bitmap bm = null;
-
 			var layout = view.FindViewById<LinearLayout>(Resource.Id.linearLayoutItemText);
 			var imageIcon = view.FindViewById<ImageView>(Resource.Id.imageIcon);
 			var textHeader = view.FindViewById<TextView>(Resource.Id.textHeader);
@@ -234,12 +233,15 @@ namespace WF.Player.Android
 				layout.LayoutParameters = layoutParams;
 			}
 
+			Bitmap bm = null;
+
 			try {
 				if (owner.ShowIcons) {
+					//					imageIcon.SetImageBitmap(null);
 					if (owner.Items[position].Icon != null) {
-						bm = Bitmap.CreateScaledBitmap(BitmapFactory.DecodeByteArray (owner.Items[position].Icon.Data, 0, owner.Items[position].Icon.Data.Length),32,32,true);
+						bm = ctrl.ConvertMediaToBitmap(owner.Items[position].Icon,32);
 					} else {
-						bm = Bitmap.CreateBitmap(32, 32, Bitmap.Config.Argb8888);
+						bm = Images.IconEmpty;
 					}
 					imageIcon.SetImageBitmap (bm);
 					imageIcon.Visibility = ViewStates.Visible;
@@ -247,8 +249,10 @@ namespace WF.Player.Android
 					imageIcon.Visibility = ViewStates.Gone;
 				}
 			} finally {
-				if (bm != null)
+				if (bm != null) {
 					bm.Dispose();
+					bm = null;
+				}
 			}
 
 			string name = owner.Items[position].Name == null ? "" : owner.Items[position].Name;
@@ -265,10 +269,16 @@ namespace WF.Player.Android
 							textDistance.Visibility = ViewStates.Visible;
 							imageDirection.Visibility = ViewStates.Visible;
 							textDistance.Text = ((Thing)owner.Items[position]).VectorFromPlayer.Distance.BestMeasureAs(DistanceUnit.Meters);
-							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0)
-								imageDirection.SetImageBitmap (ctrl.DrawCenter ());
-							else
-								imageDirection.SetImageBitmap (ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + MainApp.Instance.GPS.Heading));
+							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0) {
+								bm = ctrl.DrawCenter ();
+								imageDirection.SetImageBitmap (null);
+								imageDirection.SetImageBitmap (bm);
+								bm = null;
+							} else {
+								bm = ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + MainApp.Instance.GPS.Heading);
+								imageDirection.SetImageBitmap (bm);
+								bm = null;
+							}
 						} else {
 							textDistance.Visibility = ViewStates.Gone;
 							imageDirection.Visibility = ViewStates.Gone;

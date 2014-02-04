@@ -57,6 +57,9 @@ namespace WF.Player.Android
 		MediaPlayer mediaPlayer = new MediaPlayer();
 		AudioManager audioManager;
 		Vibrator vibrator;
+		System.Timers.Timer removeTimer;
+//		ScreenType removeType;
+//		global::Android.Support.V4.App.Fragment removeVisibleScreen;
 		bool cartRestore;
 		Paint light = new Paint (PaintFlags.AntiAlias);
 		Paint dark = new Paint (PaintFlags.AntiAlias);
@@ -147,8 +150,9 @@ namespace WF.Player.Android
 
 			// If cartridge contains an icon, than show this as home button
 			if (cartridge.Icon != null) {
-				Bitmap bm = BitmapFactory.DecodeByteArray (cartridge.Icon.Data, 0, cartridge.Icon.Data.Length);
-				SupportActionBar.SetIcon(new BitmapDrawable(this.Resources, bm));
+				using (Bitmap bm = BitmapFactory.DecodeByteArray (cartridge.Icon.Data, 0, cartridge.Icon.Data.Length)) {
+					SupportActionBar.SetIcon(new BitmapDrawable(this.Resources, bm));
+				}
 			}
 
 			// Show main screen
@@ -289,8 +293,8 @@ namespace WF.Player.Android
 		public void Restore()
 		{
 			if (engine != null) {
-				engine.RefreshLocation(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 				engine.Restore (new FileStream (cartridge.SaveFilename, FileMode.Open));
+				engine.RefreshLocation(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 			}
 		}
 
@@ -308,8 +312,8 @@ namespace WF.Player.Android
 		public void Start()
 		{
 			if (engine != null) {
-				engine.RefreshLocation(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 				engine.Start ();
+				engine.RefreshLocation(MainApp.Instance.GPS.Latitude, MainApp.Instance.GPS.Longitude, MainApp.Instance.GPS.Altitude, MainApp.Instance.GPS.Accuracy);
 			}
 		}
 
@@ -319,23 +323,52 @@ namespace WF.Player.Android
 		/// <param name="last">Last screen active.</param>
 		public void RemoveScreen(ScreenType type)
 		{
+			// Save active screen and wait 100 ms. If the active screen is the same as the saved, than remove it
+			global::Android.Support.V4.App.Fragment removeVisibleScreen = SupportFragmentManager.Fragments [0];
+			ScreenType removeType = type;
+
+			if (removeTimer != null) {
+				removeTimer.Stop();
+				removeTimer = null;
+			}
+
+			removeTimer = new System.Timers.Timer();
+			removeTimer.Interval = 100;
+			removeTimer.Elapsed += (sender, e) => RunOnUiThread( () => InternalRemoveScreen(sender, e, removeType, removeVisibleScreen) ); //InvokeRemoveScreen(sender, e, removeType, removeVisibleScreen);
+			removeTimer.Start();
+		}
+
+		void InternalRemoveScreen(object sender, System.Timers.ElapsedEventArgs e, ScreenType removeType, global::Android.Support.V4.App.Fragment removeVisibleScreen) 
+		{
+			if (removeTimer != null) {
+				// Stop timer, we don't need it anymore
+				removeTimer.Stop();
+				removeTimer = null;
+			}
+
+			// Is there still the same screen visible? If not, than leave
+			if (SupportFragmentManager.Fragments [0] != removeVisibleScreen) {
+				return;
+			}
+
 			bool remove = true;
 			ScreenType activeType = ActiveScreenType();
 
 			// Check if screen to remove is active screen, instead leave
-			if (type != null) {
+			if (removeType != null) {
 				if (SupportFragmentManager.Fragments [0] is ScreenList)
-					remove &= ((ScreenList)SupportFragmentManager.Fragments [0]).Type == type;
+					remove &= ((ScreenList)SupportFragmentManager.Fragments [0]).Type == removeType;
 				if (SupportFragmentManager.Fragments [0] is ScreenDetail)
-					remove &= type == ScreenType.Details;
+					remove &= removeType == ScreenType.Details;
 				if (SupportFragmentManager.Fragments [0] is ScreenDialog)
-					remove &= type == ScreenType.Dialog;
+					remove &= removeType == ScreenType.Dialog;
 				if (SupportFragmentManager.Fragments [0] is ScreenMap)
-					remove &= type == ScreenType.Map;
+					remove &= removeType == ScreenType.Map;
 			}
 
 			if (!remove)
 				return;
+
 
 			switch (activeType) {
 				case ScreenType.Main:
@@ -407,6 +440,12 @@ namespace WF.Player.Android
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
+			// If there is an active remove timer, stop it, because we bring the next screen on the device
+			if (removeTimer != null) {
+				removeTimer.Stop();
+				removeTimer = null;
+			}
+
 			switch (screen) 
 			{
 				case ScreenType.Main:
@@ -451,40 +490,74 @@ namespace WF.Player.Android
 
 		public Bitmap ConvertMediaToBitmap(Media media, int maxWidth = -1)
 		{
-			Bitmap result = BitmapFactory.DecodeByteArray (media.Data, 0, media.Data.Length);
+			Bitmap result = null;
+
+			// First get dimensions of the image
+			BitmapFactory.Options options = new BitmapFactory.Options();   
+
+			// First decode with InJustDecodeBounds=true to check dimensions
+			options.InJustDecodeBounds = true;
+			BitmapFactory.DecodeByteArray(media.Data, 0, media.Data.Length, options);
+
+			// Calculate inSampleSize
 
 			// We need to adjust the height if the width of the bitmap is
 			// smaller than the view width, otherwise the image will be boxed.
-			if (result.Width > 0) {
-				if (PrefHelper.ImageResize != ImageResize.NoResize) {
-					var metrics = Resources.DisplayMetrics;
-					int width = (int)(result.Width * metrics.Density);
-					int height = (int)(result.Height * metrics.Density);
-						
-					maxWidth = maxWidth < 0 ? (int)(metrics.WidthPixels - 2 * Resources.GetDimension(Resource.Dimension.screen_frame)) : maxWidth;
-					int maxHeight = (int)(0.5 * metrics.HeightPixels);
-						
-					if (width > maxWidth && (PrefHelper.ImageResize == ImageResize.ResizeWidth || PrefHelper.ImageResize == ImageResize.ShrinkWidth)) {
-						double factor = (double)maxWidth / (double)width;
-						width = maxWidth;
-						height = (int)(height * factor);
+			if (options.OutWidth > 0) {
+
+				var metrics = Resources.DisplayMetrics;
+				int width = (int)(options.OutWidth * metrics.Density);
+				int height = (int)(options.OutHeight * metrics.Density);
+							
+				maxWidth = maxWidth < 0 ? (int)(metrics.WidthPixels - 2 * Resources.GetDimension(Resource.Dimension.screen_frame)) : maxWidth;
+				int maxHeight = (int)(0.5 * metrics.HeightPixels);
+							
+				if (width > maxWidth && (PrefHelper.ImageResize == ImageResize.ResizeWidth || PrefHelper.ImageResize == ImageResize.ShrinkWidth)) {
+					double factor = (double)maxWidth / (double)width;
+					width = maxWidth;
+					height = (int)(height * factor);
 					}
 
-					if (width < maxWidth && PrefHelper.ImageResize == ImageResize.ResizeWidth) {
-						double factor = (double)maxWidth / (double)width;
-						width = maxWidth;
-						height = (int)(height * factor);
-					}
+				if (width < maxWidth && PrefHelper.ImageResize == ImageResize.ResizeWidth) {
+					double factor = (double)maxWidth / (double)width;
+					width = maxWidth;
+					height = (int)(height * factor);
+				}
 
-					if (height != maxHeight && PrefHelper.ImageResize == ImageResize.ResizeHeight) {
-						double factor = (double)maxHeight / (double)height;
-						height = maxHeight;
-						width = (int)(width * factor);
-					}
+				if (height != maxHeight && PrefHelper.ImageResize == ImageResize.ResizeHeight) {
+					double factor = (double)maxHeight / (double)height;
+					height = maxHeight;
+					width = (int)(width * factor);
+				}
 
-					result = Bitmap.CreateScaledBitmap(result, width, height, true);
+				//	result = Bitmap.CreateScaledBitmap(bitmap, width, height, true);
+				if (options.OutWidth > width || options.OutHeight > height) {
+					// Calculate ratios of height and width to requested height and width
+					int heightRatio = Convert.ToInt32(Math.Round((double) options.OutHeight / (double) height));
+					int widthRatio = Convert.ToInt32(Math.Round((double) options.OutWidth / (double) width));
+
+					// Choose the smallest ratio as inSampleSize value, this will guarantee
+					// a final image with both dimensions larger than or equal to the
+					// requested height and width.
+					options.InSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+				} else {
+					options.InSampleSize = 1;
+				}
+
+				// Decode bitmap with InSampleSize set
+				options.InJustDecodeBounds = false;        
+
+
+				if (options.OutWidth == width && options.OutHeight == height) {
+					// Cave: If width and height is the same, CreateScaledBitmap returns the same bitmap, not a new one :(
+					result = BitmapFactory.DecodeByteArray (media.Data, 0, media.Data.Length, options); 
+				} else {
+					using (Bitmap bm = BitmapFactory.DecodeByteArray (media.Data, 0, media.Data.Length, options)) { 
+						result = Bitmap.CreateScaledBitmap(bm, width, height, true);
+					}
 				}
 			}
+
 			return result;
 		}
 

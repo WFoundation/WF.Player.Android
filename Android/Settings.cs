@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Android.Graphics;
 using Vernacular;
 
 namespace WF.Player.Android
@@ -16,6 +17,7 @@ namespace WF.Player.Android
 
 	public class Images
 	{
+		public static Bitmap IconEmpty = Bitmap.CreateBitmap(32, 32, Bitmap.Config.Argb8888);
 	}
 
 	public sealed class Strings
