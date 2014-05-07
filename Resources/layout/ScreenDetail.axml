@@ -1,8 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:id="@+id/layoutButtons"
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="10dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutWorksWith"
+            android:padding="10dp">
+            <TextView
+                android:id="@+id/textWorksWith"
+                android:text="Works with"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingBottom="10dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/layoutMap">
+        <TextView
+            android:id="@+id/textMap"
+            android:text="Map"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
     <ScrollView
         android:minWidth="25px"
         android:minHeight="25px"
@@ -10,6 +61,8 @@
         android:layout_height="fill_parent"
         android:id="@+id/scrollView"
         android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/layoutBottom"
         android:scrollbars="vertical">
         <LinearLayout
             android:orientation="vertical"
@@ -26,60 +79,16 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" />
             <TextView
+                android:id="@+id/textDescription"
                 android:text="Small Text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textDescription"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
-            <LinearLayout
-                android:orientation="vertical"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/layoutButtons"
-                android:padding="10dp" />
-            <LinearLayout
-                android:orientation="vertical"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/layoutWorksWith"
-                android:padding="10dp">
-                <TextView
-                    android:text="Works with"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textWorksWith"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="10dp"
-                    android:textStyle="bold" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/layoutMap">
-        <TextView
-            android:text="Map"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textDescription"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
