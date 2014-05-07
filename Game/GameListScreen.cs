@@ -1,6 +1,6 @@
 ///
 /// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android and iPhone, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014 Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014 Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -24,14 +24,15 @@ using System.Text;
 using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Types;
 
-namespace WF.Player.Android
+namespace WF.Player.Game
 {
-	public partial class ScreenList
+	public partial class GameListScreen
 	{
-		ScreenController ctrl;
+		GameController ctrl;
 		Engine engine;
-		ScreenType type;
+		ScreenTypes type;
 		string[] properties = {"Name", "Icon", "Active", "Visible", "ObjectLocation", "VisibleObjects", "VisibleInventory", "ActiveVisibleTasks", "ActiveVisibleZones"};
 
 		public List<UIObject> Items = new List<UIObject>();
@@ -40,7 +41,7 @@ namespace WF.Player.Android
 
 		#region Properties
 
-		public ScreenType Type {
+		public ScreenTypes Type {
 			get { return type; }
 		}
 
@@ -58,7 +59,7 @@ namespace WF.Player.Android
 			}
 			else
 			{
-				ctrl.ShowScreen (ScreenType.Details, obj);
+				ctrl.ShowScreen (ScreenTypes.Details, obj);
 			}
 		}
 
@@ -75,7 +76,7 @@ namespace WF.Player.Android
 
 			switch (type)
 			{
-			case ScreenType.Locations:
+			case ScreenTypes.Locations:
 				header = Catalog.GetString("Locations");
 				ShowDirections = true;
 				foreach (UIObject item in engine.ActiveVisibleZones)
@@ -84,7 +85,7 @@ namespace WF.Player.Android
 					Items.Add (item);
 				}
 				break;
-			case ScreenType.Items:
+			case ScreenTypes.Items:
 				header = Catalog.GetString("You see");
 				ShowDirections = true;
 				foreach (UIObject item in engine.VisibleObjects)
@@ -93,7 +94,7 @@ namespace WF.Player.Android
 					Items.Add (item);
 				}
 				break;
-			case ScreenType.Inventory:
+			case ScreenTypes.Inventory:
 				header = Catalog.GetString("Inventory");
 				foreach (UIObject item in engine.VisibleInventory)
 				{
@@ -101,7 +102,7 @@ namespace WF.Player.Android
 					Items.Add (item);
 				}
 				break;
-			case ScreenType.Tasks:
+			case ScreenTypes.Tasks:
 				header = Catalog.GetString("Tasks");
 				foreach (UIObject item in engine.ActiveVisibleTasks)
 				{

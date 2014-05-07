@@ -48,6 +48,9 @@
   <string name="menu_screen_detail_default">Detail</string>
   <string name="menu_screen_detail_title">Kommandos</string>
   <string name="menu_screen_detail_cancel">Abbrechen</string>
+  <string name="menu_screen_map_location_header">Fokussieren auf</string>
+  <string name="menu_screen_map_location_mylocation">Standort</string>
+  <string name="menu_screen_map_location_game">Spielbereich</string>
   <string name="menu_screen_list_map">Karte</string>
   <string name="pref_header">Einstellungen</string>
   <string name="pref_feedback">Rückmeldung</string>

@@ -1,6 +1,6 @@
 ///
 /// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android and iPhone, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014 Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014 Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -24,16 +24,17 @@ using System.Text;
 using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Types;
 
-namespace WF.Player.Android
+namespace WF.Player.Game
 {
 	/// <summary>
 	/// Screen main fragment.
 	/// </summary>
-	public partial class ScreenMain
+	public partial class GameMainScreen
 	{
 		Engine engine;
-		ScreenController ctrl;
+		GameController ctrl;
 
 		string[] properties = {"Name", "Visible"};
 
@@ -63,7 +64,7 @@ namespace WF.Player.Android
 //                                                }
 //                                                else
 					{
-						ctrl.ShowScreen(ScreenType.Locations, null);
+						ctrl.ShowScreen(ScreenTypes.Locations, null);
 					}
 				}
 				break;
@@ -84,7 +85,7 @@ namespace WF.Player.Android
 //                                                }
 //                                                else
 					{
-						ctrl.ShowScreen(ScreenType.Items, null);
+						ctrl.ShowScreen(ScreenTypes.Items, null);
 					}
 				}
 				break;
@@ -105,7 +106,7 @@ namespace WF.Player.Android
 //                                                }
 //                                                else
 					{
-						ctrl.ShowScreen(ScreenType.Inventory, null);
+						ctrl.ShowScreen(ScreenTypes.Inventory, null);
 					}
 				}
 				break;
@@ -126,7 +127,7 @@ namespace WF.Player.Android
 //                                                }
 //                                                else
 					{
-						ctrl.ShowScreen(ScreenType.Tasks, null);
+						ctrl.ShowScreen(ScreenTypes.Tasks, null);
 					}
 				}
 				break;
@@ -195,6 +196,30 @@ namespace WF.Player.Android
 				case 4:
 					header = Catalog.GetString("Position");
 					image = iconPosition;
+
+					var gps = Main.GPS;
+					var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
+					var altitude = gps.Location.HasAltitude ? String.Format("{0:0}", gps.Location.Altitude) : "\u0335";
+					var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0}", gps.Location.Accuracy) : Strings.Infinite;
+					var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
+
+					StringBuilder sb = new StringBuilder();
+
+					sb.AppendLine(location);
+					sb.AppendLine("");
+					sb.Append(Catalog.GetString("Altitude"));
+					sb.Append(":\t\t\t\t");
+					sb.Append(altitude);
+					sb.AppendLine(" m");
+					sb.Append(Catalog.GetString("Accuracy"));
+					sb.Append(":\t\t");
+					sb.Append(accuracy);
+					sb.AppendLine(" m");
+					sb.Append(Catalog.GetString("Status"));
+					sb.Append(":\t\t\t\t");
+					sb.AppendLine(status);
+
+					items = sb.ToString();
 					break;
 				}
 
@@ -217,22 +242,46 @@ namespace WF.Player.Android
 			}
 		}
 
-		void StartEvents()
+		void CommonCreate()
+		{
+		}
+
+		void CommonResume()
 		{
 			engine.AttributeChanged += OnPropertyChanged;
 			engine.InventoryChanged += OnPropertyChanged;
 			engine.ZoneStateChanged += OnPropertyChanged;
 
 			engine.PropertyChanged += OnPropertyChanged;
+
+			Main.GPS.AddLocationListener(OnLocationChanged);
+
+			CommonRefresh();
 		}
 
-		void StopEvents()
+		void CommonRefresh()
 		{
+			Refresh();
+		}
+
+		void CommonPause()
+		{
+			Main.GPS.RemoveLocationListener(OnLocationChanged);
+
 			engine.AttributeChanged -= OnPropertyChanged;
 			engine.InventoryChanged -= OnPropertyChanged;
 			engine.ZoneStateChanged -= OnPropertyChanged;
 
 			engine.PropertyChanged -= OnPropertyChanged;
+		}
+
+		#endregion
+
+		#region Events
+
+		void OnLocationChanged (object sender, WF.Player.Location.LocationChangedEventArgs e)
+		{
+			CommonRefresh();
 		}
 
 		public void OnPropertyChanged(object sender, EventArgs e)

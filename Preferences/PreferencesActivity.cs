@@ -29,9 +29,9 @@ using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 
-namespace WF.Player.Android
+namespace WF.Player.Preferences
 {
-	[Activity (Label = "Settings", Theme="@style/Theme")]			
+	[Activity (Label = "Settings")] //, Theme="@style/Theme")]			
 	public class PreferencesActivity : PreferenceActivity
 	{
 		protected override void OnCreate (Bundle bundle)

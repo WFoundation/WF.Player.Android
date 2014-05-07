@@ -27,7 +27,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace WF.Player.Android
+namespace WF.Player
 {
 	[Activity (Label = "Search", Theme="@android:style/Theme.NoTitleBar.Fullscreen")]			
 	public class SearchActivity : Activity

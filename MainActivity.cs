@@ -34,8 +34,10 @@ using Android.Locations;
 using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Live;
+using WF.Player.Location;
+using WF.Player.Preferences;
 
-namespace WF.Player.Android
+namespace WF.Player
 {
 	[Activity (Label = "WF.Player.Main", Theme="@android:style/Theme.NoTitleBar")]			
 	public class MainActivity : Activity
@@ -44,7 +46,7 @@ namespace WF.Player.Android
 		{
 			base.OnCreate (bundle);
 
-			if (String.IsNullOrEmpty (((MainApp)Application).Path)) {
+			if (String.IsNullOrEmpty (Main.Path)) {
 				Finish ();
 				return;
 			}
@@ -52,14 +54,14 @@ namespace WF.Player.Android
 			Catalog.Implementation = new Vernacular.AndroidCatalog (Resources, typeof (Resource.String));
 
 			// Create object for location listener
-			MainApp.Instance.GPS = new LocListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
+			Main.GPS = new GPSListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
 
 			ISharedPreferences pref = GetPreferences (FileCreationMode.WorldWriteable);
 
-			pref.GetString ("Username", GetString (Resource.String.main_unknown));
+			Main.Prefs.GetString ("Username", GetString (Resource.String.main_unknown));
 
 			var textUsername = FindViewById<TextView> (Resource.Id.textUsername);
 			textUsername.Text = "charlenni";
@@ -103,8 +105,7 @@ namespace WF.Player.Android
 			base.OnResume ();
 
 			// Add to location listener
-			MainApp.Instance.GPS.LocationChanged += OnLocationChanged;
-			MainApp.Instance.GPS.Start();
+			Main.GPS.AddLocationListener(OnLocationChanged);
 		}
 
 		protected override void OnPause()
@@ -112,8 +113,7 @@ namespace WF.Player.Android
 			base.OnPause ();
 
 			// Remove to location listener
-			MainApp.Instance.GPS.LocationChanged -= OnLocationChanged;
-			MainApp.Instance.GPS.Stop();
+			Main.GPS.RemoveLocationListener(OnLocationChanged);
 		}
 
 		public void buttonOfflineClick(object sender, EventArgs args)
@@ -122,7 +122,7 @@ namespace WF.Player.Android
 			List<string> fileList = new List<string> ();
 			FileInfo[] files = null;
 
-			string path = ((MainApp)Application).Path;
+			string path = Main.Path;
 
 			try {
 				// Read all GWC, GWZ, WFC and WFZ from default directory
@@ -195,19 +195,13 @@ namespace WF.Player.Android
 			StartActivity (intent);
 		}
 
-		public void OnLocationChanged(object sender, LocationChangedEventArgs e)
+		public void OnLocationChanged(object sender, WF.Player.Location.LocationChangedEventArgs e)
 		{
 			var textCoordText = FindViewById<TextView> (Resource.Id.textCoordText);
 			textCoordText.Text = e.Location.HasAccuracy ? GetString (Resource.String.main_active_location) : GetString (Resource.String.main_last_known_location);
 
 			var textCoords = FindViewById<TextView> (Resource.Id.textCoords);
-			double latSign = e.Location.Latitude >= 0 ? 1 : -1;
-			double latDegrees = Math.Floor (Math.Abs (e.Location.Latitude));
-			double latMinutes = (Math.Abs (e.Location.Latitude) - latDegrees) * 60;
-			double lonSign = e.Location.Longitude >= 0 ? 1 : -1;
-			double lonDegrees = Math.Floor (Math.Abs (e.Location.Longitude));
-			double lonMinutes = (Math.Abs (e.Location.Longitude) - lonDegrees) * 60;
-			textCoords.Text = (latSign > 0 ? "N" : "S") + String.Format (" {0}° {1:00.000} ", latDegrees, latMinutes) + (lonSign > 0 ? "E" : "W") + String.Format (" {0}° {1:00.000}", lonDegrees, lonMinutes);
+			textCoords.Text = e.Location.ToString();
 
 			var textAccuracy = FindViewById<TextView> (Resource.Id.textAccuracy);
 			textAccuracy.Text = String.Format ("{0:0} m", e.Location.Accuracy);

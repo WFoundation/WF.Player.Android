@@ -1,6 +1,6 @@
 ///
 /// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014  Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -32,19 +32,21 @@ using Android.Support.V4.App;
 using Android.Support.V7.App;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Location;
+using WF.Player.Types;
 
-namespace WF.Player.Android
+namespace WF.Player.Game
 {
-	#region ScreenList
+	#region GameListScreen
 
-	public partial class ScreenList : global::Android.Support.V4.App.Fragment
+	public partial class GameListScreen : global::Android.Support.V4.App.Fragment
 	{
 		ListView listView;
 		IMenuItem menuMap;
 
 		#region Constructor
 
-		public ScreenList(Engine engine, ScreenType screen)
+		public GameListScreen(Engine engine, ScreenTypes screen)
 		{
 			this.type = screen;
 			this.engine = engine;
@@ -59,7 +61,7 @@ namespace WF.Player.Android
 			base.OnCreateView (inflater, container, savedInstanceState);
 
 			// Save ScreenController for later use
-			ctrl = ((ScreenController)this.Activity);
+			ctrl = ((GameController)this.Activity);
 
 			if (container == null)
 				return null;
@@ -67,12 +69,12 @@ namespace WF.Player.Android
 			var view = inflater.Inflate(Resource.Layout.ScreenList, container, false);
 
 			listView = view.FindViewById<ListView> (Resource.Id.listView);
-			listView.Adapter = new ScreenListAdapter (this, ctrl, type);
+			listView.Adapter = new GameListScreenAdapter (this, ctrl, type);
 			listView.ItemClick += OnItemClick;
 
 			ctrl.SupportActionBar.Title = GetContent ();
 
-			HasOptionsMenu = (type == ScreenType.Locations || type == ScreenType.Items);
+			HasOptionsMenu = (type == ScreenTypes.Locations || type == ScreenTypes.Items);
 
 			return view;
 		}
@@ -103,7 +105,7 @@ namespace WF.Player.Android
 
 			menuMap = menu.FindItem (Resource.Id.menu_screen_list_map);
 
-			if (type == ScreenType.Locations || type == ScreenType.Items) {
+			if (type == ScreenTypes.Locations || type == ScreenTypes.Items) {
 				menuMap.SetVisible (true);
 			} else {
 				menuMap.SetVisible(false);
@@ -122,7 +124,7 @@ namespace WF.Player.Android
 
 			switch (item.ItemId) {
 				case Resource.Id.menu_screen_list_map:
-					ctrl.ShowScreen(ScreenType.Map, null);
+					ctrl.ShowScreen(ScreenTypes.Map, null);
 					return false;
 			}
 
@@ -140,8 +142,8 @@ namespace WF.Player.Android
 
 			StartEvents();
 
-			if (type == ScreenType.Locations || type == ScreenType.Items)
-				MainApp.Instance.GPS.HeadingChanged += OnHeadingChanged;
+			if (type == ScreenTypes.Locations || type == ScreenTypes.Items)
+				Main.GPS.AddBearingListener(OnBearingChanged);
 
 			Refresh(true);
 		}
@@ -150,13 +152,13 @@ namespace WF.Player.Android
 		{
 			base.OnStop();
 
-			if (type == ScreenType.Locations || type == ScreenType.Items)
-				MainApp.Instance.GPS.HeadingChanged -= OnHeadingChanged;
+			if (type == ScreenTypes.Locations || type == ScreenTypes.Items)
+				Main.GPS.RemoveBearingListener(OnBearingChanged);
 
 			StopEvents();
 		}
 
-		void OnHeadingChanged (object sender, EventArgs e)
+		void OnBearingChanged (object sender, BearingChangedEventArgs e)
 		{
 			Refresh(false);
 		}
@@ -171,7 +173,7 @@ namespace WF.Player.Android
 				((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
 
 			if (listView != null)
-				((ScreenListAdapter)listView.Adapter).NotifyDataSetChanged();
+				((GameListScreenAdapter)listView.Adapter).NotifyDataSetChanged();
 		}
 
 		#endregion
@@ -181,15 +183,15 @@ namespace WF.Player.Android
 
 	#region ScreenListAdapter
 
-	public class ScreenListAdapter : BaseAdapter
+	public class GameListScreenAdapter : BaseAdapter
 	{
-		ScreenController ctrl;
-		ScreenList owner;
-		ScreenType screen;
+		GameController ctrl;
+		GameListScreen owner;
+		ScreenTypes screen;
 
 		#region Constructor
 
-		public ScreenListAdapter(ScreenList owner, ScreenController ctrl, ScreenType screen) : base()
+		public GameListScreenAdapter(GameListScreen owner, GameController ctrl, ScreenTypes screen) : base()
 		{
 			this.ctrl = ctrl;
 			this.owner = owner;
@@ -264,7 +266,7 @@ namespace WF.Player.Android
 			using (var textDistance = view.FindViewById<TextView> (Resource.Id.textDistance)) {
 				using(var imageDirection = view.FindViewById<ImageView> (Resource.Id.imageDirection)) {
 
-					if (screen == ScreenType.Locations || screen == ScreenType.Items) {
+					if (screen == ScreenTypes.Locations || screen == ScreenTypes.Items) {
 						if (((Thing)owner.Items[position]).VectorFromPlayer != null) {
 							textDistance.Visibility = ViewStates.Visible;
 							imageDirection.Visibility = ViewStates.Visible;
@@ -275,7 +277,7 @@ namespace WF.Player.Android
 								imageDirection.SetImageBitmap (bm);
 								bm = null;
 							} else {
-								bm = ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + MainApp.Instance.GPS.Heading);
+								bm = ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + Main.GPS.Bearing);
 								imageDirection.SetImageBitmap (bm);
 								bm = null;
 							}

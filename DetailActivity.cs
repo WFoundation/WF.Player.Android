@@ -33,8 +33,10 @@ using Android.Support.V4.App;
 using Android.Support.V7.App;
 using Vernacular;
 using WF.Player.Core;
+using WF.Player.Types;
+using WF.Player.Game;
 
-namespace WF.Player.Android
+namespace WF.Player
 {
 	[Activity (Label = "Cartridge Details", Theme="@style/Theme")]	
 	[MetaData ("android.support.UI_OPTIONS", Value = "splitActionBarWhenNarrow")]		
@@ -132,18 +134,18 @@ namespace WF.Player.Android
 			switch(item.ItemId) {
 				case Resource.Id.menu_detail_save:
 					if (String.IsNullOrEmpty (cart.Filename)) {
-						cart.Filename = System.IO.Path.Combine (((MainApp)Application).Path, cart.WGCode);
+					cart.Filename = System.IO.Path.Combine (Main.Path, cart.WGCode);
 						var pd = ProgressDialog.Show(this, "Download", "Please Wait...", false);
-						((MainApp)Application).Cartridges.DownloadCartridge (cart, ((MainApp)Application).Path, new FileStream (cart.Filename, FileMode.Create));
+					((MainApp)Application).Cartridges.DownloadCartridge (cart, Main.Path, new FileStream (cart.Filename, FileMode.Create));
 						pd.Hide ();
 					}
 					break;
 				case Resource.Id.menu_detail_delete:
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.SetTitle(Catalog.GetString("Delete"));
-				builder.SetMessage(Catalog.Format(Catalog.GetString("Would you delete the cartridge {0} and all log/save files?"), cart.Name));
+					builder.SetTitle(Catalog.GetString("Delete"));
+					builder.SetMessage(Catalog.Format(Catalog.GetString("Would you delete the cartridge {0} and all log/save files?"), cart.Name));
 					builder.SetCancelable(true);
-				builder.SetPositiveButton(Catalog.GetString("Yes"), delegate { 
+					builder.SetPositiveButton(Catalog.GetString("Yes"), delegate { 
 						if (!String.IsNullOrEmpty(cart.Filename) && File.Exists (cart.Filename))
 							File.Delete (cart.Filename);
 						if (!String.IsNullOrEmpty(cart.SaveFilename) && File.Exists (cart.SaveFilename))
@@ -158,7 +160,7 @@ namespace WF.Player.Android
 					builder.Show();
 					break;
 				case Resource.Id.menu_detail_start:
-					intent = new Intent (this, typeof(ScreenController));
+					intent = new Intent (this, typeof(GameController));
 					intent.PutExtra ("cartridge", cart.Filename);
 					intent.PutExtra ("restore", false);
 					try {
@@ -176,7 +178,7 @@ namespace WF.Player.Android
 					}
 					break;
 				case Resource.Id.menu_detail_resume:
-					intent = new Intent (this, typeof(ScreenController));
+					intent = new Intent (this, typeof(GameController));
 					intent.PutExtra ("cartridge", cart.Filename);
 					intent.PutExtra ("restore", true);
 					try {
@@ -258,8 +260,7 @@ namespace WF.Player.Android
 			base.OnPause ();
 
 			// Remove from GPS
-			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
-			MainApp.Instance.GPS.Stop();
+			Main.GPS.RemoveLocationListener(OnRefreshLocation);
 		}
 
 		/// <summary>
@@ -270,13 +271,12 @@ namespace WF.Player.Android
 			base.OnResume();
 
 			// Add to GPS
-			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
-			MainApp.Instance.GPS.Start();
+			Main.GPS.AddLocationListener(OnRefreshLocation);
 
 			Refresh();
 		}
 
-		void OnRefreshLocation (object sender, global::Android.Locations.LocationChangedEventArgs e)
+		void OnRefreshLocation (object sender, WF.Player.Location.LocationChangedEventArgs e)
 		{
 		}
 
@@ -323,8 +323,8 @@ namespace WF.Player.Android
 		{
 			SetContentView (Resource.Layout.DetailDescription);
 			TextView textView = FindViewById<TextView> (Resource.Id.textView);
-			textView.Gravity = PrefHelper.TextAlignment;
-			textView.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+			textView.Gravity = Main.Prefs.TextAlignment.ToSystem();
+			textView.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 			if (String.IsNullOrEmpty(cart.LongDescription))
 				textView.Text = Catalog.GetString("No description availible");
 			else

@@ -1,6 +1,6 @@
 ///
 /// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014  Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -33,12 +33,13 @@ using Android.Support.V4.App;
 using Android.Support.V7.App;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Types;
 
-namespace WF.Player.Android
+namespace WF.Player.Game
 {
-	#region ScreenDetail
+	#region GameDetailScreen
 
-	public partial class ScreenDetail : global::Android.Support.V4.App.Fragment
+	public partial class GameDetailScreen : global::Android.Support.V4.App.Fragment
 	{
 		ImageView imageView;
 		ScrollView layoutDefault;
@@ -52,7 +53,7 @@ namespace WF.Player.Android
 
 		#region Constructor
 
-		public ScreenDetail(ScreenController ctrl, UIObject obj)
+		public GameDetailScreen(GameController ctrl, UIObject obj)
 		{
 			this.ctrl = ctrl;
 			this.activeObject = obj;
@@ -69,7 +70,7 @@ namespace WF.Player.Android
 		{
 			base.OnCreateView (inflater, container, savedInstanceState);
 
-			ctrl = ((ScreenController)this.Activity);
+			ctrl = ((GameController)this.Activity);
 
 			if (container == null)
 				return null;
@@ -142,7 +143,7 @@ namespace WF.Player.Android
 			//This uses the imported MenuItem from ActionBarSherlock
 			switch (item.ItemId) {
 				case Resource.Id.menu_screen_detail_map:
-					ctrl.ShowScreen(ScreenType.Map, activeObject);
+					ctrl.ShowScreen(ScreenTypes.Map, activeObject);
 				// TODO: Remove, Show map
 //					menuMap.SetVisible(false);
 //					menuDefault.SetVisible(true);
@@ -255,13 +256,13 @@ namespace WF.Player.Android
 					if (!String.IsNullOrWhiteSpace (activeObject.Description)) {
 						textDescription.Visibility = ViewStates.Visible;
 						textDescription.Text = activeObject.Description; // Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-						textDescription.Gravity = PrefHelper.TextAlignment;
-						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+						textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
+						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 					} else {
 						textDescription.Visibility = ViewStates.Visible;
 						textDescription.Text = "";
-						textDescription.Gravity = PrefHelper.TextAlignment;
-						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+						textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
+						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 					}
 				}
 				// Tasks don't have any command button

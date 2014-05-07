@@ -1,6 +1,6 @@
 ///
 /// WF.Player.iPhone/WF.Player.Android - A Wherigo Player for Android and iPhone, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014 Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014 Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -23,14 +23,15 @@ using System.Linq;
 using System.Text;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Types;
 
-namespace WF.Player.Android
+namespace WF.Player.Game
 {
 	#region ScreenDetail
 
-	public partial class ScreenDetail
+	public partial class GameDetailScreen
 	{
-		ScreenController ctrl;
+		GameController ctrl;
 		UIObject activeObject;
 		WherigoCollection<Command> commands;
 		WherigoCollection<Thing> targets;
@@ -88,7 +89,7 @@ namespace WF.Player.Android
 
 			if (remove) {
 				StopEvents ();
-				ctrl.RemoveScreen (ScreenType.Details);
+				ctrl.RemoveScreen (ScreenTypes.Details);
 			}
 		}
 

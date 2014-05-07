@@ -1,6 +1,6 @@
 ///
 /// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014  Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -34,14 +34,15 @@ using Android.Support.V4.App;
 using Android.Support.V7.App;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Types;
 
-namespace WF.Player.Android
+namespace WF.Player.Game
 {
-	#region ScreenDialog
+	#region GameDialogScreen
 
-	public class ScreenDialog : global::Android.Support.V4.App.Fragment
+	public class GameDialogScreen : global::Android.Support.V4.App.Fragment
 	{
-		ScreenController ctrl;
+		GameController ctrl;
 		MessageBox messageBox;
 		Input input;
 		ImageView imageView;
@@ -56,13 +57,13 @@ namespace WF.Player.Android
 
 		#region Constructor
 
-		public ScreenDialog(MessageBox messageBox)
+		public GameDialogScreen(MessageBox messageBox)
 		{
 			this.messageBox = messageBox;
 			this.input = null;
 		}
 
-		public ScreenDialog(Input input)
+		public GameDialogScreen(Input input)
 		{
 			this.messageBox = null;
 			this.input = input;
@@ -77,7 +78,7 @@ namespace WF.Player.Android
 			ctrl.Feedback();
 
 			// Remove dialog from screen
-			ctrl.RemoveScreen (ScreenType.Dialog);
+			ctrl.RemoveScreen (ScreenTypes.Dialog);
 
 			// Execute callback if there is one
 			if (sender is Button) {
@@ -90,7 +91,7 @@ namespace WF.Player.Android
 			ctrl.Feedback();
 
 			// Remove dialog from screen
-			ctrl.RemoveScreen (ScreenType.Dialog);
+			ctrl.RemoveScreen (ScreenTypes.Dialog);
 
 			if (input != null) {
 				string result = ((Button)sender).Text;
@@ -103,7 +104,7 @@ namespace WF.Player.Android
 			base.OnCreateView (inflater, container, savedInstanceState);
 
 			// Save ScreenController for later use
-			ctrl = ((ScreenController)this.Activity);
+			ctrl = ((GameController)this.Activity);
 
 			if (container == null)
 				return null;
@@ -195,7 +196,7 @@ namespace WF.Player.Android
 				});
 
 			// Remove dialog from screen
-			ctrl.RemoveScreen (ScreenType.Dialog);
+			ctrl.RemoveScreen (ScreenTypes.Dialog);
 
 			if (input != null) {
 				string result = editInput.Text;
@@ -223,8 +224,8 @@ namespace WF.Player.Android
 				// Normal dialog
 				// TODO: HTML
 				textDescription.Text = messageBox.Text; // Html.FromHtml(messageBox.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-				textDescription.Gravity = PrefHelper.TextAlignment;
-				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+				textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
+				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 				if (messageBox.Image != null) {
 					imageView.SetImageBitmap(null);
 					using (Bitmap bm = ctrl.ConvertMediaToBitmap(messageBox.Image)) {
@@ -247,8 +248,8 @@ namespace WF.Player.Android
 			} else {
 				// TODO: HTML
 				textDescription.Text = input.Text; // Html.FromHtml(input.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-				textDescription.Gravity = PrefHelper.TextAlignment;
-				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, PrefHelper.TextSize);
+				textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
+				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 				if (input.Image != null) {
 					imageView.SetImageBitmap(null);
 					using (Bitmap bm = ctrl.ConvertMediaToBitmap(input.Image)) {
@@ -273,7 +274,7 @@ namespace WF.Player.Android
 				} else {
 					// Input dialog
 					// ToDo: Clear text field editInput
-					if (PrefHelper.InputFocus) {
+					if (Main.Prefs.InputFocus) {
 						editInput.RequestFocus();
 						((InputMethodManager)ctrl.GetSystemService(Context.InputMethodService)).ShowSoftInput(editInput, ShowFlags.Implicit);
 					}

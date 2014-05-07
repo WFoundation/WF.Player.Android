@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Android", "WF.Player.Core\Core\Core.Android.csproj", "{47C98C7A-1A47-457B-9A22-6D621F344B56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WF.Player.Android", "WF.Player.Android.csproj", "{6C7E3AB9-7CC8-4187-879E-C9CD10266339}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WF.Player", "WF.Player.csproj", "{6C7E3AB9-7CC8-4187-879E-C9CD10266339}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eluant.Android", "WF.Player.Core\Eluant\Eluant\Eluant.Android.csproj", "{5913825E-0C80-4660-81B3-C2C55B35ADB6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vernacular.Catalog.Android", "S:\Entwicklung\CSharp\vernacular\Vernacular.Catalog\Vernacular.Catalog.Android.csproj", "{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,15 +32,9 @@ Global
 		{6C7E3AB9-7CC8-4187-879E-C9CD10266339}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6C7E3AB9-7CC8-4187-879E-C9CD10266339}.Test|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C7E3AB9-7CC8-4187-879E-C9CD10266339}.Test|Any CPU.Build.0 = Debug|Any CPU
-		{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}.Test|Any CPU.ActiveCfg = Debug|Any CPU
-		{88A3707E-AF47-4C5A-8FF5-C30A0441C5AB}.Test|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = WF.Player.Android.csproj
+		StartupItem = WF.Player.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None

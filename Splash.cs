@@ -18,17 +18,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Preferences;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using WF.Player.Preferences;
 
-namespace WF.Player.Android
+namespace WF.Player
 {
 	[Activity(MainLauncher = true, NoHistory = true, Label = "WF.Player", Theme="@style/Theme.Splash")]			
 	public class Splash : Activity
@@ -37,9 +40,29 @@ namespace WF.Player.Android
 		{
 			base.OnCreate (bundle);
 
+			// Create your application here
+
+			// Display splash screen on whole screen
 			this.RequestWindowFeature(WindowFeatures.NoTitle);
 
-			// Create your application here
+			// Save prefernces instance
+			Main.Prefs = new PreferenceValues(PreferenceManager.GetDefaultSharedPreferences(this));
+
+			string path = Main.Prefs.GetString("path", null);
+
+			if (String.IsNullOrEmpty(path))
+				path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player";
+
+			try {
+				if (!Directory.Exists (path))
+					Directory.CreateDirectory (path);
+			}
+			catch {
+			}
+
+			Main.Path = path;
+
+			// Show splash screen
 			StartActivity(typeof(MainActivity));
 		}
 	}

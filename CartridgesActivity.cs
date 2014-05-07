@@ -1,6 +1,6 @@
 ///
 /// WF.Player.Android - A Wherigo Player for Android, which use the Wherigo Foundation Core.
-/// Copyright (C) 2012-2014  Dirk Weltz <web@weltz-online.de>
+/// Copyright (C) 2012-2014  Dirk Weltz <mail@wfplayer.com>
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU Lesser General Public License as
@@ -32,7 +32,7 @@ using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Live;
 
-namespace WF.Player.Android
+namespace WF.Player
 {
 	/// <summary>
 	/// Cartridges activity to show a list of cartridges.
@@ -96,8 +96,7 @@ namespace WF.Player.Android
 			base.OnPause ();
 
 			// Remove from GPS
-			MainApp.Instance.GPS.LocationChanged -= OnRefreshLocation;
-			MainApp.Instance.GPS.Stop();
+			Main.GPS.RemoveLocationListener(OnRefreshLocation);
 		}
 
 		/// <summary>
@@ -108,13 +107,12 @@ namespace WF.Player.Android
 			base.OnResume();
 
 			// Add to GPS
-			MainApp.Instance.GPS.LocationChanged += OnRefreshLocation;
-			MainApp.Instance.GPS.Start();
+			Main.GPS.AddLocationListener(OnRefreshLocation);
 
 			Refresh();
 		}
 
-		void OnRefreshLocation (object sender, global::Android.Locations.LocationChangedEventArgs e)
+		void OnRefreshLocation (object sender, WF.Player.Location.LocationChangedEventArgs e)
 		{
 		}
 
