@@ -36,10 +36,12 @@ namespace WF.Player.Preferences
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
+			SetTheme(Resource.Style.Theme_AppCompat_Light);
+
 			base.OnCreate (bundle);
 
 			// Create your application here
-			AddPreferencesFromResource(Resource.Layout.Preferences);
+			AddPreferencesFromResource(Resource.Layout.PreferencesView);
 		}
 
 		/// <summary>

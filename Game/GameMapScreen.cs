@@ -49,8 +49,8 @@ namespace WF.Player.Game
 		View mapView;
 		GoogleMap map;
 		RelativeLayout layoutButtons;
-		ImageButton btnCenter;
-		ImageButton btnOrientation;
+		ImageButton btnMapCenter;
+		ImageButton btnMapOrientation;
 		ImageButton btnMapType;
 		Dictionary<int, GroundOverlay> overlays = new Dictionary<int, GroundOverlay> ();
 		Dictionary<int, Marker> markers = new Dictionary<int, Marker> ();
@@ -84,54 +84,65 @@ namespace WF.Player.Game
 //			mapView = new MapView(ctrl);
 //			mapView.OnCreate(savedInstanceState);
 //
+			// Set all relevant data for map
 			map = this.Map;
-//
-//			// See http://stackoverflow.com/questions/19541915/google-maps-cameraupdatefactory-not-initalized
-//			if (map != null)
-//				MapsInitializer.Initialize(ctrl);
-//
-//			//			mapView = view.FindViewById<MapView>(Resource.Id.mapview);
-//
-//			var layout = view.FindViewById<LinearLayout>(Resource.Id.layoutMap);
-//
-//			layout.AddView(mapView);
-//
 			map.MapType = GoogleMap.MapTypeNormal;
 			map.MoveCamera(CameraUpdateFactory.NewLatLngZoom(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude), (float)Main.Prefs.GetDouble("MapZoom", 16)));
 			map.MyLocationEnabled = true;
 			map.BuildingsEnabled = true;
-			map.UiSettings.ZoomControlsEnabled = true;
+			map.UiSettings.ZoomControlsEnabled = false;
+			map.UiSettings.MyLocationButtonEnabled = false;
+			map.UiSettings.CompassEnabled = false;
+			map.UiSettings.TiltGesturesEnabled = false;
+			map.UiSettings.RotateGesturesEnabled = false;
 
+			// Create the zones the first time
 			CreateZones();
 
+			// Create layout for map buttons
 			layoutButtons = new RelativeLayout(ctrl);
 
+			// Button for center menu
 			var lp = new RelativeLayout.LayoutParams(62, 62);
-			lp.LeftMargin = 20;
-			lp.TopMargin = 20;
+			lp.SetMargins(16, 16, 16, 16);
+			lp.AddRule(LayoutRules.AlignParentLeft);
+			lp.AddRule(LayoutRules.AlignParentTop);
 
-			btnCenter = new ImageButton(ctrl);
-			btnCenter.SetImageResource(Resource.Drawable.ic_button_center);
-			btnCenter.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
+			btnMapCenter = new ImageButton(ctrl);
+			btnMapCenter.Id = 1;
+			btnMapCenter.SetImageResource(Resource.Drawable.ic_button_center);
+			btnMapCenter.SetBackgroundResource(Resource.Drawable.MapButton);
+			btnMapCenter.Click += OnMapCenterButtonClick;
 
-			//view.AddView(btnCenter, lp);
+			layoutButtons.AddView(btnMapCenter, lp);
 
+			// Button for the orientation: north up or always in direction
 			lp = new RelativeLayout.LayoutParams(62, 62);
-			lp.LeftMargin = 20;
-			lp.TopMargin = 80;
+			lp.SetMargins(16, 8, 16, 16);
+			lp.AddRule(LayoutRules.Below, btnMapCenter.Id);
+			lp.AddRule(LayoutRules.AlignParentLeft);
 
-			btnOrientation = new ImageButton(ctrl);
-			btnOrientation.SetImageResource(Resource.Drawable.ic_button_layer);
-			btnOrientation.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
+			btnMapOrientation = new ImageButton(ctrl);
+			btnMapOrientation.SetImageResource(Resource.Drawable.ic_button_orientation);
+			btnMapOrientation.SetBackgroundResource(Resource.Drawable.MapButton);
+			btnMapOrientation.Click += OnMapOrientationButtonClick;
 
-			//view.AddView(btnOrientation, lp);
+			layoutButtons.AddView(btnMapOrientation, lp);
 
-			//			layout.AddView(layoutButtons);
-//			LinearLayout layoutMap = view.FindViewById<LinearLayout> (Resource.Id.layoutMap);
-//
-//			mapView = new MapView(this);
-//
-//			layoutMap.AddView(mapView);
+			// Button for selecting the map type
+			lp = new RelativeLayout.LayoutParams(62, 62);
+			lp.SetMargins(16, 16, 16, 8);
+			lp.AddRule(LayoutRules.AlignParentTop);
+			lp.AddRule(LayoutRules.AlignParentRight);
+
+			btnMapType = new ImageButton(ctrl);
+			btnMapType.SetImageResource(Resource.Drawable.ic_button_layer);
+			btnMapType.SetBackgroundResource(Resource.Drawable.MapButton);
+			btnMapType.Click += OnMapTypeButtonClick;
+
+			layoutButtons.AddView(btnMapType, lp);
+
+			view.AddView(layoutButtons);
 
 			return view;
 		}
@@ -156,10 +167,12 @@ namespace WF.Player.Game
 			}
 
 			map.CameraChange += OnCameraChange;
-			map.MyLocationButtonClick += OnMyLocationButtonClick;
+			//			map.MyLocationButtonClick += OnMyLocationButtonClick;
 			// Use the common location listener, so that we have everywhere the same location
 			map.SetLocationSource(Main.GPS);
 			Main.GPS.AddLocationListener(OnLocationChanged);
+			if (!Main.Prefs.GetBool("MapOrientationNorth",true))
+				Main.GPS.AddOrientationListener(OnOrientationChanged);
 		}
 
 		/// <summary>
@@ -178,8 +191,10 @@ namespace WF.Player.Game
 			}
 
 			map.CameraChange -= OnCameraChange;
-			map.MyLocationButtonClick -= OnMyLocationButtonClick;
+			//map.MyLocationButtonClick -= OnMyLocationButtonClick;
 			Main.GPS.RemoveLocationListener(OnLocationChanged);
+			if (!Main.Prefs.GetBool("MapOrientationNorth", true))
+				Main.GPS.RemoveOrientationListener(OnOrientationChanged);
 		}
 
 		void OnPropertyChanged (object sender, PropertyChangedEventArgs e)
@@ -199,12 +214,17 @@ namespace WF.Player.Game
 			UpdateDistanceLine();
 		}
 
+		void OnOrientationChanged (object sender, WF.Player.Location.OrientationChangedEventArgs e)
+		{
+			RotateCamera((float)Main.GPS.Bearing);
+		}
+
 		void OnCameraChange (object sender, GoogleMap.CameraChangeEventArgs e)
 		{
 			Main.Prefs.SetDouble("MapZoom", e.P0.Zoom);
 		}
 
-		void OnMyLocationButtonClick (object sender, GoogleMap.MyLocationButtonClickEventArgs args)
+		void OnMapCenterButtonClick (object sender, EventArgs args)
 		{
 			string[] items = new string[] {GetString(Resource.String.menu_screen_map_location_mylocation), GetString(Resource.String.menu_screen_map_location_game)};
 
@@ -216,6 +236,61 @@ namespace WF.Player.Game
 					FocusOnLocation();
 				if (e.Which == 1)
 					FocusOnGame();
+			});
+			AlertDialog alert = builder.Create();
+			alert.Show();
+		}
+
+		void OnMapOrientationButtonClick (object sender, EventArgs args)
+		{
+			// Toogle button
+			Main.Prefs.SetBool("MapOrientationNorth", !Main.Prefs.GetBool("MapOrientationNorth", true));
+
+			// Set icon
+			if (Main.Prefs.GetBool("MapOrientationNorth", true)) {
+				btnMapOrientation.SetImageResource(Resource.Drawable.ic_button_orientation);
+				RotateCamera(0.0f);
+				Main.GPS.RemoveOrientationListener(OnOrientationChanged);
+			} else {
+				btnMapOrientation.SetImageResource(Resource.Drawable.ic_button_layer);
+				Main.GPS.AddOrientationListener(OnOrientationChanged);
+			}
+		}
+
+		void OnMapTypeButtonClick (object sender, EventArgs args)
+		{
+			string[] items = new string[] {GetString(Resource.String.menu_screen_map_type_google_maps), 
+				GetString(Resource.String.menu_screen_map_type_google_satelitte),
+				GetString(Resource.String.menu_screen_map_type_google_terrain), 
+				GetString(Resource.String.menu_screen_map_type_google_hybrid), 
+				GetString(Resource.String.menu_screen_map_type_osm), 
+				GetString(Resource.String.menu_screen_map_type_ocm),
+				GetString(Resource.String.menu_screen_map_type_none)
+			};
+
+			// Show selection dialog for location
+			AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
+			builder.SetTitle(Resource.String.menu_screen_map_type_header);
+			builder.SetItems(items.ToArray(), delegate(object s, DialogClickEventArgs e) {
+				if (e.Which == 0) {
+					map.MapType = GoogleMap.MapTypeNormal;
+				}
+				if (e.Which == 1) {
+					map.MapType = GoogleMap.MapTypeSatellite;
+				}
+				if (e.Which == 2) {
+					map.MapType = GoogleMap.MapTypeTerrain;
+				}
+				if (e.Which == 3) {
+					map.MapType = GoogleMap.MapTypeHybrid;
+				}
+				if (e.Which == 4) {
+				}
+				if (e.Which == 5) {
+				}
+				if (e.Which == 6) {
+					map.MapType = GoogleMap.MapTypeNone;
+				}
 			});
 			AlertDialog alert = builder.Create();
 			alert.Show();
@@ -259,6 +334,16 @@ namespace WF.Player.Game
 			zones.Add (z.ObjIndex, map.AddPolygon (po));
 		}
 
+		void RotateCamera(float bearing)
+		{
+			// Get old position of map
+			CameraPosition oldPos = map.CameraPosition;
+			// Calculate new orientation
+			CameraPosition pos = new CameraPosition.Builder(oldPos).Bearing(bearing).Build();
+			// Set new orientation
+			map.MoveCamera(CameraUpdateFactory.NewCameraPosition(pos));
+		}
+
 		/// <summary>
 		/// Draw line from active location to active object, if it is a zone.
 		/// </summary>
@@ -273,7 +358,7 @@ namespace WF.Player.Game
 				// Draw line
 				PolylineOptions po = new PolylineOptions();
 				po.Points.Add (new LatLng (Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
-				po.Points.Add (new LatLng (((Zone)activeObject).Points[0].Latitude, ((Zone)activeObject).Points[0].Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
+				po.Points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
 				po.InvokeColor(Color.Cyan);
 				po.InvokeWidth(2);
 				distanceLine = map.AddPolyline(po);

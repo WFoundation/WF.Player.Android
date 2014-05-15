@@ -51,6 +51,15 @@
   <string name="menu_screen_map_location_header">Fokussieren auf</string>
   <string name="menu_screen_map_location_mylocation">Standort</string>
   <string name="menu_screen_map_location_game">Spielbereich</string>
+  <string name="menu_screen_map_type_header">Art der Karte</string>
+  <string name="menu_screen_map_type_google_maps">Google Maps</string>
+  <string name="menu_screen_map_type_google_satelitte">Google Satelit</string>
+  <string name="menu_screen_map_type_google_terrain">Google Gelände</string>
+  <string name="menu_screen_map_type_google_hybrid">Google Hybrid</string>
+  <string name="menu_screen_map_type_osm">OpenStreetMap</string>
+  <string name="menu_screen_map_type_ocm">OpenCycleMap</string>
+  <string name="menu_screen_map_type_none">Keine</string>
+
   <string name="menu_screen_list_map">Karte</string>
   <string name="pref_header">Einstellungen</string>
   <string name="pref_feedback">Rückmeldung</string>

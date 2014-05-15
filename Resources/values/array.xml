@@ -2,28 +2,52 @@
 
 <resources>
 
+	<string-array name="theme_key">
+        <item name="0">@string/pref_theme_dark</item>
+        <item name="1">@string/pref_theme_light</item>
+        <item name="2">@string/pref_theme_blue</item>
+	</string-array>
+	<string-array name="theme_value">
+        <item name="0">0</item>
+        <item name="1">1</item>
+        <item name="2">2</item>
+	</string-array>
+
 	<string-array name="text_alignment_key">
         <item name="0">@string/pref_text_alignment_left</item>
         <item name="1">@string/pref_text_alignment_center</item>
         <item name="2">@string/pref_text_alignment_right</item>
-    </string-array>
+	</string-array>
 	<string-array name="text_alignment_value">
         <item name="0">0</item>
         <item name="1">1</item>
         <item name="2">2</item>
-    </string-array>
+	</string-array>
 
-    <string-array name="image_size_key">
+	<string-array name="image_size_key">
         <item name="0">@string/pref_image_size_noresize</item>
         <item name="1">@string/pref_image_size_shrink</item>
         <item name="2">@string/pref_image_size_width</item>
         <item name="3">@string/pref_image_size_height</item>
-    </string-array>
-   	<string-array name="image_size_value">
+	</string-array>
+	<string-array name="image_size_value">
         <item name="0">0</item>
         <item name="1">1</item>
         <item name="2">2</item>
         <item name="3">3</item>
-    </string-array>
+	</string-array>
+
+	<string-array name="pref_sensor_orientation_filter_key">
+        <item name="0">@string/pref_sensor_orientation_filter_none</item>
+        <item name="1">@string/pref_sensor_orientation_filter_light</item>
+        <item name="2">@string/pref_sensor_orientation_filter_medium</item>
+        <item name="3">@string/pref_sensor_orientation_filter_heavy</item>
+	</string-array>
+	<string-array name="pref_sensor_orientation_filter_value">
+        <item name="0">0</item>
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+	</string-array>
 
 </resources>

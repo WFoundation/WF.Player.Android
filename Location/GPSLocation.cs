@@ -234,6 +234,16 @@ namespace WF.Player.Location
 			get { return _hasBearing; }
 		}
 
+		double _declination;
+
+		/// <summary>
+		/// Gets the declination for the actual location
+		/// </summary>
+		public double Declination
+		{
+			get { return _declination; }
+		}
+
 		DateTime _time;
 
 		/// <summary>

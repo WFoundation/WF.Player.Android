@@ -143,7 +143,7 @@ namespace WF.Player.Game
 			StartEvents();
 
 			if (type == ScreenTypes.Locations || type == ScreenTypes.Items)
-				Main.GPS.AddBearingListener(OnBearingChanged);
+				Main.GPS.AddOrientationListener(OnOrientationChanged);
 
 			Refresh(true);
 		}
@@ -153,14 +153,15 @@ namespace WF.Player.Game
 			base.OnStop();
 
 			if (type == ScreenTypes.Locations || type == ScreenTypes.Items)
-				Main.GPS.RemoveBearingListener(OnBearingChanged);
+				Main.GPS.RemoveOrientationListener(OnOrientationChanged);
 
 			StopEvents();
 		}
 
-		void OnBearingChanged (object sender, BearingChangedEventArgs e)
+		void OnOrientationChanged (object sender, OrientationChangedEventArgs e)
 		{
-			Refresh(false);
+			if (ShowDirections)
+				Refresh(false);
 		}
 
 		#endregion
@@ -173,7 +174,7 @@ namespace WF.Player.Game
 				((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
 
 			if (listView != null)
-				((GameListScreenAdapter)listView.Adapter).NotifyDataSetChanged();
+				Activity.RunOnUiThread(() => ((GameListScreenAdapter)listView.Adapter).NotifyDataSetChanged());
 		}
 
 		#endregion

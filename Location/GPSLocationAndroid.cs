@@ -9,13 +9,14 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Locations;
+using Android.Hardware;
 
 namespace WF.Player.Location
 {
 	public partial class GPSLocation
 	{
 		// Base for time convertions from time in seconds since 1970-01-01 to DateTime
-		DateTime _baseTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+		readonly DateTime _baseTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
 		#region Constructor
 
@@ -68,7 +69,6 @@ namespace WF.Player.Location
 				_bearing = double.NaN;
 				_hasBearing = false;
 			}
-
 		}
 
 		#endregion

@@ -6,7 +6,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6C7E3AB9-7CC8-4187-879E-C9CD10266339}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -94,6 +94,8 @@
     <Compile Include="Game\GameDetailScreenAndroid.cs" />
     <Compile Include="Game\GameDetailScreen.cs" />
     <Compile Include="Preferences\PreferencesActivity.cs" />
+    <Compile Include="Preferences\IntListPreference.cs" />
+    <Compile Include="Preferences\FloatListPreference.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -387,7 +389,6 @@
     <AndroidResource Include="Resources\drawable-hdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_position.png" />
-    <AndroidResource Include="Resources\layout\Preferences.axml" />
     <AndroidResource Include="Resources\menu\ScreenListMenu.xml" />
     <AndroidResource Include="Resources\values\array.xml" />
     <AndroidResource Include="Resources\values-de\vernacular_strings.xml" />
@@ -402,6 +403,12 @@
     <AndroidResource Include="Resources\drawable-xhdpi\ic_button_layer.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_button_center.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_button_layer.png" />
+    <AndroidResource Include="Resources\layout\PreferencesView.axml" />
+    <AndroidResource Include="Resources\drawable\MapButton.xml" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_button_orientation.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_button_orientation.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_button_orientation.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_button_orientation.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

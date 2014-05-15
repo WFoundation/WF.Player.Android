@@ -76,7 +76,7 @@ namespace WF.Player.Preferences
 
 		public double GetDouble(string key, double d)
 		{
-			return _preferences.GetFloat(key, (float)d);
+			return _preferences.GetFloat(key , (float)d);
 		}
 
 		public void SetDouble(string key, double d)

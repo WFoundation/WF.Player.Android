@@ -54,7 +54,7 @@ namespace WF.Player
 			Catalog.Implementation = new Vernacular.AndroidCatalog (Resources, typeof (Resource.String));
 
 			// Create object for location listener
-			Main.GPS = new GPSListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager);
+			Main.GPS = new GPSListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager, this.WindowManager);
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);

@@ -62,6 +62,7 @@ namespace WF.Player.Game
 		System.Timers.Timer removeTimer;
 //		ScreenType removeType;
 //		global::Android.Support.V4.App.Fragment removeVisibleScreen;
+		Stack<global::Android.Support.V4.App.Fragment> screenStack = new Stack<global::Android.Support.V4.App.Fragment>();
 		bool cartRestore;
 		Paint light = new Paint (PaintFlags.AntiAlias);
 		Paint dark = new Paint (PaintFlags.AntiAlias);
@@ -405,8 +406,14 @@ namespace WF.Player.Game
 					} else
 						ShowScreen (ScreenTypes.Main, null);
 					break;
-				case ScreenTypes.Dialog:
 				case ScreenTypes.Map:
+					if (activeScreen == ScreenTypes.Details && activeObject != null && !activeObject.Visible) {
+						ShowScreen(ScreenTypes.Details, activeObject);
+					} else {
+						ShowScreen(activeScreen, null);
+					}
+					break;
+				case ScreenTypes.Dialog:
 					if (activeScreen == ScreenTypes.Details && activeObject != null && !activeObject.Visible) {
 						// Object for detail screen is no longer visible, so show correct list
 						// Select the correct list to show

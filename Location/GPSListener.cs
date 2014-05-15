@@ -29,7 +29,7 @@ namespace WF.Player.Location
 
 		// Public events
 		event EventHandler<LocationChangedEventArgs> LocationChanged;
-		event EventHandler<BearingChangedEventArgs> BearingChanged;
+		event EventHandler<OrientationChangedEventArgs> OrientationChanged;
 
 		#region Members
 
@@ -52,6 +52,16 @@ namespace WF.Player.Location
 			get { return _valid; }
 		}
 
+		double _bearing;
+
+		/// <summary>
+		/// Gets the bearing in degrees.
+		/// </summary>
+		/// <value>The bearing.</value>
+		public double Bearing {
+			get { return _bearing; }
+		}
+
 		#endregion
 
 		#region Methods
@@ -68,15 +78,15 @@ namespace WF.Player.Location
 			Stop();
 		}
 
-		public void AddBearingListener(EventHandler<BearingChangedEventArgs> handler)
+		public void AddOrientationListener(EventHandler<OrientationChangedEventArgs> handler)
 		{
 			Start();
-			BearingChanged += (EventHandler<BearingChangedEventArgs>)handler;
+			OrientationChanged += (EventHandler<OrientationChangedEventArgs>)handler;
 		}
 
-		public void RemoveBearingListener(EventHandler<BearingChangedEventArgs> handler)
+		public void RemoveOrientationListener(EventHandler<OrientationChangedEventArgs> handler)
 		{
-			BearingChanged -= (EventHandler<BearingChangedEventArgs>)handler;
+			OrientationChanged -= (EventHandler<OrientationChangedEventArgs>)handler;
 			Stop();
 		}
 
@@ -104,17 +114,29 @@ namespace WF.Player.Location
 		}
 	}
 
-	public sealed class BearingChangedEventArgs : EventArgs
+	public sealed class OrientationChangedEventArgs : EventArgs
 	{
-		double _bearing;
+		double _azimuth;
+		double _pitch;
+		double _roll;
 
-		public BearingChangedEventArgs(double bear)
+		public OrientationChangedEventArgs(double azimuth, double pitch, double roll)
 		{
-			_bearing = bear;
+			_azimuth = azimuth;
+			_pitch = pitch;
+			_roll = roll;
 		}
 
-		public double Bearing {
-			get { return _bearing; }
+		public double Azimuth {
+			get { return _azimuth; }
+		}
+
+		public double Pitch {
+			get { return _pitch; }
+		}
+
+		public double Roll {
+			get { return _roll; }
 		}
 	}
 

@@ -58,15 +58,29 @@
 	<string name="menu_screen_map_location_header">Focus on</string>
 	<string name="menu_screen_map_location_mylocation">Location</string>
 	<string name="menu_screen_map_location_game">Playing area</string>
+	<string name="menu_screen_map_type_header">Type of map</string>
+	<string name="menu_screen_map_type_google_maps">Google Maps</string>
+	<string name="menu_screen_map_type_google_satelitte">Google Satelitte</string>
+	<string name="menu_screen_map_type_google_terrain">Google Terrain</string>
+	<string name="menu_screen_map_type_google_hybrid">Google Hybrid</string>
+	<string name="menu_screen_map_type_osm">OpenStreetMap</string>
+	<string name="menu_screen_map_type_ocm">OpenCycleMap</string>
+	<string name="menu_screen_map_type_none">None</string>
 
 	<string name="menu_screen_list_map">Map</string>
 
+	<!-- Strings for preferences -->
 	<string name="pref_header">Settings</string>
 	<string name="pref_feedback">Feedback</string>
 	<string name="pref_feedback_sound">Sound</string>
 	<string name="pref_feedback_sound_detail">Play a sound each time a button is pressed</string>
 	<string name="pref_feedback_vibration">Vibrate</string>
 	<string name="pref_feedback_vibration_detail">Vibrate each time a button is pressed</string>
+	<string name="pref_theme">Theme</string>
+	<string name="pref_theme_detail">Theme for this app (only updated after a restart of the app)</string>
+	<string name="pref_theme_dark">Dark</string>
+	<string name="pref_theme_light">Light</string>
+	<string name="pref_theme_blue">Blue</string>
 	<string name="pref_text">Text</string>
 	<string name="pref_text_alignment">Alignment</string>
 	<string name="pref_text_alignment_detail">Alignment of text</string>
@@ -86,5 +100,20 @@
 	<string name="pref_image_size_shrink">Shrink to width of screen</string>
 	<string name="pref_image_size_width">Width of screen</string>
 	<string name="pref_image_size_height">Half height of screen</string>
+	<string name="pref_sensors">Sensors</string>
+	<string name="pref_sensors_hardware_compass">Use hardware compass</string>
+    <string name="pref_sensors_hardware_compass_detail">Use hardware compass for map rotation and compass screen. Bearing from GPS (better for car) will be used if disabled.</string>
+	<string name="pref_sensors_hardware_compass_auto_change">Auto change</string>
+	<string name="pref_sensors_hardware_compass_auto_change_detail">Use source for bearing defined by "Use hardware compass" settings for low speed. For high speed use bearing from GPS.</string>
+	<string name="pref_sensors_hardware_compass_auto_change_value">Speed value</string>
+	<string name="pref_sensors_hardware_compass_auto_change_value_detail">Value that define which source for bearing will be used (low speed below this value, high speed above this value).</string>
+	<string name="pref_sensors_azimuth_true">Use true bearing</string>
+	<string name="pref_sensors_azimuth_true_detail">If enabled use true bearing. Otherwise use magnetic bearing.</string>
+	<string name="pref_sensor_orientation_filter">Orientation filter</string>
+	<string name="pref_sensor_orientation_filter_detail">Filter applied to orientation. Stronger filter cause slower reactions, but fluent movement.</string>
+	<string name="pref_sensor_orientation_filter_none">No filter</string>
+	<string name="pref_sensor_orientation_filter_light">Light filter</string>
+	<string name="pref_sensor_orientation_filter_medium">Medium filter</string>
+	<string name="pref_sensor_orientation_filter_heavy">Heavy filter</string>
 
 </resources>

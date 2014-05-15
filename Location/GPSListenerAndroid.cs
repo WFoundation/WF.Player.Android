@@ -42,18 +42,36 @@ namespace WF.Player.Location
 	/// </remarks>
 	public partial class GPSListener : Java.Lang.Object, ILocationListener, ISensorEventListener, ILocationSource
 	{
-		static LocationManager locManager;
-		static SensorManager sensorManager;
+		static LocationManager _locManager;
+		static SensorManager _sensorManager;
+		static IWindowManager _windowManager;
+		static double RadToDeg = (180.0 / Math.PI);
+
+		// Base for time convertions from time in seconds since 1970-01-01 to DateTime
+		readonly DateTime _baseTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
 		ILocationSourceOnLocationChangedListener mapsListener = null;
 		Timer timer;
-		Sensor accelerometer;
-		Sensor magnetometer;
+		Sensor _orientationSensor;
+		Sensor _accelerometerSensor;
+		double _lastGPSAzimuth;
+		double _lastSensorAzimuth;
+		double _lastPitch;
+		double _lastRoll;
+		double _azimuth;
+		double _pitch;
+		double _roll;
+		double _aboveOrBelow = 0.0;
+
 		string locationProvider;
 
-		public GPSListener(LocationManager lm, SensorManager sm) : base()
+		#region Constructor
+
+		public GPSListener(LocationManager lm, SensorManager sm, IWindowManager wm) : base()
 		{
 			// Get LocationManager
-			locManager = lm;
+			_locManager = lm;
+			_windowManager = wm;
 
 			var locationCriteria = new Criteria ()
 			{
@@ -62,19 +80,19 @@ namespace WF.Player.Location
 				PowerRequirement = Power.Low
 			};
 
-			locationProvider = locManager.GetBestProvider(locationCriteria, true);
+			locationProvider = _locManager.GetBestProvider(locationCriteria, true);
 
 			if (locationProvider == null)
 				throw new Exception("No location provider found");
 
-			List<String> providers = locManager.GetProviders(true) as List<String>;
+			List<String> providers = _locManager.GetProviders(true) as List<String>;
 
 			// Loop over the array backwards, and if you get an accurate location, then break out the loop
 			GPSLocation loc = null;
 
 			if (providers != null) {
 				for (int i = providers.Count - 1; i >= 0; i--) {
-					loc = new GPSLocation(locManager.GetLastKnownLocation(providers[i]));
+					loc = new GPSLocation(_locManager.GetLastKnownLocation(providers[i]));
 					if (loc != null) 
 						break;
 				}
@@ -88,10 +106,13 @@ namespace WF.Player.Location
 				_location = new GPSLocation();
 			}
 
-			sensorManager = sm;
-			accelerometer = sensorManager.GetDefaultSensor(SensorType.Accelerometer);
-			magnetometer = sensorManager.GetDefaultSensor(SensorType.MagneticField);
+			_sensorManager = sm;
+
+			_orientationSensor = _sensorManager.GetDefaultSensor(SensorType.Orientation);
+			_accelerometerSensor = _sensorManager.GetDefaultSensor(SensorType.Accelerometer);
 		}
+
+		#endregion
 
 		#region Methods
 
@@ -104,10 +125,10 @@ namespace WF.Player.Location
 			}
 
 			// Now activate location updates
-			locManager.RequestLocationUpdates(locationProvider, 500, 1, this);
+			_locManager.RequestLocationUpdates(locationProvider, 500, 1, this);
 
-			sensorManager.RegisterListener(this, accelerometer, SensorDelay.Ui);
-			sensorManager.RegisterListener(this, magnetometer, SensorDelay.Ui);
+			_sensorManager.RegisterListener(this, _orientationSensor, SensorDelay.Game);
+			_sensorManager.RegisterListener(this, _accelerometerSensor, SensorDelay.Game);
 
 			_valid = false;
 		}
@@ -146,8 +167,8 @@ namespace WF.Player.Location
 
 		void OnTimerTick (object sender, ElapsedEventArgs e)
 		{
-			locManager.RemoveUpdates(this);
-			sensorManager.UnregisterListener(this);
+			_locManager.RemoveUpdates(this);
+			_sensorManager.UnregisterListener(this);
 
 			_valid = false;
 
@@ -167,8 +188,15 @@ namespace WF.Player.Location
 		public void OnLocationChanged (global::Android.Locations.Location l)
 		{
 			_location = new GPSLocation(l);
-			if (_location != null)
+			if (_location != null) {
 				_valid = true;
+				// Check if the new location has bearing info
+				if (_location.HasBearing) {
+					_lastGPSAzimuth = _location.Bearing;
+					SendOrientation(_lastPitch, _lastRoll);
+				}
+			}
+
 			if (LocationChanged != null)
 				LocationChanged (this, new LocationChangedEventArgs (_location));
 			// If Google Maps is active, than send new location
@@ -216,45 +244,167 @@ namespace WF.Player.Location
 
 		#endregion
 
-		#region SensorListener Events
+		#region SensorListener Members
 
-		float[] gravity;
-		float[] geomagnetic;
-		double bearing;
+		DateTime _lastDeclinationCalculation;
+		double _declination = 0;
 
-		public double Bearing {
-			get { return bearing; }
+		/// <summary>
+		/// Gets the declination in degrees.
+		/// </summary>
+		/// <remarks>
+		/// The declinations changes are very slow. So it is enough to calculat this very 5 minutes.
+		/// </remarks>
+		/// <value>The declination.</value>
+		public double Declination {
+			get {
+				DateTime time = DateTime.Now;
+				// Compute this only if needed
+				if (_lastDeclinationCalculation == null || time.Subtract(_lastDeclinationCalculation).Seconds > 300) {
+					using (GeomagneticField _geoField = new GeomagneticField((Single) _location.Latitude, (Single) _location.Longitude, (Single) _location.Altitude, time.Subtract(_baseTime).Milliseconds)) {
+						// Save for later use
+						_lastDeclinationCalculation = time;
+						_declination = _geoField.Declination;
+					}
+				}
+
+				return _declination;
+			}
 		}
+
+		#endregion
+
+		#region SensorListener Events
 
 		public void OnAccuracyChanged(Sensor sensor, SensorStatus status) 
 		{
 		}
 
+		/// <summary>
+		/// Function, which is called, when the sensors change.
+		/// </summary>
+		/// <param name="args">Arguments.</param>
 		public void OnSensorChanged(SensorEvent args) 
 		{
-			if (args.Sensor.Type == SensorType.Accelerometer)
-				gravity = args.Values.ToArray();
-			if (args.Sensor.Type == SensorType.MagneticField)
-				geomagnetic = args.Values.ToArray();
-			if (gravity != null && geomagnetic != null) {
-				float[] R = new float[9];
-				float[] I = new float[9];
-				bool success = SensorManager.GetRotationMatrix(R, I, gravity, geomagnetic);
-				if (success) {
-					float[] orientation = new float[3];
-					SensorManager.GetOrientation(R, orientation);
-					// double azimuth = Math.toDegrees(matrixValues[0]);
-					// double pitch = Math.toDegrees(matrixValues[1]);
-					// double roll = Math.toDegrees(matrixValues[2]);
-					// orientation contains: azimut, pitch and roll
-					var newBearing = orientation[0] < 0 ? 360.0 + orientation[0] * 180.0 / Math.PI : orientation[0] * 180.0 / Math.PI;  
-					if (Math.Abs(bearing - newBearing) >= 5.0) {
-						bearing = newBearing;
-						if (BearingChanged != null)
-							BearingChanged(this, new BearingChangedEventArgs(bearing));
-					}
+			switch (args.Sensor.Type) {
+			case SensorType.MagneticField:
+				break;
+			case SensorType.Accelerometer:
+				double filter = GetFilterValue();
+				_aboveOrBelow = (args.Values[2] * filter) + (_aboveOrBelow * (1.0 - filter));
+				break;
+			case SensorType.Orientation:
+				double azimuth = args.Values[0];
+				// Fix to true bearing
+				if (Main.Prefs.GetBool("sensor_azimuth_true", true)) {
+					azimuth += Declination;
 				}
+
+				_azimuth = FilterValue(azimuth, _azimuth);
+				_pitch = FilterValue(args.Values[1], _pitch);
+				_roll = FilterValue(args.Values[2], _roll);
+
+				_lastSensorAzimuth = _azimuth;
+
+				double rollDef;
+
+				if (_aboveOrBelow < 0) {
+					if (_roll < 0) {
+						rollDef = -180 - _roll;
+					} else {
+						rollDef = 180 - _roll;
+					}
+				} else {
+					rollDef = _roll;
+				}
+
+				// Adjust the rotation matrix for the device orientation
+				SurfaceOrientation screenRotation = _windowManager.DefaultDisplay.Rotation;
+
+				switch (screenRotation) 
+				{
+				case SurfaceOrientation.Rotation0:
+					// no need for change
+					break;
+				case SurfaceOrientation.Rotation90:
+					_lastSensorAzimuth += 90;
+					break;
+				case SurfaceOrientation.Rotation180:
+					_lastSensorAzimuth -= 180;
+					break;
+				case SurfaceOrientation.Rotation270:
+					_lastSensorAzimuth -= 90;
+					break;
+				}
+
+				SendOrientation(_pitch, rollDef);
+				break;
 			}
+		}
+
+		#endregion
+
+		#region SensorListener Functions
+
+		/// <summary>
+		/// Filters the value to flatten the value by combining the actual and last value.
+		/// </summary>
+		/// <returns>The value.</returns>
+		/// <param name="valueActual">Actual value in degrees.</param>
+		/// <param name="valueLast">Last value in degrees.</param>
+		private double FilterValue(double valueActual, double valueLast) 
+		{
+			if (valueActual < valueLast - 180.0) {
+				valueLast -= 360.0;
+			} else if (valueActual > valueLast + 180.0) {
+				valueLast += 360.0;
+			}
+
+			double filter = GetFilterValue();
+
+			return valueActual * filter + valueLast * (1.0 - filter);
+		}
+
+		/// <summary>
+		/// Gets the filter value like it is set in the preferences.
+		/// </summary>
+		/// <returns>The filter value.</returns>
+		double GetFilterValue() 
+		{
+			switch (Main.Prefs.GetInt("sensor_orientation_filter", 0)) 
+			{
+			case 1: // PreferenceValues.VALUE_SENSORS_ORIENT_FILTER_LIGHT:
+				return 0.20;
+			case 2: // PreferenceValues.VALUE_SENSORS_ORIENT_FILTER_MEDIUM:
+				return 0.06;
+			case 3: // PreferenceValues.VALUE_SENSORS_ORIENT_FILTER_HEAVY:
+				return 0.03;
+			}
+
+			return 1.0;
+		}
+
+		void SendOrientation(double pitch, double roll) 
+		{
+			double azimuth;
+
+			if (!Main.Prefs.GetBool("sensor_hardware_compass_auto_change", true) || _location.Speed < Main.Prefs.GetDouble("sensor_hardware_compass_auto_change_value", 1.0)) {
+				if (!Main.Prefs.GetBool("sensor_hardware_compass", true))
+					azimuth = _lastGPSAzimuth;
+				else
+					// Substract 90° because the bearing 0° is in direction east
+					azimuth = (_lastSensorAzimuth + 90.0);
+			} else {
+				azimuth = _lastGPSAzimuth;
+			}
+
+			_lastPitch = pitch;
+			_lastRoll = roll;
+
+			_bearing = azimuth;
+
+			if (OrientationChanged != null)
+				OrientationChanged(this, new OrientationChangedEventArgs(azimuth, _lastPitch, _lastRoll));
 		}
 
 		#endregion
