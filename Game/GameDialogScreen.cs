@@ -55,6 +55,8 @@ namespace WF.Player.Game
 		LinearLayout layoutInput;
 		TextView textDescription;
 
+		ScreenTypes Type = ScreenTypes.Dialog;
+
 		#region Constructor
 
 		public GameDialogScreen(MessageBox messageBox)
@@ -78,7 +80,7 @@ namespace WF.Player.Game
 			ctrl.Feedback();
 
 			// Remove dialog from screen
-			ctrl.RemoveScreen (ScreenTypes.Dialog);
+			ctrl.RemoveScreen (this);
 
 			// Execute callback if there is one
 			if (sender is Button) {
@@ -91,7 +93,7 @@ namespace WF.Player.Game
 			ctrl.Feedback();
 
 			// Remove dialog from screen
-			ctrl.RemoveScreen (ScreenTypes.Dialog);
+			ctrl.RemoveScreen (this);
 
 			if (input != null) {
 				string result = ((Button)sender).Text;
@@ -158,28 +160,6 @@ namespace WF.Player.Game
 			return view;
 		}
 
-		/// <summary>
-		/// Raised when the fragment is destroyed, so free references to other UI elements.
-		/// </summary>
-		public override void OnDestroyView()
-		{
-			base.OnDestroyView();
-
-			imageView.SetImageBitmap(null);
-			imageView = null;
-			messageBox = null;
-			input = null;
-			editInput = null;
-			btnView1 = null;
-			btnView2 = null;
-			btnInput = null;
-			layoutDialog = null;
-			layoutMultipleChoice = null;
-			layoutInput = null;
-			textDescription = null;
-			ctrl = null;
-		}
-
 		public void OnInputClicked(object sender, EventArgs e)
 		{
 			ctrl.Feedback();
@@ -196,7 +176,7 @@ namespace WF.Player.Game
 				});
 
 			// Remove dialog from screen
-			ctrl.RemoveScreen (ScreenTypes.Dialog);
+			ctrl.RemoveScreen (this);
 
 			if (input != null) {
 				string result = editInput.Text;

@@ -35,6 +35,7 @@
 	<string name="screen_yousee">You see</string>
 	<string name="screen_inventory">Inventory</string>
 	<string name="screen_tasks">Tasks</string>
+	<string name="screen_map">Map</string>
 
 	<string name="screen_save_before_quit">Would you save before quit?</string>
 	<string name="screen_save_before_quit_yes">Yes</string>

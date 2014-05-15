@@ -44,6 +44,8 @@ namespace WF.Player.Game
 		object iconTask;
 		object iconPosition;
 
+		ScreenTypes Type = ScreenTypes.Main;
+
 		#region Common Functions
 
 		/// <summary>

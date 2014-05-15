@@ -37,6 +37,8 @@ namespace WF.Player.Game
 		WherigoCollection<Thing> targets;
 		string[] properties = {"Name", "Description", "Media", "Commands"};
 
+		ScreenTypes Type = ScreenTypes.Details;
+
 		#region Object Handling
 
 		public UIObject ActiveObject
@@ -89,7 +91,7 @@ namespace WF.Player.Game
 
 			if (remove) {
 				StopEvents ();
-				ctrl.RemoveScreen (ScreenTypes.Details);
+				ctrl.RemoveScreen (this);
 			}
 		}
 

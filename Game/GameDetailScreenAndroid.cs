@@ -110,27 +110,6 @@ namespace WF.Player.Game
 			base.OnCreateOptionsMenu(menu, inflater);
 		}
 
-		/// <summary>
-		/// Raised when the fragment is destroyed, so free references to other UI elements.
-		/// </summary>
-		public override void OnDestroyView()
-		{
-			base.OnDestroyView();
-
-			imageView.SetImageBitmap(null);
-			imageView = null;
-			layoutButtons = null;
-			layoutWorksWith = null;
-			textDescription = null;
-			textWorksWith = null;
-			menuMap = null;
-			activeObject = null;
-			com = null;
-			commands = null;
-			targets = null;
-			ctrl = null;
-		}
-
 		public void OnDialogClicked(object sender, DialogClickEventArgs e)
 		{
 			Console.WriteLine (e.Which);
@@ -160,12 +139,13 @@ namespace WF.Player.Game
 		{
 			base.OnResume();
 
+			// Show title bar with the correct buttons
+			((ActionBarActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+			((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(true);
+			((ActionBarActivity)Activity).SupportActionBar.Title = activeObject.Name;
+
 			StartEvents();
 
-			//TODO: Load data
-//			if (remove)
-//				((ScreenController)this.Activity).RemoveScreen (ScreenType.Details);
-//
 			Refresh ();
 		}
 

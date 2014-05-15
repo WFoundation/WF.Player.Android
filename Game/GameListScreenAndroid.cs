@@ -82,15 +82,15 @@ namespace WF.Player.Game
 		/// <summary>
 		/// Raised when the fragment is destroyed, so free references to other UI elements.
 		/// </summary>
-		public override void OnDestroyView()
-		{
-			base.OnDestroyView();
-
-			Items = null;
-			listView = null;
-			ctrl = null;
-			engine = null;
-		}
+//		public override void OnDestroyView()
+//		{
+//			base.OnDestroyView();
+//
+//			Items = null;
+//			listView = null;
+//			ctrl = null;
+//			engine = null;
+//		}
 
 		public void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
 		{
@@ -170,6 +170,9 @@ namespace WF.Player.Game
 
 		void Refresh(bool itemsChanged)
 		{
+			if (Activity == null)
+				return;
+
 			if (itemsChanged && Activity != null)
 				((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
 

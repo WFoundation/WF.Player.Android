@@ -32,8 +32,11 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
+using WF.Player.Types;
 using Android.Gms.Common;
 using Android.Graphics;
+using Android.Support.V7.App;
+using Java.Net;
 
 namespace WF.Player.Game
 {
@@ -47,7 +50,8 @@ namespace WF.Player.Game
 		bool headingOrientation = false;
 		Thing thing;
 		View mapView;
-		GoogleMap map;
+		GoogleMap _map;
+		TileOverlay _tileOverlay;
 		RelativeLayout layoutButtons;
 		ImageButton btnMapCenter;
 		ImageButton btnMapOrientation;
@@ -56,8 +60,11 @@ namespace WF.Player.Game
 		Dictionary<int, Marker> markers = new Dictionary<int, Marker> ();
 		Dictionary<int, Polygon> zones = new Dictionary<int, Polygon> ();
 		Polyline distanceLine;
+		OsmTileProvider _osmTileLayer;
+		OsmTileProvider _ocmTileLayer;
 		string[] properties = {"Name", "Icon", "Active", "Visible", "ObjectLocation"};
 
+		ScreenTypes Type = ScreenTypes.Map;
 
 		#region Constructor
 
@@ -85,16 +92,23 @@ namespace WF.Player.Game
 //			mapView.OnCreate(savedInstanceState);
 //
 			// Set all relevant data for map
-			map = this.Map;
-			map.MapType = GoogleMap.MapTypeNormal;
-			map.MoveCamera(CameraUpdateFactory.NewLatLngZoom(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude), (float)Main.Prefs.GetDouble("MapZoom", 16)));
-			map.MyLocationEnabled = true;
-			map.BuildingsEnabled = true;
-			map.UiSettings.ZoomControlsEnabled = false;
-			map.UiSettings.MyLocationButtonEnabled = false;
-			map.UiSettings.CompassEnabled = false;
-			map.UiSettings.TiltGesturesEnabled = false;
-			map.UiSettings.RotateGesturesEnabled = false;
+			_map = this.Map;
+			_map.MapType = GoogleMap.MapTypeNormal;
+			_map.MoveCamera(CameraUpdateFactory.NewLatLngZoom(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude), (float)Main.Prefs.GetDouble("MapZoom", 16)));
+			_map.MyLocationEnabled = true;
+			_map.BuildingsEnabled = true;
+			_map.UiSettings.ZoomControlsEnabled = false;
+			_map.UiSettings.MyLocationButtonEnabled = false;
+			_map.UiSettings.CompassEnabled = false;
+			_map.UiSettings.TiltGesturesEnabled = false;
+			_map.UiSettings.RotateGesturesEnabled = false;
+
+			// Create tile layers
+			_osmTileLayer = new OsmTileProvider("http://a.tile.openstreetmap.org/{0}/{1}/{2}.png");
+			_ocmTileLayer = new OsmTileProvider("http://c.tile.opencyclemap.org/cycle/{0}/{1}/{2}.png");
+
+			// Set selected map type
+			SetMapType(Main.Prefs.GetInt("map_source", 0));
 
 			// Create the zones the first time
 			CreateZones();
@@ -166,13 +180,22 @@ namespace WF.Player.Game
 				activeObject.PropertyChanged += OnDetailPropertyChanged;
 			}
 
-			map.CameraChange += OnCameraChange;
+			_map.CameraChange += OnCameraChange;
 			//			map.MyLocationButtonClick += OnMyLocationButtonClick;
 			// Use the common location listener, so that we have everywhere the same location
-			map.SetLocationSource(Main.GPS);
+			_map.SetLocationSource(Main.GPS);
 			Main.GPS.AddLocationListener(OnLocationChanged);
 			if (!Main.Prefs.GetBool("MapOrientationNorth",true))
 				Main.GPS.AddOrientationListener(OnOrientationChanged);
+
+			// Show title bar with the correct buttons
+			((ActionBarActivity)Activity).SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+			((ActionBarActivity)Activity).SupportActionBar.SetDisplayShowHomeEnabled(true);
+
+			if  (activeObject != null)
+				((ActionBarActivity)Activity).SupportActionBar.Title = activeObject.Name;
+			else
+				((ActionBarActivity)Activity).SupportActionBar.Title = GetString(Resource.String.screen_map);
 		}
 
 		/// <summary>
@@ -190,7 +213,7 @@ namespace WF.Player.Game
 				activeObject.PropertyChanged -= OnDetailPropertyChanged;
 			}
 
-			map.CameraChange -= OnCameraChange;
+			_map.CameraChange -= OnCameraChange;
 			//map.MyLocationButtonClick -= OnMyLocationButtonClick;
 			Main.GPS.RemoveLocationListener(OnLocationChanged);
 			if (!Main.Prefs.GetBool("MapOrientationNorth", true))
@@ -272,25 +295,8 @@ namespace WF.Player.Game
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
 			builder.SetTitle(Resource.String.menu_screen_map_type_header);
 			builder.SetItems(items.ToArray(), delegate(object s, DialogClickEventArgs e) {
-				if (e.Which == 0) {
-					map.MapType = GoogleMap.MapTypeNormal;
-				}
-				if (e.Which == 1) {
-					map.MapType = GoogleMap.MapTypeSatellite;
-				}
-				if (e.Which == 2) {
-					map.MapType = GoogleMap.MapTypeTerrain;
-				}
-				if (e.Which == 3) {
-					map.MapType = GoogleMap.MapTypeHybrid;
-				}
-				if (e.Which == 4) {
-				}
-				if (e.Which == 5) {
-				}
-				if (e.Which == 6) {
-					map.MapType = GoogleMap.MapTypeNone;
-				}
+				SetMapType (e.Which);
+				Main.Prefs.SetInt("map_source", e.Which);
 			});
 			AlertDialog alert = builder.Create();
 			alert.Show();
@@ -331,17 +337,48 @@ namespace WF.Player.Game
 			po.InvokeStrokeWidth (2);
 			po.InvokeFillColor (Color.Argb (80, 255, 0, 0));
 			// Add polygon to list of active zones
-			zones.Add (z.ObjIndex, map.AddPolygon (po));
+			zones.Add (z.ObjIndex, _map.AddPolygon (po));
+		}
+
+		void SetMapType (int type)
+		{
+			if (type == 0) {
+				_map.MapType = GoogleMap.MapTypeNormal;
+			}
+			if (type == 1) {
+				_map.MapType = GoogleMap.MapTypeSatellite;
+			}
+			if (type == 2) {
+				_map.MapType = GoogleMap.MapTypeTerrain;
+			}
+			if (type == 3) {
+				_map.MapType = GoogleMap.MapTypeHybrid;
+			}
+			if (type == 4) {
+				if (_tileOverlay != null)
+					_tileOverlay = null;
+				var tileOptions = new TileOverlayOptions ();
+				_tileOverlay = _map.AddTileOverlay (tileOptions.InvokeTileProvider (_osmTileLayer));
+			}
+			if (type == 5) {
+				if (_tileOverlay != null)
+					_tileOverlay = null;
+				var tileOptions = new TileOverlayOptions ();
+				_tileOverlay = _map.AddTileOverlay (tileOptions.InvokeTileProvider (_ocmTileLayer));
+			}
+			if (type == 6) {
+				_map.MapType = GoogleMap.MapTypeNone;
+			}
 		}
 
 		void RotateCamera(float bearing)
 		{
 			// Get old position of map
-			CameraPosition oldPos = map.CameraPosition;
+			CameraPosition oldPos = _map.CameraPosition;
 			// Calculate new orientation
 			CameraPosition pos = new CameraPosition.Builder(oldPos).Bearing(bearing).Build();
 			// Set new orientation
-			map.MoveCamera(CameraUpdateFactory.NewCameraPosition(pos));
+			_map.MoveCamera(CameraUpdateFactory.NewCameraPosition(pos));
 		}
 
 		/// <summary>
@@ -361,7 +398,7 @@ namespace WF.Player.Game
 				po.Points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
 				po.InvokeColor(Color.Cyan);
 				po.InvokeWidth(2);
-				distanceLine = map.AddPolyline(po);
+				distanceLine = _map.AddPolyline(po);
 			}
 		}
 
@@ -393,7 +430,7 @@ namespace WF.Player.Game
 
 			CameraUpdate cu = CameraUpdateFactory.NewLatLngBounds(new LatLngBounds(new LatLng(latSouth, longWest), new LatLng(latNorth, longEast)), 10);
 
-			map.MoveCamera(cu);
+			_map.MoveCamera(cu);
 		}
 
 		/// <summary>
@@ -403,11 +440,31 @@ namespace WF.Player.Game
 		{
 			CameraUpdate cu = CameraUpdateFactory.NewLatLng(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
 
-			map.MoveCamera(cu);
+			_map.MoveCamera(cu);
 		}
 
 		#endregion
 
 	}
 
+	#region Tile Providers
+
+	class OsmTileProvider : UrlTileProvider
+	{
+		string _urlFormat;
+
+		public OsmTileProvider(string urlFormat) : base (256, 256)
+		{
+			_urlFormat = urlFormat;
+		}
+
+		public override URL GetTileUrl(int x, int y, int zoom) 
+		{
+			string s = String.Format(_urlFormat, zoom, x, y);
+
+			return new URL(s);
+		}
+	}
+
+	#endregion
 }

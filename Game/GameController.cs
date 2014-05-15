@@ -96,7 +96,7 @@ namespace WF.Player.Game
 		{
 			if (SupportFragmentManager.Fragments [0] is GameListScreen || SupportFragmentManager.Fragments [0] is GameDetailScreen 
 				|| SupportFragmentManager.Fragments [0] is GameMapScreen || SupportFragmentManager.Fragments[0] is GameDialogScreen)
-				RemoveScreen (ActiveScreenType());
+				RemoveScreen (SupportFragmentManager.Fragments [0]);
 			else if (SupportFragmentManager.Fragments [0] is GameMainScreen)
 				Quit();
 			else
@@ -159,11 +159,7 @@ namespace WF.Player.Game
 			}
 
 			// Show main screen
-			var ft = this.SupportFragmentManager.BeginTransaction ();
-			ft.SetBreadCrumbTitle (cartridge.Name);
-			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-			ft.Replace (Resource.Id.fragment, new GameMainScreen (engine));
-			ft.Commit ();
+			ShowScreen(ScreenTypes.Main, null);
 
 			// Start cartridge
 			if (cartRestore)
@@ -322,11 +318,18 @@ namespace WF.Player.Game
 		/// Removes the active screen and show screen before.
 		/// </summary>
 		/// <param name="last">Last screen active.</param>
-		public void RemoveScreen(ScreenTypes type)
+		public void RemoveScreen(global::Android.Support.V4.App.Fragment fragment)
 		{
+			// We couldn't remove the main screen
+			if (fragment is GameMainScreen)
+				return;
+
 			// Save active screen and wait 100 ms. If the active screen is the same as the saved, than remove it
-			global::Android.Support.V4.App.Fragment removeVisibleScreen = SupportFragmentManager.Fragments [0];
-			ScreenTypes removeType = type;
+			global::Android.Support.V4.App.Fragment removeVisibleScreen = fragment;
+
+			// Remove fragment from screen stack, if it is the top most
+			if (screenStack.Peek() == fragment)
+				screenStack.Pop();
 
 			if (removeTimer != null) {
 				removeTimer.Stop();
@@ -335,11 +338,11 @@ namespace WF.Player.Game
 
 			removeTimer = new System.Timers.Timer();
 			removeTimer.Interval = 100;
-			removeTimer.Elapsed += (sender, e) => RunOnUiThread( () => InternalRemoveScreen(sender, e, removeType, removeVisibleScreen) ); //InvokeRemoveScreen(sender, e, removeType, removeVisibleScreen);
+			removeTimer.Elapsed += (sender, e) => RunOnUiThread( () => InternalRemoveScreen(sender, e, removeVisibleScreen) ); //InvokeRemoveScreen(sender, e, removeType, removeVisibleScreen);
 			removeTimer.Start();
 		}
 
-		void InternalRemoveScreen(object sender, System.Timers.ElapsedEventArgs e, ScreenTypes removeType, global::Android.Support.V4.App.Fragment removeVisibleScreen) 
+		void InternalRemoveScreen(object sender, System.Timers.ElapsedEventArgs e, global::Android.Support.V4.App.Fragment removeVisibleScreen) 
 		{
 			if (removeTimer != null) {
 				// Stop timer, we don't need it anymore
@@ -352,88 +355,14 @@ namespace WF.Player.Game
 				return;
 			}
 
-			bool remove = true;
-			ScreenTypes activeType = ActiveScreenType();
+			// Now show topmost screen on stack
+			//			var bar = SupportActionBar;
+			var ft = this.SupportFragmentManager.BeginTransaction ();
 
-			// Check if screen to remove is active screen, instead leave
-			if (removeType != null) {
-				if (SupportFragmentManager.Fragments [0] is GameListScreen)
-					remove &= ((GameListScreen)SupportFragmentManager.Fragments [0]).Type == removeType;
-				if (SupportFragmentManager.Fragments [0] is GameDetailScreen)
-					remove &= removeType == ScreenTypes.Details;
-				if (SupportFragmentManager.Fragments [0] is GameDialogScreen)
-					remove &= removeType == ScreenTypes.Dialog;
-				if (SupportFragmentManager.Fragments [0] is GameMapScreen)
-					remove &= removeType == ScreenTypes.Map;
-			}
-
-			if (!remove)
-				return;
-
-
-			switch (activeType) {
-				case ScreenTypes.Main:
-					// Don't remove the main screen
-					break;
-				case ScreenTypes.Locations:
-					ShowScreen (ScreenTypes.Main, null);
-					break;
-				case ScreenTypes.Items:
-					ShowScreen (ScreenTypes.Main, null);
-					break;
-				case ScreenTypes.Inventory:
-					ShowScreen (ScreenTypes.Main, null);
-					break;
-				case ScreenTypes.Tasks:
-					ShowScreen (ScreenTypes.Main, null);
-					break;
-				case ScreenTypes.Details:
-					// Show correct list for this zone/item/character/task
-					if (((GameDetailScreen)SupportFragmentManager.Fragments [0]).ActiveObject != null) {
-						// Select the correct list to show
-						UIObject obj = ((GameDetailScreen)SupportFragmentManager.Fragments [0]).ActiveObject;
-						activeObject = null;
-						if (obj is Zone)
-							ShowScreen (ScreenTypes.Locations, null);
-						if (obj is Task)
-							ShowScreen (ScreenTypes.Tasks, null);
-						if (obj is Item || obj is Character) {
-							if (engine.VisibleInventory.Contains ((Thing)obj))
-								ShowScreen (ScreenTypes.Inventory, null);
-							else
-								ShowScreen (ScreenTypes.Items, null);
-						}
-					} else
-						ShowScreen (ScreenTypes.Main, null);
-					break;
-				case ScreenTypes.Map:
-					if (activeScreen == ScreenTypes.Details && activeObject != null && !activeObject.Visible) {
-						ShowScreen(ScreenTypes.Details, activeObject);
-					} else {
-						ShowScreen(activeScreen, null);
-					}
-					break;
-				case ScreenTypes.Dialog:
-					if (activeScreen == ScreenTypes.Details && activeObject != null && !activeObject.Visible) {
-						// Object for detail screen is no longer visible, so show correct list
-						// Select the correct list to show
-						UIObject obj = activeObject;
-						activeObject = null;
-						if (obj is Zone)
-							ShowScreen (ScreenTypes.Locations, null);
-						if (obj is Task)
-							ShowScreen (ScreenTypes.Tasks, null);
-						if (obj is Item || obj is Character) {
-							if (engine.VisibleInventory.Contains ((Thing)obj))
-								ShowScreen (ScreenTypes.Inventory, null);
-							else
-								ShowScreen (ScreenTypes.Items, null);
-						}
-					} else {
-						ShowScreen (activeScreen, activeObject);
-					}
-					break;
-				}
+			// Bring topmost fragment to screen
+			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
+			ft.Replace (Resource.Id.fragment, screenStack.Peek(), "active");
+			ft.Commit ();
 		}
 
 		/// <summary>
@@ -443,50 +372,57 @@ namespace WF.Player.Game
 		/// <param name="obj">Object to show if screen is ScreenType.Details.</param>
 		public void ShowScreen(ScreenTypes screen, UIObject obj)
 		{
+			bool showBackButton = true;
 			var bar = SupportActionBar;
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
-			// If there is an active remove timer, stop it, because we bring the next screen on the device
+			// If there is an active remove timer, stop it, because we bring the next screen onto the device
 			if (removeTimer != null) {
 				removeTimer.Stop();
 				removeTimer = null;
 			}
 
+			// A new screen replaces a dialog screen, if there is one
+			if (screenStack.Count > 0 && screenStack.Peek() is GameDialogScreen)
+				screenStack.Pop();
+
 			switch (screen) 
 			{
-				case ScreenTypes.Main:
-					ft.SetBreadCrumbTitle (cartridge.Name);
-					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-					ft.Replace (Resource.Id.fragment, new GameMainScreen (engine), "active");
-					ft.Commit ();
-				//					SupportFragmentManager.Fragments [0] = new ScreenMain (engine);
-					break;
-				case ScreenTypes.Locations:
-				case ScreenTypes.Items:
-				case ScreenTypes.Inventory:
-				case ScreenTypes.Tasks:
-					bar.SetDisplayHomeAsUpEnabled (true);
-					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-					ft.Replace (Resource.Id.fragment, new GameListScreen (engine, screen), "active");
-					ft.Commit ();
-				//					SupportFragmentManager.Fragments [0] = new ScreenList (engine, screen);
-					break;
-				case ScreenTypes.Details:
-					bar.SetDisplayHomeAsUpEnabled (true);
-					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-					ft.Replace (Resource.Id.fragment, new GameDetailScreen (this, obj), "active");
-					ft.Commit ();
-				//					SupportFragmentManager.Fragments [0] = new ScreenDetail (this, obj);
-					break;
-				case ScreenTypes.Map:
-					bar.SetDisplayHomeAsUpEnabled (true);
-					ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-					ft.Replace (Resource.Id.fragment, new GameMapScreen (this, obj), "active");
-					ft.Commit ();
-				//					SupportFragmentManager.Fragments [0] = new ScreenMap (this, obj);
-					break;
+			case ScreenTypes.Main:
+				// Clear stack, because main screen is always the first
+				screenStack.Clear();
+				// Push new main screen onto stack
+				screenStack.Push(new GameMainScreen (engine));
+				// Don't show back button on main screen
+				showBackButton = false;
+				// Set title for activity
+				ft.SetBreadCrumbTitle (cartridge.Name);
+				break;
+			case ScreenTypes.Locations:
+			case ScreenTypes.Items:
+			case ScreenTypes.Inventory:
+			case ScreenTypes.Tasks:
+				// Clear stack, except main screen, which is always the first
+				while(screenStack.Count > 1)
+					screenStack.Pop();
+				screenStack.Push(new GameListScreen (engine, screen));
+				break;
+			case ScreenTypes.Details:
+				screenStack.Push(new GameDetailScreen (this, obj));
+				break;
+			case ScreenTypes.Map:
+				screenStack.Push(new GameMapScreen (this, obj));
+				break;
 			}
+
+			// Show icon as back button
+			bar.SetDisplayHomeAsUpEnabled (showBackButton);
+
+			// Bring topmost fragment to screen
+			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
+			ft.Replace (Resource.Id.fragment, screenStack.Peek(), "active");
+			ft.Commit ();
 
 			// Save actuall values for later use
 			if (screen != ScreenTypes.Dialog && screen != ScreenTypes.Map) {
@@ -568,6 +504,9 @@ namespace WF.Player.Game
 			return result;
 		}
 
+		/// <summary>
+		/// Feedback for pressing a key or a event occures.
+		/// </summary>
 		public void Feedback()
 		{
 			if (Main.Prefs.FeedbackSound) {
@@ -576,7 +515,7 @@ namespace WF.Player.Game
 				audioManager.PlaySoundEffect(SoundEffect.KeyClick, vol);
 			}
 			if (Main.Prefs.FeedbackVibration) {
-				vibrator.Vibrate(120);
+				vibrator.Vibrate(100);
 			}
 		}
 
@@ -604,7 +543,6 @@ namespace WF.Player.Game
 		void OnCartridgeComplete (object sender, WherigoEventArgs args)
 		{
 			// TODO: Implementation
-//			throw new NotImplementedException ();
 		}
 
 		/// <summary>
@@ -618,14 +556,17 @@ namespace WF.Player.Game
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
+			// There could be only one dialog on screen
+			if (screenStack.Peek() is GameDialogScreen)
+				screenStack.Pop();
+
+			// Now push new dialog to screen
+			screenStack.Push(new GameDialogScreen (args.Object));
+
 			bar.SetDisplayHomeAsUpEnabled (false);
 			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-			ft.Replace (Resource.Id.fragment, new GameDialogScreen (args.Object), "active");
+			ft.Replace (Resource.Id.fragment, screenStack.Peek(), "active");
 			ft.Commit ();
-
-			// Delete last fragment
-//			if (activeFragment != null)
-//				activeFragment.Dispose();
 		}
 
 		/// <summary>
@@ -729,14 +670,17 @@ namespace WF.Player.Game
 			var ft = this.SupportFragmentManager.BeginTransaction ();
 			var activeFragment = this.SupportFragmentManager.FindFragmentByTag("active");
 
+			// There could be only one dialog on screen
+			if (screenStack.Peek() is GameDialogScreen)
+				screenStack.Pop();
+
+			// Now push new dialog to screen
+			screenStack.Push(new GameDialogScreen (args.Descriptor));
+
 			bar.SetDisplayHomeAsUpEnabled (false);
 			ft.SetTransition (global::Android.Support.V4.App.FragmentTransaction.TransitNone);
-			ft.Replace (Resource.Id.fragment, new GameDialogScreen (args.Descriptor), "active");
+			ft.Replace (Resource.Id.fragment, screenStack.Peek(), "active");
 			ft.Commit ();
-
-			// Delete last fragment
-//			if (activeFragment != null)
-//				activeFragment.Dispose();
 		}
 
 		/// <summary>
@@ -935,6 +879,9 @@ namespace WF.Player.Game
 			engine.Init (new FileStream (cart.Filename,FileMode.Open), cart);
 		}
 
+		/// <summary>
+		/// Removes all event handlers and destroys the engine.
+		/// </summary>
 		private void DestroyEngine()
 		{
 			if (engine != null) {
@@ -1001,25 +948,6 @@ namespace WF.Player.Game
 		{
 			var view = this.FindViewById(Resource.Id.fragment);
 			view.Invalidate ();
-		}
-
-		ScreenTypes ActiveScreenType()
-		{
-			ScreenTypes result = ScreenTypes.Main;
-
-			// Get active screen type
-			if (SupportFragmentManager.Fragments [0] is GameMainScreen)
-				result = ScreenTypes.Main;
-			if (SupportFragmentManager.Fragments [0] is GameListScreen)
-				result = ((GameListScreen)SupportFragmentManager.Fragments [0]).Type;
-			if (SupportFragmentManager.Fragments [0] is GameDetailScreen)
-				result = ScreenTypes.Details;
-			if (SupportFragmentManager.Fragments [0] is GameDialogScreen)
-				result = ScreenTypes.Dialog;
-			if (SupportFragmentManager.Fragments [0] is GameMapScreen)
-				result = ScreenTypes.Map;
-
-			return result;
 		}
 
 		#endregion

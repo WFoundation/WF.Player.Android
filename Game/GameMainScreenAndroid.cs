@@ -121,26 +121,26 @@ namespace WF.Player.Game
 		/// <summary>
 		/// Raised when the fragment is destroyed, so free references to other UI elements.
 		/// </summary>
-		public override void OnDestroyView()
-		{
-			base.OnDestroyView();
-
-			((Bitmap)iconLocation).Recycle();
-			iconLocation = null;
-			((Bitmap)iconYouSee).Recycle();
-			iconYouSee = null;
-			((Bitmap)iconInventory).Recycle();
-			iconInventory = null;
-			((Bitmap)iconTask).Recycle();
-			iconTask = null;
-			((Bitmap)iconPosition).Recycle();
-			iconPosition = null;
-			menuQuit = null;
-			menuSave = null;
-			listView = null;
-			ctrl = null;
-			engine = null;
-		}
+//		public override void OnDestroyView()
+//		{
+//			base.OnDestroyView();
+//
+//			((Bitmap)iconLocation).Recycle();
+//			iconLocation = null;
+//			((Bitmap)iconYouSee).Recycle();
+//			iconYouSee = null;
+//			((Bitmap)iconInventory).Recycle();
+//			iconInventory = null;
+//			((Bitmap)iconTask).Recycle();
+//			iconTask = null;
+//			((Bitmap)iconPosition).Recycle();
+//			iconPosition = null;
+//			menuQuit = null;
+//			menuSave = null;
+//			listView = null;
+//			ctrl = null;
+//			engine = null;
+//		}
 
 		/// <summary>
 		/// Raised, when one of the list entries is selected.
