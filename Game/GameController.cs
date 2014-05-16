@@ -390,6 +390,10 @@ namespace WF.Player.Game
 			if (screenStack.Count > 0 && screenStack.Peek() is GameDialogScreen)
 				screenStack.Pop();
 
+			// A new screen replaces a screen of same type, if there is one
+			if (screenStack.Count > 0 && ((screenStack.Peek() is GameDetailScreen && screen == ScreenTypes.Details) || ((screenStack.Peek() is GameMapScreen && screen == ScreenTypes.Map))))
+				screenStack.Pop();
+
 			switch (screen) 
 			{
 			case ScreenTypes.Main:
@@ -456,8 +460,8 @@ namespace WF.Player.Game
 			if (options.OutWidth > 0) {
 
 				var metrics = Resources.DisplayMetrics;
-				int width = (int)(options.OutWidth * metrics.Density);
-				int height = (int)(options.OutHeight * metrics.Density);
+				int width = (int)(options.OutWidth * 1); //metrics.Density);
+				int height = (int)(options.OutHeight * 1); //metrics.Density);
 							
 				maxWidth = maxWidth < 0 ? (int)(metrics.WidthPixels - 2 * Resources.GetDimension(Resource.Dimension.screen_frame)) : maxWidth;
 				int maxHeight = (int)(0.5 * metrics.HeightPixels);
