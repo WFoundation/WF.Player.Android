@@ -47,13 +47,15 @@ namespace WF.Player.Game
 		Input input;
 		ImageView imageView;
 		EditText editInput;
+		Spinner spinnerInput;
 		Button btnView1;
 		Button btnView2;
 		Button btnInput;
 		LinearLayout layoutDialog;
-		LinearLayout layoutMultipleChoice;
 		LinearLayout layoutInput;
+		LinearLayout layoutButton;
 		TextView textDescription;
+		string inputResult;
 
 		ScreenTypes Type = ScreenTypes.Dialog;
 
@@ -115,17 +117,19 @@ namespace WF.Player.Game
 
 			imageView = view.FindViewById<ImageView> (Resource.Id.imageView);
 			textDescription = view.FindViewById<TextView> (Resource.Id.textDescription);
+			spinnerInput = view.FindViewById<Spinner> (Resource.Id.spinnerMulti);
+			editInput = view.FindViewById<EditText> (Resource.Id.editInput);
 			layoutDialog = view.FindViewById<LinearLayout> (Resource.Id.layoutDialog);
-			layoutMultipleChoice = view.FindViewById<LinearLayout> (Resource.Id.layoutMultipleChoice);
 			layoutInput = view.FindViewById<LinearLayout> (Resource.Id.layoutInput);
+			layoutButton = view.FindViewById<LinearLayout> (Resource.Id.layoutButton);
 
 			// Don't know a better way
 			layoutDialog.SetBackgroundResource(Main.BottomBackground);
+			layoutButton.SetBackgroundResource(Main.BottomBackground);
 
 			if (input == null) {
 				// Normal dialog
 				layoutDialog.Visibility = ViewStates.Visible;
-				layoutMultipleChoice.Visibility = ViewStates.Gone;
 				layoutInput.Visibility = ViewStates.Gone;
 
 				btnView1 = view.FindViewById<Button> (Resource.Id.button1);
@@ -141,25 +145,24 @@ namespace WF.Player.Game
 				if (input.InputType == InputType.MultipleChoice) {
 					// Multiple choice dialog
 					layoutDialog.Visibility = ViewStates.Gone;
-					layoutMultipleChoice.Visibility = ViewStates.Visible;
-					layoutInput.Visibility = ViewStates.Gone;
+					layoutInput.Visibility = ViewStates.Visible;
+					spinnerInput.Visibility = ViewStates.Visible;
+					editInput.Visibility = ViewStates.Gone;
 				} else {
 					// Input dialog
 					layoutDialog.Visibility = ViewStates.Gone;
-					layoutMultipleChoice.Visibility = ViewStates.Gone;
 					layoutInput.Visibility = ViewStates.Visible;
-
-					editInput = view.FindViewById<EditText> (Resource.Id.editInput);
-
-					btnInput = view.FindViewById<Button> (Resource.Id.buttonInput);
-					btnInput.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
-					btnInput.Click += OnInputClicked;
+					spinnerInput.Visibility = ViewStates.Gone;
+					editInput.Visibility = ViewStates.Visible;
 
 					editInput.Text = "";
 					editInput.EditorAction += HandleEditorAction;  
-
-					btnInput.Text = ctrl.Resources.GetString(Resource.String.done);
 				}
+
+				btnInput = view.FindViewById<Button> (Resource.Id.buttonInput);
+				btnInput.Text = ctrl.Resources.GetString(Resource.String.done);
+				btnInput.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
+				btnInput.Click += OnInputClicked;
 			}
 
 			return view;
@@ -184,8 +187,10 @@ namespace WF.Player.Game
 			ctrl.RemoveScreen (this);
 
 			if (input != null) {
-				string result = editInput.Text;
-				input.GiveResult (result);
+				if (input.InputType != InputType.MultipleChoice) {
+					inputResult = editInput.Text;
+				}
+				input.GiveResult (inputResult);
 			}
 		}
 
@@ -197,6 +202,15 @@ namespace WF.Player.Game
 			ctrl.SupportActionBar.SetDisplayShowHomeEnabled(false);
 
 			Refresh();
+		}
+
+		private void OnSpinnerItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)
+		{
+			ctrl.Feedback();
+
+			if (input != null) {
+				inputResult = input.Choices.ElementAt(e.Position);
+			}
 		}
 
 		#endregion
@@ -246,16 +260,22 @@ namespace WF.Player.Game
 				}
 				if (input.InputType == InputType.MultipleChoice) {
 					// Multiple choice dialog
-					layoutMultipleChoice.RemoveAllViews ();
-					foreach (string s in input.Choices) {
-						Button btnView = new Button (Activity.ApplicationContext);
-						btnView.SetBackgroundResource(Main.ButtonBackground);
-						btnView.SetTextColor(Color.White);
-						btnView.SetHighlightColor(Color.White);
-						btnView.Text = s;
-						btnView.Click += OnChoiceClicked;
-						layoutMultipleChoice.AddView (btnView);
-					}
+					Spinner spinner = ctrl.FindViewById<Spinner> (Resource.Id.spinnerMulti);
+					spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (OnSpinnerItemSelected);
+					ArrayAdapter<string> adapter = new ArrayAdapter<string>(this.Activity, Android.Resource.Layout.SimpleSpinnerItem, input.Choices.ToArray());
+					adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
+					spinner.Adapter = adapter;
+
+//					layoutMultipleChoice.RemoveAllViews ();
+//					foreach (string s in input.Choices) {
+//						Button btnView = new Button (Activity.ApplicationContext);
+//						btnView.SetBackgroundResource(Main.ButtonBackground);
+//						btnView.SetTextColor(Color.White);
+//						btnView.SetHighlightColor(Color.White);
+//						btnView.Text = s;
+//						btnView.Click += OnChoiceClicked;
+//						layoutMultipleChoice.AddView (btnView);
+//					}
 				} else {
 					// Input dialog
 					// ToDo: Clear text field editInput

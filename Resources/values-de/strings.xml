@@ -35,6 +35,7 @@
   <string name="screen_tasks">Aufgaben</string>
   <string name="screen_map">Karte</string>
   <string name="screen_detail_commands">Aktionen</string>
+  <string name="screen_input_select">Wählen</string>
   <string name="screen_save_before_quit">Abspeichern vor dem Beenden?</string>
   <string name="screen_save_before_quit_yes">Ja</string>
   <string name="screen_save_before_quit_cancel">Abbrechen</string>

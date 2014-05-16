@@ -39,6 +39,7 @@
 	<string name="screen_map">Map</string>
 
 	<string name="screen_detail_commands">Actions</string>
+	<string name="screen_input_select">Select</string>
 
 	<string name="screen_save_before_quit">Would you save before quit?</string>
 	<string name="screen_save_before_quit_yes">Yes</string>

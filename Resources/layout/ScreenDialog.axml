@@ -9,6 +9,55 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
         <LinearLayout
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/layoutInput">
+            <Spinner
+                android:id="@+id/spinnerMulti"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:prompt="@string/screen_input_select"
+                android:background="@drawable/spinner_ab_focused_lighttheme"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginBottom="8dp"
+                android:spinnerMode="dialog" />
+            <EditText
+                android:id="@+id/editInput"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:background="@drawable/edit_background"
+                android:inputType="textShortMessage"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:id="@+id/layoutButton">
+                <Button
+                    android:id="@+id/buttonInput"
+                    android:text="Button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:hapticFeedbackEnabled="true"
+                    android:soundEffectsEnabled="true" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
             android:orientation="horizontal"
             android:minWidth="25px"
             android:minHeight="25px"
@@ -46,34 +95,6 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="8dp" />
         </LinearLayout>
-        <LinearLayout
-            android:orientation="vertical"
-            android:minWidth="25px"
-            android:minHeight="25px"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutInput"
-            android:padding="10dp">
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/editInput"
-                android:imeOptions="actionDone"
-                android:background="@drawable/edit_background"
-                android:inputType="textShortMessage" />
-            <Button
-                android:id="@+id/buttonInput"
-                android:text="Button"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_gravity="bottom"
-                android:hapticFeedbackEnabled="true"
-                android:soundEffectsEnabled="true" />
-        </LinearLayout>
     </LinearLayout>
     <ScrollView
         android:minWidth="25px"
@@ -110,14 +131,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp" />
-            <LinearLayout
-                android:orientation="vertical"
-                android:minWidth="25px"
-                android:minHeight="25px"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/layoutMultipleChoice"
-                android:padding="16dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

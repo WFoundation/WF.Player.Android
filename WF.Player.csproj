@@ -521,6 +521,7 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_restart.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_map.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_start.png" />
+    <AndroidResource Include="Resources\layout\Spinner.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />
