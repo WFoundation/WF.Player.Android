@@ -23,7 +23,7 @@
             android:summary="@string/pref_theme_detail"
             android:entries="@array/theme_key"
             android:entryValues="@array/theme_value"
-            android:defaultValue="2"
+            android:defaultValue="1"
             android:dialogTitle="@string/pref_theme" />
     </PreferenceCategory>
     <PreferenceCategory

@@ -34,6 +34,9 @@ namespace WF.Player
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
+			// Set color schema for activity
+			Main.SetTheme(this);
+
 			base.OnCreate (bundle);
 
 			// Set our view from the "main" layout resource

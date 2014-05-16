@@ -141,8 +141,8 @@ namespace WF.Player.Location
 				timer = new Timer();
 			}
 
-			// Set interval to 3 seconds. This is the time while running GPS in background
-			timer.Interval = 3000;
+			// Set interval to 30 seconds. This is the time while running GPS in background
+			timer.Interval = 30000;
 			timer.Elapsed += OnTimerTick;
 			timer.Start();
 		}

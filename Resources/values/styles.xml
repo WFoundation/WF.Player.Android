@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+
+  <!--
+	Base application theme, dependent on API level. This theme is replaced
+	by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+	-->
+  <style name="LightThemeLight" parent="@style/Theme.AppCompat.Light">
+    <!--
+	Theme customizations available in newer API levels can go in
+	res/values-vXX/styles.xml, while customizations related to
+	backward-compatibility can go here.
+	-->
+    <item name="android:backgroundSplit">@drawable/ab_bottom_solid_</item>
+    <item name="backgroundSplit">@drawable/ab_bottom_solid_</item>
+  </style>
+
+  <style name="DarkThemeDark" parent="@style/Theme.AppCompat">
+    <!--
+	Theme customizations available in newer API levels can go in
+	res/values-vXX/styles.xml, while customizations related to
+	backward-compatibility can go here.
+	-->
+  </style>
+
+  <!-- Application theme. -->
+  <style name="DefaultTheme" parent="LightThemeLigth">
+    <item name="android:actionBarStyle">@style/WFActionBar</item>
+    <!-- Support library compatibility -->
+    <item name="actionBarStyle">@style/WFActionBar</item>
+  </style>
+
+  <!-- ActionBar styles -->
+  <style name="WFActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+    <item name="android:actionBarItemBackground">@drawable/selectable_background_</item>
+    <item name="android:popupMenuStyle">@style/PopupMenu.</item>
+    <item name="android:dropDownListViewStyle">@style/DropDownListView.</item>
+    <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.</item>
+    <item name="android:actionDropDownStyle">@style/DropDownNav.</item>
+    <item name="android:actionBarStyle">@style/ActionBar.Solid.</item>
+    <item name="android:actionModeBackground">@drawable/cab_background_top_</item>
+    <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_</item>
+    <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.</item>
+    <item name="android:background">@drawable/ab_solid_</item>
+    <item name="android:backgroundStacked">@drawable/ab_stacked_solid_</item>
+    <item name="android:backgroundSplit">@drawable/ab_bottom_solid_</item>
+    <!-- Support library compatibility -->
+    <item name="actionBarItemBackground">@drawable/selectable_background_</item>
+    <item name="popupMenuStyle">@style/PopupMenu.</item>
+    <item name="dropDownListViewStyle">@style/DropDownListView.</item>
+    <item name="actionBarTabStyle">@style/ActionBarTabStyle.</item>
+    <item name="actionDropDownStyle">@style/DropDownNav.</item>
+    <item name="actionBarStyle">@style/ActionBar.Solid.</item>
+    <item name="actionModeBackground">@drawable/cab_background_top_</item>
+    <item name="actionModeSplitBackground">@drawable/cab_background_bottom_</item>
+    <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.</item>
+    <item name="background">@drawable/ab_solid_</item>
+    <item name="backgroundStacked">@drawable/ab_stacked_solid_</item>
+    <item name="backgroundSplit">@drawable/ab_bottom_solid_</item>
+  </style>
+  
+  <style name="ActionBar.Solid." parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
+    <item name="android:background">@drawable/ab_solid_</item>
+    <item name="android:backgroundStacked">@drawable/ab_stacked_solid_</item>
+    <item name="android:backgroundSplit">@drawable/ab_bottom_solid_</item>
+    <item name="android:progressBarStyle">@style/ProgressBar.</item>
+    <!-- Support library compatibility -->
+    <item name="background">@drawable/ab_solid_</item>
+    <item name="backgroundStacked">@drawable/ab_stacked_solid_</item>
+    <item name="backgroundSplit">@drawable/ab_bottom_solid_</item>
+    <item name="progressBarStyle">@style/ProgressBar.</item>
+  </style>
+
+  <style name="ActionBar.Transparent." parent="@style/Widget.AppCompat.Light.ActionBar">
+    <item name="android:background">@drawable/ab_transparent_</item>
+    <item name="android:progressBarStyle">@style/ProgressBar.</item>
+    <!-- Support library compatibility -->
+    <item name="background">@drawable/ab_transparent_</item>
+    <item name="progressBarStyle">@style/ProgressBar.</item>
+  </style>
+	
+  <style name="PopupMenu." parent="@style/Widget.AppCompat.Light.PopupMenu">	
+    <!-- <item name="android:popupBackground">@drawable/menu_dropdown_panel_</item>	-->
+    <!-- Support library compatibility -->
+    <!--- <item name="popupBackground">@drawable/menu_dropdown_panel_</item> -->	
+  </style>
+	
+  <style name="DropDownListView." parent="@style/Widget.AppCompat.Light.ListView.DropDown">
+    <!-- <item name="android:listSelector">@drawable/selectable_background_</item> -->
+    <!-- Support library compatibility -->
+    <!-- <item name="listSelector">@drawable/selectable_background_</item> -->
+  </style>
+
+  <style name="ActionBarTabStyle." parent="@style/Widget.AppCompat.Light.ActionBar.TabView">
+    <item name="android:background">@drawable/tab_indicator_ab_</item>
+    <!-- Support library compatibility -->
+    <item name="background">@drawable/tab_indicator_ab_</item>
+  </style>
+	
+  <style name="DropDownNav." parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+    <item name="android:background">@drawable/spinner_background_ab_</item>
+    <!-- <item name="android:popupBackground">@drawable/menu_dropdown_panel_</item> -->
+    <!-- <item name="android:dropDownSelector">@drawable/selectable_background_</item> -->
+    <!-- Support library compatibility -->
+    <item name="background">@drawable/spinner_background_ab_</item>
+    <!-- <item name="popupBackground">@drawable/menu_dropdown_panel_</item> -->
+    <!-- <item name="dropDownSelector">@drawable/selectable_background_</item> -->
+  </style>
+    
+  <style name="ProgressBar." parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+    <!-- <item name="android:progressDrawable">@drawable/progress_horizontal_</item> -->
+    <!-- Support library compatibility -->
+    <!-- <item name="progressDrawable">@drawable/progress_horizontal_</item> -->
+  </style>
+    
+  <style name="ActionButton.CloseMode." parent="@style/Widget.AppCompat.Light.ActionButton.CloseMode">
+    <item name="android:background">@drawable/btn_cab_done_</item>
+    <!-- Support library compatibility -->
+    <item name="background">@drawable/btn_cab_done_</item>
+  </style>
+
+  <!-- Splash screen -->
+  <style name="Theme.Splash" parent="android:Theme">
+    <item name="android:windowBackground">@drawable/splash</item>
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
+</resources>

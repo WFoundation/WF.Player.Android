@@ -41,15 +41,17 @@ namespace WF.Player.Game
 
 	public partial class GameDetailScreen : global::Android.Support.V4.App.Fragment
 	{
-		ImageView imageView;
-		ScrollView layoutDefault;
-		LinearLayout layoutMap;
-		LinearLayout layoutButtons;
-		LinearLayout layoutWorksWith;
-		TextView textDescription;
-		TextView textWorksWith;
+		ImageView _imageView;
+		ImageView _imageDirection;
+		ScrollView _layoutDefault;
+		LinearLayout _layoutBottom;
+		LinearLayout _layoutButtons;
+		LinearLayout _layoutDirection;
+		TextView _textDescription;
+		TextView _textDirection;
 		IMenuItem menuMap;
 		Command com;
+		double _lastBearing = 0;
 
 		#region Constructor
 
@@ -77,18 +79,20 @@ namespace WF.Player.Game
 
 			var view = inflater.Inflate(Resource.Layout.ScreenDetail, container, false);
 
-			layoutDefault = view.FindViewById<ScrollView> (Resource.Id.scrollView);
-			layoutMap = view.FindViewById<LinearLayout> (Resource.Id.layoutMap);
+			_layoutDefault = view.FindViewById<ScrollView> (Resource.Id.scrollView);
 
-			imageView = view.FindViewById<ImageView> (Resource.Id.imageView);
-			textDescription = view.FindViewById<TextView> (Resource.Id.textDescription);
-			textWorksWith = view.FindViewById<TextView> (Resource.Id.textWorksWith);
-			layoutButtons = view.FindViewById<LinearLayout> (Resource.Id.layoutButtons);
-			layoutWorksWith = view.FindViewById<LinearLayout> (Resource.Id.layoutWorksWith);
+			_imageView = view.FindViewById<ImageView> (Resource.Id.imageView);
+			_imageDirection = view.FindViewById<ImageView> (Resource.Id.imageDirection);
+			_textDescription = view.FindViewById<TextView> (Resource.Id.textDescription);
+			_textDirection = view.FindViewById<TextView> (Resource.Id.textDirection);
+			_layoutBottom = view.FindViewById<LinearLayout> (Resource.Id.layoutBottom);
+			_layoutButtons = view.FindViewById<LinearLayout> (Resource.Id.layoutButtons);
+			_layoutDirection = view.FindViewById<LinearLayout> (Resource.Id.layoutDirection);
 
-			layoutButtons.Visibility = ViewStates.Visible;
-			layoutWorksWith.Visibility = ViewStates.Gone;
-			layoutMap.Visibility = ViewStates.Gone;
+			// Don't know a better way :(
+			_layoutBottom.SetBackgroundResource(Main.BottomBackground);
+
+			_layoutButtons.Visibility = ViewStates.Visible;
 
 			HasOptionsMenu = !(activeObject is Task);
 
@@ -146,6 +150,8 @@ namespace WF.Player.Game
 
 			StartEvents();
 
+			Main.GPS.AddOrientationListener(OnOrientationChanged);
+
 			Refresh ();
 		}
 
@@ -153,58 +159,87 @@ namespace WF.Player.Game
 		{
 			StopEvents();
 
+			Main.GPS.RemoveOrientationListener(OnOrientationChanged);
+
 			base.OnPause();
+		}
+
+		void OnOrientationChanged (object sender, WF.Player.Location.OrientationChangedEventArgs e)
+		{
+			if (Math.Abs(Main.GPS.Bearing - _lastBearing) > 2) {
+				_lastBearing = Main.GPS.Bearing;
+				Refresh();
+			}
 		}
 
 		public void OnButtonClicked(object sender, EventArgs e)
 		{
+			// Sound and vibration if it is selected
 			ctrl.Feedback();
 
-			int tag = (int)((Button)sender).Tag;
-
-			Command c = commands [tag];
-					
-			if (c.CmdWith) 
-			{
-				layoutButtons.Visibility = ViewStates.Gone;
-				layoutWorksWith.Visibility = ViewStates.Visible;
-				com = c;
-				targets = com.TargetObjects;
-				Refresh ();
-			} 
-			else
-			{
-				c.Execute ();
+			if (commands.Count == 1) {
+				// We have only one command, so we don't need an extra dialog
+				CommandSelected(commands[0]);
+			} else {
+				// We have a list of commands, so show this to the user
+				string[] commandNames = new string[commands.Count];
+				for(int i = 0; i < commands.Count; i++)
+					commandNames[i] = commands[i].Text;
+				AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
+				builder.SetTitle(Resource.String.screen_detail_commands);
+				builder.SetItems(commandNames, OnCommandListClicked);
+				builder.SetNeutralButton(Resource.String.cancel, (s, args) => {});
+				builder.Show();
 			}
 		}
 
-		public void OnThingClicked(object sender, EventArgs e)
+		void OnCommandListClicked (object sender, DialogClickEventArgs e)
 		{
-			ctrl.Feedback();
-
-			layoutButtons.Visibility = ViewStates.Visible;
-			layoutWorksWith.Visibility = ViewStates.Gone;
-
-			Refresh();
-
-			com.Execute(targets[(int)((Button)sender).Tag]);
+			CommandSelected(commands[e.Which]);
 		}
 
-		public void OnNothingClicked(object sender, EventArgs e)
+		void OnTargetListClicked (object sender, DialogClickEventArgs e)
 		{
-			ctrl.Feedback();
-
-			layoutButtons.Visibility = ViewStates.Visible;
-			layoutWorksWith.Visibility = ViewStates.Gone;
-
-			Refresh();
+			com.Execute(targets[e.Which]);
 		}
 
 		#endregion
 
 		#region Private Functions
 
-		private void Refresh(string what = "")
+		void CommandSelected(Command c)
+		{
+			if (c.CmdWith) 
+			{
+				// Display WorksWith list to user
+				targets = c.TargetObjects;
+				if (targets.Count == 0) {
+					// We don't have any target, so display empty text
+					AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
+					builder.SetTitle(c.Text);
+					builder.SetMessage(c.EmptyTargetListText);
+					builder.SetNeutralButton(Resource.String.ok, (sender, e) => {});
+					builder.Show();
+				} else {
+					// We have a list of commands, so show this to the user
+					string[] targetNames = new string[targets.Count];
+					for(int i = 0; i < targets.Count; i++)
+						targetNames[i] = targets[i].Name;
+					AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
+					builder.SetTitle(c.Text);
+					builder.SetItems(targetNames, OnTargetListClicked);
+					builder.SetNeutralButton(Resource.String.cancel, (sender, e) => {});
+					builder.Show();
+				}
+			} 
+			else
+			{
+				// Execute command
+				c.Execute ();
+			}
+		}
+
+		void Refresh(string what = "")
 		{
 			if (activeObject != null && this.Activity != null) {
 				// Assign this item's values to the various subviews
@@ -222,77 +257,81 @@ namespace WF.Player.Game
 
 				if (what.Equals ("") || what.Equals ("Media")) {
 					if (activeObject.Image != null) {
-						imageView.SetImageBitmap(null);
+						_imageView.SetImageBitmap(null);
 						using (Bitmap bm = ctrl.ConvertMediaToBitmap(activeObject.Image)) {
-							imageView.SetImageBitmap (bm);
+							_imageView.SetImageBitmap (bm);
 						}
-						imageView.Visibility = ViewStates.Visible;
+						_imageView.Visibility = ViewStates.Visible;
 					} else {
-						imageView.Visibility = ViewStates.Gone;
+						_imageView.Visibility = ViewStates.Gone;
 					}
 				}
 
 				if (what.Equals ("") || what.Equals ("Description")) {
 					if (!String.IsNullOrWhiteSpace (activeObject.Description)) {
-						textDescription.Visibility = ViewStates.Visible;
-						textDescription.Text = activeObject.Description; // Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
-						textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
-						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
+						_textDescription.Visibility = ViewStates.Visible;
+						_textDescription.Text = activeObject.Description; // Html.FromHtml(activeObject.HTML.Replace("&lt;BR&gt;", "<br>").Replace("<br>\n", "<br>").Replace("\n", "<br>"));
+						_textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
+						_textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 					} else {
-						textDescription.Visibility = ViewStates.Visible;
-						textDescription.Text = "";
-						textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
-						textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
+						_textDescription.Visibility = ViewStates.Visible;
+						_textDescription.Text = "";
+						_textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
+						_textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 					}
 				}
-				// Tasks don't have any command button
-				if (activeObject is Task)
+				// Tasks don't have any command button or direction
+				if (activeObject is Task) {
+					_layoutBottom.Visibility =  ViewStates.Gone;
 					return;
+				}
 
-				if (layoutButtons.Visibility == ViewStates.Visible) {
-					layoutButtons.RemoveAllViews ();
+				// Check, if the bottom should be displayed or not
+				_layoutButtons.Visibility = ((Thing)activeObject).ActiveCommands.Count == 0 ? ViewStates.Invisible : ViewStates.Visible;
+				_layoutDirection.Visibility = ctrl.Engine.Player.Inventory.Contains(activeObject) ? ViewStates.Gone : (((Thing)activeObject).VectorFromPlayer == null ? ViewStates.Gone : ViewStates.Visible);
+				_layoutBottom.Visibility =  (_layoutButtons.Visibility == ViewStates.Visible || _layoutDirection.Visibility == ViewStates.Visible) ? ViewStates.Visible : ViewStates.Gone;
+
+				if (_layoutButtons.Visibility == ViewStates.Visible) {
+					_layoutButtons.RemoveAllViews ();
 					commands = ((Thing)activeObject).ActiveCommands;
-					for (int i = 0; i < commands.Count; i++) {
-						Button btnView = new Button (Activity.ApplicationContext) {
-							Text = commands[i].Text,
-							Tag = i
-						};
-						btnView.SetTextColor(Color.Black);
-						btnView.SetHighlightColor(Color.Black);
+					_layoutButtons.WeightSum = 1;
+					if (commands.Count > 0) {
+						Button btnView = new Button (Activity.ApplicationContext);
+						btnView.Text = commands.Count == 1 ? commands[0].Text : GetString(Resource.String.screen_detail_commands);
+						btnView.SetTextColor(Color.White);
+						btnView.SetHighlightColor(Color.White);
 						btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
 						btnView.Click += OnButtonClicked;
-						layoutButtons.AddView (btnView);
+						// Set size of button
+						Android.Views.ViewGroup.LayoutParams lp = new Android.Views.ViewGroup.LayoutParams(Android.Views.ViewGroup.LayoutParams.FillParent, Android.Views.ViewGroup.LayoutParams.FillParent);
+						// Add button to view
+						_layoutButtons.AddView (btnView, lp);
 					}
 				}
 
-				if (layoutWorksWith.Visibility == ViewStates.Visible) {
-					layoutWorksWith.RemoveViews(1,layoutWorksWith.ChildCount-1);
-					if (targets.Count == 0) {
-						textWorksWith.Text = com.EmptyTargetListText;
-						Button btnView = new Button (Activity.ApplicationContext);
-						btnView.SetTextColor(Color.Black);
-						btnView.SetHighlightColor(Color.Black);
-						btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
-						btnView.Text = GetString(Resource.String.ok);
-						btnView.Click += OnNothingClicked;
-						layoutWorksWith.AddView (btnView);
-					} else {
-						textWorksWith.Text = com.Text;
-						for (int i = 0; i < targets.Count; i++) {
-							Button btnView = new Button (Activity.ApplicationContext);
-							btnView.SetTextColor(Color.Black);
-							btnView.SetHighlightColor(Color.Black);
-							btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
-							btnView.Text = targets[i].Name;
-							btnView.Tag = i;
-							btnView.Click += OnThingClicked;
-							layoutWorksWith.AddView (btnView);
+				if (_layoutDirection.Visibility == ViewStates.Visible) {
+					// Draw direction content
+					var direction = ((Thing)activeObject).VectorFromPlayer;
+					if ( direction != null) {
+						_textDirection.Visibility = ViewStates.Visible;
+						_imageDirection.Visibility = ViewStates.Visible;
+						_textDirection.Text = direction.Distance.BestMeasureAs(DistanceUnit.Meters);
+						Bitmap bm;
+						if (direction.Distance.Value == 0) {
+							bm = ctrl.DrawCenter ();
+							_imageDirection.SetImageBitmap (null);
+							_imageDirection.SetImageBitmap (bm);
+							bm = null;
+						} else {
+							bm = ctrl.DrawArrow (direction.Bearing.Value + Main.GPS.Bearing);
+							_imageDirection.SetImageBitmap (bm);
+							bm = null;
 						}
 					}
 				}
 
 				// Resize scrollview
-				layoutDefault.Invalidate();
+				_layoutDefault.Invalidate();
 			}
 		}
 

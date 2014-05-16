@@ -31,12 +31,13 @@ using Android.Widget;
 
 namespace WF.Player.Preferences
 {
-	[Activity (Label = "Settings")] //, Theme="@style/Theme")]			
+	[Activity (Label = "Settings")]		
 	public class PreferencesActivity : PreferenceActivity
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
-			SetTheme(Resource.Style.Theme_AppCompat_Light);
+			// Set color schema for activity
+			Main.SetTheme(this);
 
 			base.OnCreate (bundle);
 

@@ -2,4 +2,6 @@
 <resources>
     <color name="button_back">#00000000</color>
     <color name="button_text">#00000000</color>
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffffff</color>
 </resources>

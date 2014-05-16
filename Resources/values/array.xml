@@ -5,12 +5,10 @@
 	<string-array name="theme_key">
         <item name="0">@string/pref_theme_dark</item>
         <item name="1">@string/pref_theme_light</item>
-        <item name="2">@string/pref_theme_blue</item>
 	</string-array>
 	<string-array name="theme_value">
         <item name="0">0</item>
         <item name="1">1</item>
-        <item name="2">2</item>
 	</string-array>
 
 	<string-array name="text_alignment_key">

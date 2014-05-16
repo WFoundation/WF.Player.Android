@@ -38,7 +38,7 @@ using WF.Player.Game;
 
 namespace WF.Player
 {
-	[Activity (Label = "Cartridge Details", Theme="@style/Theme")]	
+	[Activity (Label = "Cartridge Details")]	
 	[MetaData ("android.support.UI_OPTIONS", Value = "splitActionBarWhenNarrow")]		
 	public class DetailActivity : ActionBarActivity, global::Android.Support.V7.App.ActionBar.ITabListener
 	{
@@ -54,6 +54,9 @@ namespace WF.Player
 
 		protected override void OnCreate (Bundle bundle)
 		{
+			// Set color schema for activity
+			Main.SetTheme(this);
+
 			int[] tabs = {
 				Resource.String.detail_tab_overview,
 				Resource.String.detail_tab_description,

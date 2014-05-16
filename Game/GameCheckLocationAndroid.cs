@@ -72,6 +72,11 @@ namespace WF.Player.Game
 			textAccuracy = new TextViewAndroid(view.FindViewById<TextView> (Resource.Id.textAccuracy));
 			button = new ButtonViewAndroid(view.FindViewById<Button> (Resource.Id.buttonStart));
 
+			var layoutBottom = view.FindViewById<LinearLayout> (Resource.Id.layoutBottom);
+
+			// Don't know a better way :(
+			layoutBottom.SetBackgroundResource(Main.BottomBackground);
+
 			CommonCreate();
 
 			return view;

@@ -44,6 +44,8 @@ namespace WF.Player
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
+			Main.SetTheme(this);
+
 			base.OnCreate (bundle);
 
 			if (String.IsNullOrEmpty (Main.Path)) {

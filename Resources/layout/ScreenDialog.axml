@@ -13,35 +13,38 @@
             android:minWidth="25px"
             android:minHeight="25px"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:id="@+id/layoutDialog"
-            android:padding="10dp">
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp">
             <Button
                 android:text="Button"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/button1"
-                android:layout_marginTop="0dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
                 android:layout_weight="0.5"
                 android:layout_gravity="bottom"
                 android:hapticFeedbackEnabled="true"
-                android:soundEffectsEnabled="true" />
+                android:soundEffectsEnabled="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp" />
             <Button
                 android:text="Button"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:id="@+id/button2"
-                android:layout_marginTop="0dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginBottom="0dp"
                 android:layout_weight="0.5"
                 android:layout_gravity="bottom"
                 android:hapticFeedbackEnabled="true"
-                android:soundEffectsEnabled="true" />
+                android:soundEffectsEnabled="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="8dp" />
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
@@ -59,10 +62,10 @@
                 android:background="@drawable/edit_background"
                 android:inputType="textShortMessage" />
             <Button
+                android:id="@+id/buttonInput"
                 android:text="Button"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/buttonInput"
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
@@ -93,9 +96,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView"
                 android:scaleType="fitCenter"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
             <TextView
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -104,9 +107,9 @@
                 android:id="@+id/textDescription"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
             <LinearLayout
                 android:orientation="vertical"
                 android:minWidth="25px"
@@ -114,7 +117,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/layoutMultipleChoice"
-                android:padding="10dp" />
+                android:padding="16dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

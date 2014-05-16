@@ -37,7 +37,7 @@ namespace WF.Player
 	/// <summary>
 	/// Cartridges activity to show a list of cartridges.
 	/// </summary>
-	[Activity (Label = "Cartridges", Theme="@style/Theme")]
+	[Activity (Label = "Cartridges")]
 	public class CartridgesActivity : ActionBarActivity
 	{
 
@@ -49,6 +49,9 @@ namespace WF.Player
 		/// <param name="bundle">Bundle with cartridge and restore flag.</param>
 		protected override void OnCreate (Bundle bundle)
 		{
+			// Set color schema for activity
+			Main.SetTheme(this);
+
 			base.OnCreate(bundle);
 
 			// Set our view from the "main" layout resource

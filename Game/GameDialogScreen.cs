@@ -119,6 +119,9 @@ namespace WF.Player.Game
 			layoutMultipleChoice = view.FindViewById<LinearLayout> (Resource.Id.layoutMultipleChoice);
 			layoutInput = view.FindViewById<LinearLayout> (Resource.Id.layoutInput);
 
+			// Don't know a better way
+			layoutDialog.SetBackgroundResource(Main.BottomBackground);
+
 			if (input == null) {
 				// Normal dialog
 				layoutDialog.Visibility = ViewStates.Visible;
@@ -126,11 +129,13 @@ namespace WF.Player.Game
 				layoutInput.Visibility = ViewStates.Gone;
 
 				btnView1 = view.FindViewById<Button> (Resource.Id.button1);
-				btnView1.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
+				btnView1.SetTextColor(Color.White);
+				btnView1.SetBackgroundResource(Main.ButtonBackground);
 				btnView1.Click += OnButtonClicked;
 
 				btnView2 = view.FindViewById<Button> (Resource.Id.button2);
-				btnView2.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
+				btnView1.SetTextColor(Color.White);
+				btnView2.SetBackgroundResource(Main.ButtonBackground);
 				btnView2.Click += OnButtonClicked;
 			} else {
 				if (input.InputType == InputType.MultipleChoice) {
@@ -244,9 +249,9 @@ namespace WF.Player.Game
 					layoutMultipleChoice.RemoveAllViews ();
 					foreach (string s in input.Choices) {
 						Button btnView = new Button (Activity.ApplicationContext);
-						btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
-						btnView.SetTextColor(Color.Black);
-						btnView.SetHighlightColor(Color.Black);
+						btnView.SetBackgroundResource(Main.ButtonBackground);
+						btnView.SetTextColor(Color.White);
+						btnView.SetHighlightColor(Color.White);
 						btnView.Text = s;
 						btnView.Click += OnChoiceClicked;
 						layoutMultipleChoice.AddView (btnView);

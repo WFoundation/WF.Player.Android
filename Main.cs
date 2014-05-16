@@ -64,6 +64,32 @@ namespace WF.Player
 		}
 
 		#endregion
+
+		#region Static Functions
+
+		public static void SetTheme(Activity activity)
+		{
+			switch(Prefs.GetInt("theme", 1)) {
+			case 0:
+				BottomBackground = Resource.Drawable.ab_bottom_solid_darktheme;
+				activity.SetTheme(Resource.Style.Theme_Darktheme);
+				break;
+			case 1:
+				BottomBackground = Resource.Drawable.ab_bottom_solid_lighttheme;
+				activity.SetTheme(Resource.Style.Theme_Lighttheme);
+				break;
+			default:
+				BottomBackground = Resource.Drawable.ab_bottom_solid_lighttheme;
+				activity.SetTheme(Resource.Style.Theme_Lighttheme);
+				break;
+			}
+		}
+
+		public static int BottomBackground; 
+
+		public static int ButtonBackground = Resource.Drawable.apptheme_btn_default_holo_light; 
+
+		#endregion
 	}
 }
 

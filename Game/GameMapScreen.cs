@@ -76,6 +76,17 @@ namespace WF.Player.Game
 
 		#endregion
 
+		#region Properties
+
+		public UIObject ActiveObject
+		{
+			get { return activeObject; }
+		}
+
+		#endregion
+
+		#region Android Event Functions
+
 		public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
 			mapView = base.OnCreateView (inflater, container, savedInstanceState);
@@ -359,12 +370,14 @@ namespace WF.Player.Game
 					_tileOverlay = null;
 				var tileOptions = new TileOverlayOptions ();
 				_tileOverlay = _map.AddTileOverlay (tileOptions.InvokeTileProvider (_osmTileLayer));
+				_map.MapType = GoogleMap.MapTypeNone;
 			}
 			if (type == 5) {
 				if (_tileOverlay != null)
 					_tileOverlay = null;
 				var tileOptions = new TileOverlayOptions ();
 				_tileOverlay = _map.AddTileOverlay (tileOptions.InvokeTileProvider (_ocmTileLayer));
+				_map.MapType = GoogleMap.MapTypeNone;
 			}
 			if (type == 6) {
 				_map.MapType = GoogleMap.MapTypeNone;
@@ -446,6 +459,8 @@ namespace WF.Player.Game
 		#endregion
 
 	}
+
+	#endregion
 
 	#region Tile Providers
 

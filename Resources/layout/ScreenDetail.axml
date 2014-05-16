@@ -5,61 +5,63 @@
     android:layout_height="fill_parent">
     <LinearLayout
         android:id="@+id/layoutBottom"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true">
         <LinearLayout
             android:id="@+id/layoutButtons"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:minWidth="25px"
-            android:minHeight="25px"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:padding="10dp" />
+            android:minHeight="40px"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:top="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_height="52dp" />
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/layoutDirection"
+            android:orientation="horizontal"
             android:minWidth="25px"
-            android:minHeight="25px"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutWorksWith"
-            android:padding="10dp">
+            android:minHeight="48px"
+            android:layout_width="140dp"
+            android:layout_height="60dp">
             <TextView
-                android:id="@+id/textWorksWith"
-                android:text="Works with"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_width="fill_parent"
+                android:id="@+id/textDirection"
+                android:text="99.9 km"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:textStyle="bold" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="4dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white" />
+            <ImageView
+                android:id="@+id/imageDirection"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/layoutMap">
-        <TextView
-            android:id="@+id/textMap"
-            android:text="Map"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </LinearLayout>
     <ScrollView
+        android:id="@+id/scrollView"
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/scrollView"
         android:fillViewport="true"
         android:layout_alignParentTop="true"
         android:layout_above="@+id/layoutBottom"
@@ -75,9 +77,9 @@
                 android:id="@+id/imageView"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
             <TextView
                 android:id="@+id/textDescription"
                 android:text="Small Text"
@@ -85,10 +87,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginBottom="16dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

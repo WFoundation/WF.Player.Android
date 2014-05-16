@@ -46,7 +46,7 @@ namespace WF.Player.Game
 	/// <summary>
 	/// Screen activity for player.
 	/// </summary>
-	[Activity (Label = "Screen", ConfigurationChanges = ConfigChanges.KeyboardHidden|ConfigChanges.Orientation|ConfigChanges.ScreenSize, Theme = "@style/Theme")]
+	[Activity (Label = "Screen", ConfigurationChanges = ConfigChanges.KeyboardHidden|ConfigChanges.Orientation|ConfigChanges.ScreenSize)]
 	public class GameController : ActionBarActivity
 	{
 		ScreenTypes activeScreen = ScreenTypes.Main;
@@ -109,6 +109,9 @@ namespace WF.Player.Game
 		/// <param name="bundle">Bundle with cartridge and restore flag.</param>
 		protected override void OnCreate (Bundle bundle)
 		{
+			// Set color schema for activity
+			Main.SetTheme(this);
+
 			base.OnCreate (bundle);
 
 			// Load content of activity
@@ -409,10 +412,14 @@ namespace WF.Player.Game
 				screenStack.Push(new GameListScreen (engine, screen));
 				break;
 			case ScreenTypes.Details:
-				screenStack.Push(new GameDetailScreen (this, obj));
+				// Only push a new one, if it isn't the same
+				if (!(screenStack.Peek() is GameDetailScreen) || !((GameDetailScreen)screenStack.Peek()).ActiveObject.Equals(obj))
+					screenStack.Push(new GameDetailScreen (this, obj));
 				break;
 			case ScreenTypes.Map:
-				screenStack.Push(new GameMapScreen (this, obj));
+				// Only push a new one, if it isn't the same
+				if (!(screenStack.Peek() is GameMapScreen) || !((GameMapScreen)screenStack.Peek()).ActiveObject.Equals(obj))
+					screenStack.Push(new GameMapScreen (this, obj));
 				break;
 			}
 

@@ -14,10 +14,10 @@
         android:id="@+id/textDescription"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
     <TextView
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -27,9 +27,9 @@
         android:singleLine="false"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
     <TextView
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -40,19 +40,27 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
-    <Button
-        android:text="Button"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" />
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonStart"
-        android:layout_marginTop="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:hapticFeedbackEnabled="true"
-        android:soundEffectsEnabled="true" />
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:text="Button"
+            android:layout_width="fill_parent"
+            android:layout_height="52dp"
+            android:id="@+id/buttonStart"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
+            android:hapticFeedbackEnabled="true"
+            android:soundEffectsEnabled="true"
+            android:textColor="@color/white"
+            android:textColorHighlight="@color/white" />
+    </LinearLayout>
 </LinearLayout>
