@@ -45,6 +45,7 @@ namespace WF.Player
 		private Cartridge cart;
 		private IMenuItem menuSave;
 		private IMenuItem menuDelete;
+		private IMenuItem menuNavigate;
 		private IMenuItem menuStart;
 		private IMenuItem menuResume;
 //		private WebView webView;
@@ -107,12 +108,17 @@ namespace WF.Player
 
 			menuSave = menu.FindItem (Resource.Id.menu_detail_save);
 			menuDelete = menu.FindItem (Resource.Id.menu_detail_delete);
+			menuNavigate = menu.FindItem (Resource.Id.menu_detail_navigate);
 			menuResume = menu.FindItem (Resource.Id.menu_detail_resume);
 			menuStart = menu.FindItem (Resource.Id.menu_detail_start);
 
 			if (cart != null) {
 				menuSave.SetVisible (!File.Exists (cart.Filename));
 				menuDelete.SetVisible (File.Exists (cart.Filename));
+				if (cart.StartingLocationLatitude != 360.0 && cart.StartingLocationLongitude != 360.0 && HasRouting())
+					menuNavigate.SetEnabled(true);
+				else
+					menuNavigate.SetEnabled(false);
 				menuResume.SetVisible (true);
 				menuResume.SetEnabled(File.Exists (cart.SaveFilename));
 				menuResume.Icon.SetAlpha(menuResume.IsEnabled ? 255 : 96);
@@ -132,6 +138,9 @@ namespace WF.Player
 				Finish ();
 				return false;
 			}
+
+			if (HasRouting())
+				StartRouting(0, 0);
 
 			//This uses the imported MenuItem from ActionBarSherlock
 			switch(item.ItemId) {
@@ -161,6 +170,10 @@ namespace WF.Player
 					// builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
 				builder.SetNegativeButton(Catalog.GetString("No"), delegate { });
 					builder.Show();
+					break;
+				case Resource.Id.menu_detail_navigate:
+					if (cart.StartingLocationLatitude != 360.0 && cart.StartingLocationLongitude != 360.0)
+						StartRouting(cart.StartingLocationLatitude, cart.StartingLocationLongitude);
 					break;
 				case Resource.Id.menu_detail_start:
 					intent = new Intent (this, typeof(GameController));
@@ -308,6 +321,16 @@ namespace WF.Player
 			if (!String.IsNullOrEmpty(cart.Version)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_version),cart.Version));
 			if (cart.UniqueDownloads != 0) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_unique_downloads),cart.Version));
 			if (!String.IsNullOrEmpty(cart.ShortDescription)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_short_description),cart.ShortDescription));
+			// Start point and description
+			string text = GetString (Resource.String.detail_starting_location);
+			string description;
+			if (cart.StartingLocationLatitude == 360.0 && cart.StartingLocationLongitude == 360.0)
+				description = GetString (Resource.String.detail_starting_play_anywhare);
+			else 
+				description = Location.Converters.CoordinatToString(cart.StartingLocationLatitude, cart.StartingLocationLongitude, WF.Player.Location.GPSFormat.DecimalMinutes, true);
+			description += System.Environment.NewLine;
+			description += cart.StartingDescription;
+			entries.Add (new DetailInfoEntry(text, description));
 
 			ListView listView = FindViewById<ListView> (Resource.Id.listView);
 			DetailInfoAdapter adapter = new DetailInfoAdapter(this, entries);
@@ -352,6 +375,23 @@ namespace WF.Player
 
 		void Refresh()
 		{
+		}
+
+		bool HasRouting()
+		{
+			Intent intent = new Intent(Intent.ActionView, Android.Net.Uri.Parse("google.navigation:q=0,0"));
+
+			return intent.ResolveActivity(this.PackageManager) != null;
+		}
+
+		void StartRouting(double lat, double lon)
+		{
+			// TODO: Conversion from lat/lon to string should be on all devices with point "." instead of ","
+			string uri = String.Format("google.navigation:q={0},{1}", lat.ToString().Replace(",", "."), lon.ToString().Replace(",", "."));
+			Intent intent = new Intent(Intent.ActionView, Android.Net.Uri.Parse(uri));
+			if (intent.ResolveActivity(this.PackageManager) != null) {
+				this.StartActivity(intent);
+			}
 		}
 
 		#endregion

@@ -31,7 +31,9 @@
 	<string name="detail_version">Version</string>
 	<string name="detail_unique_downloads">Unique Downloads</string>
 	<string name="detail_short_description">Short Description</string>
-	
+	<string name="detail_starting_location">Starting location</string>
+	<string name="detail_starting_play_anywhare">Play Anyhere</string>
+
 	<string name="screen_locations">Locations</string>
 	<string name="screen_yousee">You see</string>
 	<string name="screen_inventory">Inventory</string>
@@ -48,6 +50,7 @@
 		
 	<string name="menu_detail_save">Save</string>
 	<string name="menu_detail_delete">Delete</string>
+	<string name="menu_detail_navigate">Navigate</string>
 	<string name="menu_detail_start">Start</string>
 	<string name="menu_detail_resume">Restore</string>
 

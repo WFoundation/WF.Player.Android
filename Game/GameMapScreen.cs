@@ -128,8 +128,8 @@ namespace WF.Player.Game
 			layoutButtons = new RelativeLayout(ctrl);
 
 			// Button for center menu
-			var lp = new RelativeLayout.LayoutParams(62, 62);
-			lp.SetMargins(16, 16, 16, 16);
+			var lp = new RelativeLayout.LayoutParams(64, 64);
+			lp.SetMargins(16, 16, 16, 8);
 			lp.AddRule(LayoutRules.AlignParentLeft);
 			lp.AddRule(LayoutRules.AlignParentTop);
 
@@ -142,20 +142,23 @@ namespace WF.Player.Game
 			layoutButtons.AddView(btnMapCenter, lp);
 
 			// Button for the orientation: north up or always in direction
-			lp = new RelativeLayout.LayoutParams(62, 62);
+			lp = new RelativeLayout.LayoutParams(64, 64);
 			lp.SetMargins(16, 8, 16, 16);
 			lp.AddRule(LayoutRules.Below, btnMapCenter.Id);
 			lp.AddRule(LayoutRules.AlignParentLeft);
 
 			btnMapOrientation = new ImageButton(ctrl);
-			btnMapOrientation.SetImageResource(Resource.Drawable.ic_button_orientation);
+			if (Main.Prefs.GetBool ("MapOrientationNorth", true))
+				btnMapOrientation.SetImageResource (Resource.Drawable.ic_button_orientation_north);
+			else
+				btnMapOrientation.SetImageResource (Resource.Drawable.ic_button_orientation);
 			btnMapOrientation.SetBackgroundResource(Resource.Drawable.MapButton);
 			btnMapOrientation.Click += OnMapOrientationButtonClick;
 
 			layoutButtons.AddView(btnMapOrientation, lp);
 
 			// Button for selecting the map type
-			lp = new RelativeLayout.LayoutParams(62, 62);
+			lp = new RelativeLayout.LayoutParams(64, 64);
 			lp.SetMargins(16, 16, 16, 8);
 			lp.AddRule(LayoutRules.AlignParentTop);
 			lp.AddRule(LayoutRules.AlignParentRight);
@@ -281,13 +284,14 @@ namespace WF.Player.Game
 			Main.Prefs.SetBool("MapOrientationNorth", !Main.Prefs.GetBool("MapOrientationNorth", true));
 
 			// Set icon
-			if (Main.Prefs.GetBool("MapOrientationNorth", true)) {
-				btnMapOrientation.SetImageResource(Resource.Drawable.ic_button_orientation);
-				RotateCamera(0.0f);
-				Main.GPS.RemoveOrientationListener(OnOrientationChanged);
-			} else {
-				btnMapOrientation.SetImageResource(Resource.Drawable.ic_button_layer);
-				Main.GPS.AddOrientationListener(OnOrientationChanged);
+			if (Main.Prefs.GetBool ("MapOrientationNorth", true)) {
+				btnMapOrientation.SetImageResource (Resource.Drawable.ic_button_orientation_north);
+				RotateCamera (0.0f);
+				Main.GPS.RemoveOrientationListener (OnOrientationChanged);
+			}
+			else {
+				btnMapOrientation.SetImageResource (Resource.Drawable.ic_button_orientation);
+				Main.GPS.AddOrientationListener (OnOrientationChanged);
 			}
 		}
 
@@ -354,15 +358,19 @@ namespace WF.Player.Game
 		void SetMapType (int type)
 		{
 			if (type == 0) {
+				_tileOverlay.Remove();
 				_map.MapType = GoogleMap.MapTypeNormal;
 			}
 			if (type == 1) {
+				_tileOverlay.Remove();
 				_map.MapType = GoogleMap.MapTypeSatellite;
 			}
 			if (type == 2) {
+				_tileOverlay.Remove();
 				_map.MapType = GoogleMap.MapTypeTerrain;
 			}
 			if (type == 3) {
+				_tileOverlay.Remove();
 				_map.MapType = GoogleMap.MapTypeHybrid;
 			}
 			if (type == 4) {
@@ -380,6 +388,7 @@ namespace WF.Player.Game
 				_map.MapType = GoogleMap.MapTypeNone;
 			}
 			if (type == 6) {
+				_tileOverlay.Remove();
 				_map.MapType = GoogleMap.MapTypeNone;
 			}
 		}

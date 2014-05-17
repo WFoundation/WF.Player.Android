@@ -14,6 +14,12 @@
         wfplayer:showAsAction="never"
         android:title="@string/menu_detail_delete"/>
     <item
+        android:id="@+id/menu_detail_navigate"
+        android:icon="@drawable/ic_action_content_split"
+        android:title="@string/menu_detail_navigate"
+        android:showAsAction="always"
+        wfplayer:showAsAction="always"/>
+    <item
         android:id="@+id/menu_detail_resume"
         android:icon="@drawable/ic_action_restart"
         android:title="@string/menu_detail_resume"

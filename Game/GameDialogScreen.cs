@@ -138,7 +138,7 @@ namespace WF.Player.Game
 				btnView1.Click += OnButtonClicked;
 
 				btnView2 = view.FindViewById<Button> (Resource.Id.button2);
-				btnView1.SetTextColor(Color.White);
+				btnView2.SetTextColor(Color.White);
 				btnView2.SetBackgroundResource(Main.ButtonBackground);
 				btnView2.Click += OnButtonClicked;
 			} else {
@@ -265,17 +265,6 @@ namespace WF.Player.Game
 					ArrayAdapter<string> adapter = new ArrayAdapter<string>(this.Activity, Android.Resource.Layout.SimpleSpinnerItem, input.Choices.ToArray());
 					adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
 					spinner.Adapter = adapter;
-
-//					layoutMultipleChoice.RemoveAllViews ();
-//					foreach (string s in input.Choices) {
-//						Button btnView = new Button (Activity.ApplicationContext);
-//						btnView.SetBackgroundResource(Main.ButtonBackground);
-//						btnView.SetTextColor(Color.White);
-//						btnView.SetHighlightColor(Color.White);
-//						btnView.Text = s;
-//						btnView.Click += OnChoiceClicked;
-//						layoutMultipleChoice.AddView (btnView);
-//					}
 				} else {
 					// Input dialog
 					// ToDo: Clear text field editInput

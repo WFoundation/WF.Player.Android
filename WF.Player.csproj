@@ -96,6 +96,7 @@
     <Compile Include="Preferences\PreferencesActivity.cs" />
     <Compile Include="Preferences\IntListPreference.cs" />
     <Compile Include="Preferences\FloatListPreference.cs" />
+    <Compile Include="Location\Converters.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -522,6 +523,14 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_map.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_start.png" />
     <AndroidResource Include="Resources\layout\Spinner.xml" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_button_orientation_north.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_button_orientation_north.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_button_orientation_north.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_button_orientation_north.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_action_content_split.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_action_content_split.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_action_content_split.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_content_split.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

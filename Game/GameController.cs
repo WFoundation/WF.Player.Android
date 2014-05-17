@@ -818,6 +818,10 @@ namespace WF.Player.Game
 				path3.LineTo (p3.X,p3.Y);
 				path3.LineTo (p4.X,p4.Y);
 
+				light.Color = new Color (128, 0, 0, 255);
+				dark.Color = new Color (255, 0, 0, 255);
+				black.Color = new Color (0, 0, 0, 255);
+
 				c.DrawPath (path1, light);
 				c.DrawPath (path2, dark);
 				c.DrawPath (path3, black);

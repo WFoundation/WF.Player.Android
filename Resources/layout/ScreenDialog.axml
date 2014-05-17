@@ -22,7 +22,7 @@
                 android:prompt="@string/screen_input_select"
                 android:background="@drawable/spinner_ab_focused_lighttheme"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginBottom="8dp"
                 android:spinnerMode="dialog" />
@@ -34,7 +34,7 @@
                 android:background="@drawable/edit_background"
                 android:inputType="textShortMessage"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp" />
             <LinearLayout
