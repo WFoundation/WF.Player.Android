@@ -21,7 +21,7 @@
   <string name="cartridges_title">Cartridges</string>
   <string name="detail_tab_overview">Überblick</string>
   <string name="detail_tab_description">Beschreibung</string>
-  <string name="detail_tab_map">Karte</string>
+  <string name="detail_tab_history">Historie</string>
   <string name="detail_tab_logs">Logs</string>
   <string name="detail_author_name">Author</string>
   <string name="detail_author_company">Firma</string>

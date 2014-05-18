@@ -23,7 +23,7 @@
 	
 	<string name="detail_tab_overview">Overview</string>
 	<string name="detail_tab_description">Description</string>
-	<string name="detail_tab_map">Map</string>
+	<string name="detail_tab_history">History</string>
 	<string name="detail_tab_logs">Logs</string>
 	<string name="detail_author_name">Author</string>
 	<string name="detail_author_company">Company</string>

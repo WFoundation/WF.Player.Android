@@ -61,7 +61,7 @@ namespace WF.Player
 			int[] tabs = {
 				Resource.String.detail_tab_overview,
 				Resource.String.detail_tab_description,
-				Resource.String.detail_tab_map,
+				Resource.String.detail_tab_history,
 				Resource.String.detail_tab_logs
 			};
 
@@ -91,7 +91,7 @@ namespace WF.Player
 //				if (File.Exists (filename))
 //					File.Delete(filename);
 
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 4; i++) {
 				var tab = SupportActionBar.NewTab ();
 				tab.SetText (GetString(tabs[i]));
 				tab.SetTabListener (this);
@@ -256,7 +256,7 @@ namespace WF.Player
 					InitDetailDescription();
 					break;
 				case 2:
-					// TODO: Map
+					InitDetailHistory();
 					break;
 				case 3:
 					InitDetailLogs();
@@ -357,6 +357,11 @@ namespace WF.Player
 				textView.Text = cart.LongDescription;
 		}
 
+
+		void InitDetailHistory()
+		{
+			SetContentView (Resource.Layout.DetailHistory);
+		}
 
 		void InitDetailLogs()
 		{

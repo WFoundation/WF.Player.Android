@@ -1390,32 +1390,32 @@ namespace WF.Player
 			// aapt resource value: 0x7f050011
 			public const int beginning = 2131034129;
 			
-			// aapt resource value: 0x7f050079
-			public const int button1 = 2131034233;
-			
 			// aapt resource value: 0x7f05007a
-			public const int button2 = 2131034234;
+			public const int button1 = 2131034234;
 			
-			// aapt resource value: 0x7f050077
-			public const int buttonInput = 2131034231;
+			// aapt resource value: 0x7f05007b
+			public const int button2 = 2131034235;
 			
-			// aapt resource value: 0x7f050068
-			public const int buttonNearby = 2131034216;
-			
-			// aapt resource value: 0x7f050064
-			public const int buttonOffline = 2131034212;
-			
-			// aapt resource value: 0x7f050086
-			public const int buttonSearch = 2131034246;
+			// aapt resource value: 0x7f050078
+			public const int buttonInput = 2131034232;
 			
 			// aapt resource value: 0x7f050069
-			public const int buttonSearchParam = 2131034217;
+			public const int buttonNearby = 2131034217;
 			
-			// aapt resource value: 0x7f050067
-			public const int buttonSearchWGCode = 2131034215;
+			// aapt resource value: 0x7f050065
+			public const int buttonOffline = 2131034213;
+			
+			// aapt resource value: 0x7f050087
+			public const int buttonSearch = 2131034247;
 			
 			// aapt resource value: 0x7f05006a
-			public const int buttonSettings = 2131034218;
+			public const int buttonSearchParam = 2131034218;
+			
+			// aapt resource value: 0x7f050068
+			public const int buttonSearchWGCode = 2131034216;
+			
+			// aapt resource value: 0x7f05006b
+			public const int buttonSettings = 2131034219;
 			
 			// aapt resource value: 0x7f050051
 			public const int buttonStart = 2131034193;
@@ -1438,20 +1438,20 @@ namespace WF.Player
 			// aapt resource value: 0x7f05000f
 			public const int dropdown = 2131034127;
 			
-			// aapt resource value: 0x7f050075
-			public const int editInput = 2131034229;
-			
-			// aapt resource value: 0x7f050081
-			public const int editLat = 2131034241;
+			// aapt resource value: 0x7f050076
+			public const int editInput = 2131034230;
 			
 			// aapt resource value: 0x7f050082
-			public const int editLon = 2131034242;
+			public const int editLat = 2131034242;
 			
-			// aapt resource value: 0x7f050085
-			public const int editName = 2131034245;
+			// aapt resource value: 0x7f050083
+			public const int editLon = 2131034243;
 			
-			// aapt resource value: 0x7f050066
-			public const int editWGCode = 2131034214;
+			// aapt resource value: 0x7f050086
+			public const int editName = 2131034246;
+			
+			// aapt resource value: 0x7f050067
+			public const int editWGCode = 2131034215;
 			
 			// aapt resource value: 0x7f050039
 			public const int edit_query = 2131034169;
@@ -1465,8 +1465,8 @@ namespace WF.Player
 			// aapt resource value: 0x7f05002d
 			public const int expanded_menu = 2131034157;
 			
-			// aapt resource value: 0x7f05006d
-			public const int fragment = 2131034221;
+			// aapt resource value: 0x7f05006e
+			public const int fragment = 2131034222;
 			
 			// aapt resource value: 0x7f050014
 			public const int home = 2131034132;
@@ -1486,56 +1486,59 @@ namespace WF.Player
 			// aapt resource value: 0x7f050028
 			public const int image = 2131034152;
 			
-			// aapt resource value: 0x7f050083
-			public const int imageButton1 = 2131034243;
-			
-			// aapt resource value: 0x7f050071
-			public const int imageDirection = 2131034225;
-			
-			// aapt resource value: 0x7f05005b
-			public const int imageIcon = 2131034203;
-			
-			// aapt resource value: 0x7f050061
-			public const int imageLine = 2131034209;
-			
-			// aapt resource value: 0x7f05005e
-			public const int imageUser = 2131034206;
+			// aapt resource value: 0x7f050084
+			public const int imageButton1 = 2131034244;
 			
 			// aapt resource value: 0x7f050072
-			public const int imageView = 2131034226;
+			public const int imageDirection = 2131034226;
+			
+			// aapt resource value: 0x7f05005c
+			public const int imageIcon = 2131034204;
+			
+			// aapt resource value: 0x7f050062
+			public const int imageLine = 2131034210;
+			
+			// aapt resource value: 0x7f05005f
+			public const int imageUser = 2131034207;
+			
+			// aapt resource value: 0x7f050073
+			public const int imageView = 2131034227;
 			
 			// aapt resource value: 0x7f050048
 			public const int imageViewIcon = 2131034184;
 			
-			// aapt resource value: 0x7f050055
-			public const int ivPoster = 2131034197;
+			// aapt resource value: 0x7f050057
+			public const int ivPoster = 2131034199;
 			
 			// aapt resource value: 0x7f050050
 			public const int layoutBottom = 2131034192;
 			
-			// aapt resource value: 0x7f050076
-			public const int layoutButton = 2131034230;
-			
-			// aapt resource value: 0x7f05006e
-			public const int layoutButtons = 2131034222;
-			
-			// aapt resource value: 0x7f050054
-			public const int layoutDetailInfo = 2131034196;
-			
-			// aapt resource value: 0x7f050078
-			public const int layoutDialog = 2131034232;
+			// aapt resource value: 0x7f050077
+			public const int layoutButton = 2131034231;
 			
 			// aapt resource value: 0x7f05006f
-			public const int layoutDirection = 2131034223;
+			public const int layoutButtons = 2131034223;
 			
-			// aapt resource value: 0x7f050073
-			public const int layoutInput = 2131034227;
+			// aapt resource value: 0x7f050055
+			public const int layoutDetailInfo = 2131034197;
 			
-			// aapt resource value: 0x7f05006c
-			public const int layoutMain = 2131034220;
+			// aapt resource value: 0x7f050079
+			public const int layoutDialog = 2131034233;
 			
-			// aapt resource value: 0x7f05007e
-			public const int layoutMap = 2131034238;
+			// aapt resource value: 0x7f050070
+			public const int layoutDirection = 2131034224;
+			
+			// aapt resource value: 0x7f050056
+			public const int layoutInfo = 2131034198;
+			
+			// aapt resource value: 0x7f050074
+			public const int layoutInput = 2131034228;
+			
+			// aapt resource value: 0x7f05006d
+			public const int layoutMain = 2131034221;
+			
+			// aapt resource value: 0x7f05007f
+			public const int layoutMap = 2131034239;
 			
 			// aapt resource value: 0x7f050034
 			public const int left_icon = 2131034164;
@@ -1543,14 +1546,14 @@ namespace WF.Player
 			// aapt resource value: 0x7f050046
 			public const int linearLayout1 = 2131034182;
 			
-			// aapt resource value: 0x7f05007c
-			public const int linearLayout2 = 2131034236;
+			// aapt resource value: 0x7f05007d
+			public const int linearLayout2 = 2131034237;
 			
 			// aapt resource value: 0x7f050047
 			public const int linearLayoutImage = 2131034183;
 			
-			// aapt resource value: 0x7f05007b
-			public const int linearLayoutItemText = 2131034235;
+			// aapt resource value: 0x7f05007c
+			public const int linearLayoutItemText = 2131034236;
 			
 			// aapt resource value: 0x7f050049
 			public const int linearLayoutText = 2131034185;
@@ -1561,44 +1564,44 @@ namespace WF.Player
 			// aapt resource value: 0x7f050045
 			public const int listView = 2131034181;
 			
-			// aapt resource value: 0x7f050059
-			public const int listView1 = 2131034201;
+			// aapt resource value: 0x7f050054
+			public const int listView1 = 2131034196;
 			
 			// aapt resource value: 0x7f05002a
 			public const int list_item = 2131034154;
 			
-			// aapt resource value: 0x7f05007f
-			public const int mapview = 2131034239;
-			
-			// aapt resource value: 0x7f05008a
-			public const int menu_detail_delete = 2131034250;
+			// aapt resource value: 0x7f050080
+			public const int mapview = 2131034240;
 			
 			// aapt resource value: 0x7f05008b
-			public const int menu_detail_navigate = 2131034251;
+			public const int menu_detail_delete = 2131034251;
 			
 			// aapt resource value: 0x7f05008c
-			public const int menu_detail_resume = 2131034252;
-			
-			// aapt resource value: 0x7f050089
-			public const int menu_detail_save = 2131034249;
+			public const int menu_detail_navigate = 2131034252;
 			
 			// aapt resource value: 0x7f05008d
-			public const int menu_detail_start = 2131034253;
+			public const int menu_detail_resume = 2131034253;
+			
+			// aapt resource value: 0x7f05008a
+			public const int menu_detail_save = 2131034250;
 			
 			// aapt resource value: 0x7f05008e
-			public const int menu_screen_detail_map = 2131034254;
+			public const int menu_detail_start = 2131034254;
 			
 			// aapt resource value: 0x7f05008f
-			public const int menu_screen_list_map = 2131034255;
-			
-			// aapt resource value: 0x7f050091
-			public const int menu_screen_main_quit = 2131034257;
+			public const int menu_screen_detail_map = 2131034255;
 			
 			// aapt resource value: 0x7f050090
-			public const int menu_screen_main_save = 2131034256;
+			public const int menu_screen_list_map = 2131034256;
 			
-			// aapt resource value: 0x7f050088
-			public const int menu_search = 2131034248;
+			// aapt resource value: 0x7f050092
+			public const int menu_screen_main_quit = 2131034258;
+			
+			// aapt resource value: 0x7f050091
+			public const int menu_screen_main_save = 2131034257;
+			
+			// aapt resource value: 0x7f050089
+			public const int menu_search = 2131034249;
 			
 			// aapt resource value: 0x7f050012
 			public const int middle = 2131034130;
@@ -1621,11 +1624,11 @@ namespace WF.Player
 			// aapt resource value: 0x7f050030
 			public const int radio = 2131034160;
 			
-			// aapt resource value: 0x7f05005a
-			public const int relativeLayout1 = 2131034202;
+			// aapt resource value: 0x7f05005b
+			public const int relativeLayout1 = 2131034203;
 			
-			// aapt resource value: 0x7f050065
-			public const int relativeLayout2 = 2131034213;
+			// aapt resource value: 0x7f050066
+			public const int relativeLayout2 = 2131034214;
 			
 			// aapt resource value: 0x7f050035
 			public const int right_container = 2131034165;
@@ -1681,11 +1684,11 @@ namespace WF.Player
 			// aapt resource value: 0x7f050006
 			public const int showTitle = 2131034118;
 			
-			// aapt resource value: 0x7f050074
-			public const int spinnerMulti = 2131034228;
+			// aapt resource value: 0x7f050075
+			public const int spinnerMulti = 2131034229;
 			
-			// aapt resource value: 0x7f050087
-			public const int spinnerTarget = 2131034247;
+			// aapt resource value: 0x7f050088
+			public const int spinnerTarget = 2131034248;
 			
 			// aapt resource value: 0x7f05001f
 			public const int split_action_bar = 2131034143;
@@ -1702,14 +1705,14 @@ namespace WF.Player
 			// aapt resource value: 0x7f05004f
 			public const int textAccuracy = 2131034191;
 			
-			// aapt resource value: 0x7f050063
-			public const int textAccuracyText = 2131034211;
+			// aapt resource value: 0x7f050064
+			public const int textAccuracyText = 2131034212;
 			
-			// aapt resource value: 0x7f050080
-			public const int textByCoords = 2131034240;
+			// aapt resource value: 0x7f050081
+			public const int textByCoords = 2131034241;
 			
-			// aapt resource value: 0x7f050084
-			public const int textByName = 2131034244;
+			// aapt resource value: 0x7f050085
+			public const int textByName = 2131034245;
 			
 			// aapt resource value: 0x7f05004c
 			public const int textCartAuthor = 2131034188;
@@ -1720,8 +1723,8 @@ namespace WF.Player
 			// aapt resource value: 0x7f05004b
 			public const int textCartVersion = 2131034187;
 			
-			// aapt resource value: 0x7f050062
-			public const int textCoordText = 2131034210;
+			// aapt resource value: 0x7f050063
+			public const int textCoordText = 2131034211;
 			
 			// aapt resource value: 0x7f05004e
 			public const int textCoords = 2131034190;
@@ -1729,29 +1732,29 @@ namespace WF.Player
 			// aapt resource value: 0x7f05004d
 			public const int textDescription = 2131034189;
 			
-			// aapt resource value: 0x7f050070
-			public const int textDirection = 2131034224;
+			// aapt resource value: 0x7f050071
+			public const int textDirection = 2131034225;
 			
-			// aapt resource value: 0x7f05007d
-			public const int textDistance = 2131034237;
+			// aapt resource value: 0x7f05007e
+			public const int textDistance = 2131034238;
 			
-			// aapt resource value: 0x7f050060
-			public const int textFounds = 2131034208;
-			
-			// aapt resource value: 0x7f05005c
-			public const int textHeader = 2131034204;
+			// aapt resource value: 0x7f050061
+			public const int textFounds = 2131034209;
 			
 			// aapt resource value: 0x7f05005d
-			public const int textItems = 2131034205;
+			public const int textHeader = 2131034205;
 			
-			// aapt resource value: 0x7f05005f
-			public const int textUsername = 2131034207;
+			// aapt resource value: 0x7f05005e
+			public const int textItems = 2131034206;
+			
+			// aapt resource value: 0x7f050060
+			public const int textUsername = 2131034208;
 			
 			// aapt resource value: 0x7f050053
 			public const int textView = 2131034195;
 			
-			// aapt resource value: 0x7f05006b
-			public const int text_size = 2131034219;
+			// aapt resource value: 0x7f05006c
+			public const int text_size = 2131034220;
 			
 			// aapt resource value: 0x7f05002c
 			public const int title = 2131034156;
@@ -1762,14 +1765,14 @@ namespace WF.Player
 			// aapt resource value: 0x7f050021
 			public const int top_action_bar = 2131034145;
 			
-			// aapt resource value: 0x7f050057
-			public const int tvContent = 2131034199;
+			// aapt resource value: 0x7f050059
+			public const int tvContent = 2131034201;
+			
+			// aapt resource value: 0x7f05005a
+			public const int tvDesciption = 2131034202;
 			
 			// aapt resource value: 0x7f050058
-			public const int tvDesciption = 2131034200;
-			
-			// aapt resource value: 0x7f050056
-			public const int tvDescription = 2131034198;
+			public const int tvDescription = 2131034200;
 			
 			// aapt resource value: 0x7f050022
 			public const int up = 2131034146;
@@ -1897,55 +1900,58 @@ namespace WF.Player
 			public const int DetailDescription = 2130903067;
 			
 			// aapt resource value: 0x7f03001c
-			public const int DetailInfo = 2130903068;
+			public const int DetailHistory = 2130903068;
 			
 			// aapt resource value: 0x7f03001d
-			public const int DetailInfoItem = 2130903069;
+			public const int DetailInfo = 2130903069;
 			
 			// aapt resource value: 0x7f03001e
-			public const int DetailLogs = 2130903070;
+			public const int DetailInfoItem = 2130903070;
 			
 			// aapt resource value: 0x7f03001f
-			public const int GameMainScreen = 2130903071;
+			public const int DetailLogs = 2130903071;
 			
 			// aapt resource value: 0x7f030020
-			public const int GameMainScreenItem = 2130903072;
+			public const int GameMainScreen = 2130903072;
 			
 			// aapt resource value: 0x7f030021
-			public const int Main = 2130903073;
+			public const int GameMainScreenItem = 2130903073;
 			
 			// aapt resource value: 0x7f030022
-			public const int PreferencesView = 2130903074;
+			public const int Main = 2130903074;
 			
 			// aapt resource value: 0x7f030023
-			public const int ScreenActivity = 2130903075;
+			public const int PreferencesView = 2130903075;
 			
 			// aapt resource value: 0x7f030024
-			public const int ScreenDetail = 2130903076;
+			public const int ScreenActivity = 2130903076;
 			
 			// aapt resource value: 0x7f030025
-			public const int ScreenDialog = 2130903077;
+			public const int ScreenDetail = 2130903077;
 			
 			// aapt resource value: 0x7f030026
-			public const int ScreenList = 2130903078;
+			public const int ScreenDialog = 2130903078;
 			
 			// aapt resource value: 0x7f030027
-			public const int ScreenListItem = 2130903079;
+			public const int ScreenList = 2130903079;
 			
 			// aapt resource value: 0x7f030028
-			public const int ScreenMap = 2130903080;
+			public const int ScreenListItem = 2130903080;
 			
 			// aapt resource value: 0x7f030029
-			public const int Search = 2130903081;
+			public const int ScreenMap = 2130903081;
 			
 			// aapt resource value: 0x7f03002a
-			public const int Spinner = 2130903082;
+			public const int Search = 2130903082;
 			
 			// aapt resource value: 0x7f03002b
-			public const int Splash = 2130903083;
+			public const int Spinner = 2130903083;
 			
 			// aapt resource value: 0x7f03002c
-			public const int support_simple_spinner_dropdown_item = 2130903084;
+			public const int Splash = 2130903084;
+			
+			// aapt resource value: 0x7f03002d
+			public const int support_simple_spinner_dropdown_item = 2130903085;
 			
 			static Layout()
 			{
@@ -2393,11 +2399,11 @@ namespace WF.Player
 			// aapt resource value: 0x7f0a003d
 			public const int detail_tab_description = 2131361853;
 			
+			// aapt resource value: 0x7f0a003e
+			public const int detail_tab_history = 2131361854;
+			
 			// aapt resource value: 0x7f0a003f
 			public const int detail_tab_logs = 2131361855;
-			
-			// aapt resource value: 0x7f0a003e
-			public const int detail_tab_map = 2131361854;
 			
 			// aapt resource value: 0x7f0a003c
 			public const int detail_tab_overview = 2131361852;

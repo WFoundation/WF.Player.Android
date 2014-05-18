@@ -531,6 +531,7 @@
     <AndroidResource Include="Resources\drawable-mdpi\ic_action_content_split.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_action_content_split.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_content_split.png" />
+    <AndroidResource Include="Resources\layout\DetailHistory.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />
