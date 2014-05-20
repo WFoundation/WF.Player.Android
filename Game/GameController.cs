@@ -782,6 +782,9 @@ namespace WF.Player.Game
 			int w2 = w / 2;
 			int h2 = w / 2;
 
+			// Values of direction are between 0° and 360°, but for drawing we need -180° to +180°
+			direction -= 180.0;
+
 			double rad1 = direction / 180.0 * Math.PI;
 			double rad2 = (direction + 180.0 + 30.0) / 180.0 * Math.PI;
 			double rad3 = (direction + 180.0 - 30.0) / 180.0 * Math.PI; 

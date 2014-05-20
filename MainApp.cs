@@ -57,10 +57,8 @@ namespace WF.Player
 			// Save prefernces instance
 			Main.Prefs = new PreferenceValues(PreferenceManager.GetDefaultSharedPreferences(this));
 
-			string path = Main.Prefs.GetString("path", null);
-
-			if (String.IsNullOrEmpty(path))
-				path = global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player";
+			// Get path from preferences or default path
+			string path = Main.Prefs.GetString("filepath", Path.Combine(global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "WF.Player"));
 
 			try {
 				if (!Directory.Exists (path))
@@ -79,7 +77,7 @@ namespace WF.Player
 				builder.Show ();
 			} else {
 				Main.Path = path;
-				Main.Prefs.SetString("path", path);
+				Main.Prefs.SetString("filepath", path);
 			}
 		}
 
@@ -116,7 +114,13 @@ namespace WF.Player
 			// Send the Exception to TestFlight.
 			//			TestFlight.SendCrash(e.Exception);
 
-			throw e.Exception;
+			AlertDialog.Builder builder = new AlertDialog.Builder (this.ApplicationContext);
+			builder.SetTitle (GetString (Resource.String.main_error));
+			builder.SetMessage(e.Exception.Message);
+			builder.SetNeutralButton(Resource.String.ok,(obj,arg) => { });
+			builder.Show ();
+
+			//			throw e.Exception;
 		}
 
 		void ApplicationUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)

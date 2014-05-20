@@ -19,6 +19,9 @@
   <string name="main_error_directory_not_found">Verzeichnis {0} ist nicht vorhanden.</string>
   <string name="main_error_no_cartridges">Verzeichnis {0} enthält keine Cartridges.</string>
   <string name="cartridges_title">Cartridges</string>
+  <string name="cartridges_about">Über WF.Player</string>
+  <string name="cartridges_about_text">Version {0}</string>
+  <string name="cartridges_title">Cartridges</string>
   <string name="detail_tab_overview">Überblick</string>
   <string name="detail_tab_description">Beschreibung</string>
   <string name="detail_tab_history">Historie</string>
@@ -42,6 +45,8 @@
   <string name="screen_save_before_quit_yes">Ja</string>
   <string name="screen_save_before_quit_cancel">Abbrechen</string>
   <string name="screen_save_before_quit_no">Nein</string>
+  <string name="menu_cartridges_settings">Einstellungen</string>
+  <string name="menu_cartridges_about">Über WF.Player</string>
   <string name="menu_detail_save">Sichern</string>
   <string name="menu_detail_delete">Löschen</string>
   <string name="menu_detail_navigate">Navigieren</string>

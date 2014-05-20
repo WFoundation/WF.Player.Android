@@ -42,12 +42,12 @@ namespace WF.Player
 	[MetaData ("android.support.UI_OPTIONS", Value = "splitActionBarWhenNarrow")]		
 	public class DetailActivity : ActionBarActivity, global::Android.Support.V7.App.ActionBar.ITabListener
 	{
-		private Cartridge cart;
-		private IMenuItem menuSave;
-		private IMenuItem menuDelete;
-		private IMenuItem menuNavigate;
-		private IMenuItem menuStart;
-		private IMenuItem menuResume;
+		Cartridge _cart;
+		IMenuItem _menuSave;
+		IMenuItem _menuDelete;
+		IMenuItem _menuNavigate;
+		IMenuItem _menuStart;
+		IMenuItem _menuResume;
 //		private WebView webView;
 
 		#region Android Event Handlers
@@ -72,9 +72,9 @@ namespace WF.Player
 
 			// Get cartridge
 			Intent intent = this.Intent;
-			cart = ((MainApp)Application).Cartridges [intent.GetIntExtra("cartridge",0)];
+			_cart = ((MainApp)Application).Cartridges [intent.GetIntExtra("cartridge",0)];
 
-			if (cart == null)
+			if (_cart == null)
 				Finish ();
 
 			string filename = System.IO.Path.Combine (global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "WF.Player", "poster.png");
@@ -98,7 +98,7 @@ namespace WF.Player
 				SupportActionBar.AddTab (tab);
 			}
 
-			SupportActionBar.Title = cart.Name;
+			SupportActionBar.Title = _cart.Name;
 
 		}
 
@@ -106,25 +106,25 @@ namespace WF.Player
 		{
 			MenuInflater.Inflate (Resource.Menu.DetailMenu, menu);
 
-			menuSave = menu.FindItem (Resource.Id.menu_detail_save);
-			menuDelete = menu.FindItem (Resource.Id.menu_detail_delete);
-			menuNavigate = menu.FindItem (Resource.Id.menu_detail_navigate);
-			menuResume = menu.FindItem (Resource.Id.menu_detail_resume);
-			menuStart = menu.FindItem (Resource.Id.menu_detail_start);
+			_menuSave = menu.FindItem (Resource.Id.menu_detail_save);
+			_menuDelete = menu.FindItem (Resource.Id.menu_detail_delete);
+			_menuNavigate = menu.FindItem (Resource.Id.menu_detail_navigate);
+			_menuResume = menu.FindItem (Resource.Id.menu_detail_resume);
+			_menuStart = menu.FindItem (Resource.Id.menu_detail_start);
 
-			if (cart != null) {
-				menuSave.SetVisible (!File.Exists (cart.Filename));
-				menuDelete.SetVisible (File.Exists (cart.Filename));
-				if (cart.StartingLocationLatitude != 360.0 && cart.StartingLocationLongitude != 360.0 && HasRouting())
-					menuNavigate.SetEnabled(true);
+			if (_cart != null) {
+				_menuSave.SetVisible (!File.Exists (_cart.Filename));
+				_menuDelete.SetVisible (File.Exists (_cart.Filename));
+				if (_cart.StartingLocationLatitude != 360.0 && _cart.StartingLocationLongitude != 360.0 && HasRouting())
+					_menuNavigate.SetEnabled(true);
 				else
-					menuNavigate.SetEnabled(false);
-				menuResume.SetVisible (true);
-				menuResume.SetEnabled(File.Exists (cart.SaveFilename));
-				menuResume.Icon.SetAlpha(menuResume.IsEnabled ? 255 : 96);
-				menuStart.SetVisible (true);
-				menuStart.SetEnabled(File.Exists (cart.Filename));
-				menuStart.Icon.SetAlpha(menuStart.IsEnabled ? 255 : 96);
+					_menuNavigate.SetEnabled(false);
+				_menuResume.SetVisible (true);
+				_menuResume.SetEnabled(File.Exists (_cart.SaveFilename));
+				_menuResume.Icon.SetAlpha(_menuResume.IsEnabled ? 255 : 96);
+				_menuStart.SetVisible (true);
+				_menuStart.SetEnabled(File.Exists (_cart.Filename));
+				_menuStart.Icon.SetAlpha(_menuStart.IsEnabled ? 255 : 96);
 			}
 
 			return base.OnCreateOptionsMenu(menu);
@@ -139,28 +139,28 @@ namespace WF.Player
 				return false;
 			}
 
-			//This uses the imported MenuItem from ActionBarSherlock
+			// This uses the imported MenuItem from action bar
 			switch(item.ItemId) {
 				case Resource.Id.menu_detail_save:
-					if (String.IsNullOrEmpty (cart.Filename)) {
-					cart.Filename = System.IO.Path.Combine (Main.Path, cart.WGCode);
+					if (String.IsNullOrEmpty (_cart.Filename)) {
+					_cart.Filename = System.IO.Path.Combine (Main.Path, _cart.WGCode);
 						var pd = ProgressDialog.Show(this, "Download", "Please Wait...", false);
-					((MainApp)Application).Cartridges.DownloadCartridge (cart, Main.Path, new FileStream (cart.Filename, FileMode.Create));
+					((MainApp)Application).Cartridges.DownloadCartridge (_cart, Main.Path, new FileStream (_cart.Filename, FileMode.Create));
 						pd.Hide ();
 					}
 					break;
 				case Resource.Id.menu_detail_delete:
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
 					builder.SetTitle(Catalog.GetString("Delete"));
-					builder.SetMessage(Catalog.Format(Catalog.GetString("Would you delete the cartridge {0} and all log/save files?"), cart.Name));
+					builder.SetMessage(Catalog.Format(Catalog.GetString("Would you delete the cartridge {0} and all log/save files?"), _cart.Name));
 					builder.SetCancelable(true);
 					builder.SetPositiveButton(Catalog.GetString("Yes"), delegate { 
-						if (!String.IsNullOrEmpty(cart.Filename) && File.Exists (cart.Filename))
-							File.Delete (cart.Filename);
-						if (!String.IsNullOrEmpty(cart.SaveFilename) && File.Exists (cart.SaveFilename))
-							File.Delete (cart.SaveFilename);
-						if (!String.IsNullOrEmpty(cart.LogFilename) && File.Exists (cart.LogFilename))
-							File.Delete (cart.LogFilename);
+						if (!String.IsNullOrEmpty(_cart.Filename) && File.Exists (_cart.Filename))
+							File.Delete (_cart.Filename);
+						if (!String.IsNullOrEmpty(_cart.SaveFilename) && File.Exists (_cart.SaveFilename))
+							File.Delete (_cart.SaveFilename);
+						if (!String.IsNullOrEmpty(_cart.LogFilename) && File.Exists (_cart.LogFilename))
+							File.Delete (_cart.LogFilename);
 					});
 					// TODO: Works this also on devices with API < 14 (Pre 4.0)
 					// var test = Build.VERSION.SdkInt;
@@ -169,12 +169,12 @@ namespace WF.Player
 					builder.Show();
 					break;
 				case Resource.Id.menu_detail_navigate:
-					if (cart.StartingLocationLatitude != 360.0 && cart.StartingLocationLongitude != 360.0)
-						StartRouting(cart.StartingLocationLatitude, cart.StartingLocationLongitude);
+					if (_cart.StartingLocationLatitude != 360.0 && _cart.StartingLocationLongitude != 360.0)
+						StartRouting(_cart.StartingLocationLatitude, _cart.StartingLocationLongitude);
 					break;
 				case Resource.Id.menu_detail_start:
 					intent = new Intent (this, typeof(GameController));
-					intent.PutExtra ("cartridge", cart.Filename);
+					intent.PutExtra ("cartridge", _cart.Filename);
 					intent.PutExtra ("restore", false);
 					try {
 						Start(intent);
@@ -192,7 +192,7 @@ namespace WF.Player
 					break;
 				case Resource.Id.menu_detail_resume:
 					intent = new Intent (this, typeof(GameController));
-					intent.PutExtra ("cartridge", cart.Filename);
+					intent.PutExtra ("cartridge", _cart.Filename);
 					intent.PutExtra ("restore", true);
 					try {
 						Start(intent);
@@ -213,14 +213,14 @@ namespace WF.Player
 					break;
 			}
 
-			menuSave.SetVisible (!File.Exists (cart.Filename));
-			menuDelete.SetVisible (File.Exists (cart.Filename));
-			menuResume.SetVisible (true);
-			menuResume.SetEnabled(File.Exists (cart.SaveFilename));
-			menuResume.Icon.SetAlpha(menuResume.IsEnabled ? 255 : 96);
-			menuStart.SetVisible (true);
-			menuStart.SetEnabled(File.Exists (cart.Filename));
-			menuStart.Icon.SetAlpha(menuStart.IsEnabled ? 255 : 96);
+			_menuSave.SetVisible (!File.Exists (_cart.Filename));
+			_menuDelete.SetVisible (File.Exists (_cart.Filename));
+			_menuResume.SetVisible (true);
+			_menuResume.SetEnabled(File.Exists (_cart.SaveFilename));
+			_menuResume.Icon.SetAlpha(_menuResume.IsEnabled ? 255 : 96);
+			_menuStart.SetVisible (true);
+			_menuStart.SetEnabled(File.Exists (_cart.Filename));
+			_menuStart.Icon.SetAlpha(_menuStart.IsEnabled ? 255 : 96);
 
 			return true;
 		}
@@ -303,8 +303,8 @@ namespace WF.Player
 
 			ImageView imageView = FindViewById<ImageView> (Resource.Id.ivPoster);
 
-			if (cart.Poster != null) {
-				Bitmap bm = BitmapFactory.DecodeByteArray (cart.Poster.Data, 0, cart.Poster.Data.Length);
+			if (_cart.Poster != null) {
+				Bitmap bm = BitmapFactory.DecodeByteArray (_cart.Poster.Data, 0, _cart.Poster.Data.Length);
 				imageView.SetImageBitmap (bm);
 			} else {
 				imageView.Visibility = ViewStates.Gone;
@@ -312,27 +312,27 @@ namespace WF.Player
 
 			List<DetailInfoEntry> entries = new List<DetailInfoEntry>();
 
-			if (!String.IsNullOrEmpty(cart.AuthorName)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_author_name),cart.AuthorName));
-			if (!String.IsNullOrEmpty(cart.AuthorCompany)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_author_company),cart.AuthorCompany));
-			if (cart.CreateDate != null) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_created),cart.CreateDate.ToString ()));
-			if (!String.IsNullOrEmpty(cart.Version)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_version),cart.Version));
-			if (cart.UniqueDownloads != 0) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_unique_downloads),cart.Version));
-			if (!String.IsNullOrEmpty(cart.ShortDescription)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_short_description),cart.ShortDescription));
+			if (!String.IsNullOrEmpty(_cart.AuthorName)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_author_name),_cart.AuthorName));
+			if (!String.IsNullOrEmpty(_cart.AuthorCompany)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_author_company),_cart.AuthorCompany));
+			if (_cart.CreateDate != null) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_created),_cart.CreateDate.ToString ()));
+			if (!String.IsNullOrEmpty(_cart.Version)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_version),_cart.Version));
+			if (_cart.UniqueDownloads != 0) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_unique_downloads),_cart.Version));
+			if (!String.IsNullOrEmpty(_cart.ShortDescription)) entries.Add (new DetailInfoEntry(GetString (Resource.String.detail_short_description),_cart.ShortDescription));
 			// Start point and description
 			string text = GetString (Resource.String.detail_starting_location);
 			string description;
-			if (cart.StartingLocationLatitude == 360.0 && cart.StartingLocationLongitude == 360.0)
+			if (_cart.StartingLocationLatitude == 360.0 && _cart.StartingLocationLongitude == 360.0)
 				description = GetString (Resource.String.detail_starting_play_anywhare);
 			else 
-				description = Location.Converters.CoordinatToString(cart.StartingLocationLatitude, cart.StartingLocationLongitude, WF.Player.Location.GPSFormat.DecimalMinutes, true);
+				description = Location.Converters.CoordinatToString(_cart.StartingLocationLatitude, _cart.StartingLocationLongitude, WF.Player.Location.GPSFormat.DecimalMinutes, true);
 			description += System.Environment.NewLine;
-			description += cart.StartingDescription;
+			description += _cart.StartingDescription;
 			entries.Add (new DetailInfoEntry(text, description));
 
 			ListView listView = FindViewById<ListView> (Resource.Id.listView);
 			DetailInfoAdapter adapter = new DetailInfoAdapter(this, entries);
 
-			if (entries.Count == 0 && cart.Poster == null) {
+			if (entries.Count == 0 && _cart.Poster == null) {
 				LinearLayout ll = FindViewById<LinearLayout> (Resource.Id.layoutDetailInfo);
 				ll.RemoveAllViews();
 				TextView tv = new TextView(this);
@@ -348,10 +348,10 @@ namespace WF.Player
 			TextView textView = FindViewById<TextView> (Resource.Id.textView);
 			textView.Gravity = Main.Prefs.TextAlignment.ToSystem();
 			textView.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
-			if (String.IsNullOrEmpty(cart.LongDescription))
+			if (String.IsNullOrEmpty(_cart.LongDescription))
 				textView.Text = Catalog.GetString("No description availible");
 			else
-				textView.Text = cart.LongDescription;
+				textView.Text = _cart.LongDescription;
 		}
 
 

@@ -31,6 +31,8 @@ using Android.Support.V7.App;
 using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Live;
+using WF.Player.Preferences;
+using Android.Content.PM;
 
 namespace WF.Player
 {
@@ -40,6 +42,9 @@ namespace WF.Player
 	[Activity (Label = "Cartridges")]
 	public class CartridgesActivity : ActionBarActivity
 	{
+		IMenuItem _menuSearch;
+		IMenuItem _menuSettings;
+		IMenuItem _menuAbout;
 
 		#region Android Events
 
@@ -98,6 +103,19 @@ namespace WF.Player
 				iv.SetImageBitmap(null);
 		}
 
+		public override bool OnCreateOptionsMenu(IMenu menu) 
+		{
+			MenuInflater.Inflate (Resource.Menu.CartridgesMenu, menu);
+
+			_menuSearch = menu.FindItem (Resource.Id.menu_cartridges_search);
+			_menuSettings = menu.FindItem (Resource.Id.menu_cartridges_settings);
+			_menuAbout = menu.FindItem (Resource.Id.menu_cartridges_about);
+
+			_menuSearch.SetVisible(false);
+
+			return base.OnCreateOptionsMenu(menu);
+		}
+
 		/// <summary>
 		/// Raised, when an entry of the options menu is selected.
 		/// </summary>
@@ -108,6 +126,28 @@ namespace WF.Player
 			{
 				Finish ();
 				return false;
+			}
+
+			// This uses the imported MenuItem from action bar
+			switch(item.ItemId) {
+			case Resource.Id.menu_cartridges_settings:
+				Intent intent = new Intent (this, typeof(PreferencesActivity));
+				intent.PutExtra ("Cartridges", "Test");
+				StartActivity (intent);
+				break;
+			case Resource.Id.menu_cartridges_about:
+				PackageInfo pInfo = this.PackageManager.GetPackageInfo(this.PackageName, 0);
+				string version = String.Format("{0}.{1}", pInfo.VersionName, pInfo.VersionCode);
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.SetTitle(Resource.String.cartridges_about);
+				builder.SetMessage(Catalog.Format(GetString(Resource.String.cartridges_about_text), version));
+				builder.SetCancelable(true);
+				builder.SetNeutralButton(Resource.String.ok, delegate {});
+				// TODO: Works this also on devices with API < 14 (Pre 4.0)
+				// var test = Build.VERSION.SdkInt;
+				// builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
+				builder.Show();
+				break;
 			}
 
 			return base.OnOptionsItemSelected(item); 

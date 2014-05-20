@@ -19,7 +19,10 @@
 	<string name="main_error">Error</string>
 	<string name="main_error_directory_not_found">Directory {0} didn\'t exists.</string>
 	<string name="main_error_no_cartridges">Directory {0} contains no cartridges.</string>
+
 	<string name="cartridges_title">Cartridges</string>
+	<string name="cartridges_about">About WF.Player</string>
+	<string name="cartridges_about_text">Version {0}</string>
 	
 	<string name="detail_tab_overview">Overview</string>
 	<string name="detail_tab_description">Description</string>
@@ -48,6 +51,9 @@
 	<string name="screen_save_before_quit_cancel">Cancel</string>
 	<string name="screen_save_before_quit_no">No</string>
 		
+	<string name="menu_cartridges_settings">Settings</string>
+	<string name="menu_cartridges_about">About WF.Player</string>
+
 	<string name="menu_detail_save">Save</string>
 	<string name="menu_detail_delete">Delete</string>
 	<string name="menu_detail_navigate">Navigate</string>

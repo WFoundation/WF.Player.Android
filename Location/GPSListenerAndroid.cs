@@ -393,7 +393,7 @@ namespace WF.Player.Location
 					azimuth = _lastGPSAzimuth;
 				else
 					// Substract 90° because the bearing 0° is in direction east
-					azimuth = (_lastSensorAzimuth + 90.0);
+					azimuth = _lastSensorAzimuth;
 			} else {
 				azimuth = _lastGPSAzimuth;
 			}

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:id="@+id/menu_search"
+  <item android:id="@+id/menu_cartridges_search"
       android:icon="@drawable/ic_menu_search"
       android:title="@string/menu_string_search" />
+  <item android:id="@+id/menu_cartridges_settings"
+      android:icon="@drawable/ic_menu_search"
+      android:title="@string/menu_cartridges_settings" />
+  <item android:id="@+id/menu_cartridges_about"
+      android:icon="@drawable/ic_menu_search"
+      android:title="@string/menu_cartridges_about" />
 </menu>

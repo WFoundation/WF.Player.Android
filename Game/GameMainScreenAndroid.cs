@@ -81,7 +81,7 @@ namespace WF.Player.Game
 		/// <param name="inflater">Inflater.</param>
 		public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater)
 		{
-			inflater.Inflate (Resource.Menu.ScreenMainMenu, menu);
+			inflater.Inflate (Resource.Menu.GameMainScreenMenu, menu);
 
 			menuSave = menu.FindItem (Resource.Id.menu_screen_main_save);
 			menuQuit = menu.FindItem (Resource.Id.menu_screen_main_quit);

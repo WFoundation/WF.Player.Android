@@ -39,7 +39,7 @@ using WF.Player.Preferences;
 
 namespace WF.Player
 {
-	[Activity (Label = "WF.Player.Main", Theme="@android:style/Theme.NoTitleBar")]			
+	[Activity (Label = "WF.Player", Theme="@android:style/Theme.NoTitleBar")]			
 	public class MainActivity : Activity
 	{
 		protected override void OnCreate (Bundle bundle)

@@ -50,7 +50,7 @@ namespace WF.Player.Game
 		TextView _textDescription;
 		TextView _textDirection;
 		IMenuItem menuMap;
-		Command com;
+		Command _com;
 		double _lastBearing = 0;
 
 		#region Constructor
@@ -101,7 +101,7 @@ namespace WF.Player.Game
 
 		public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater) 
 		{
-			inflater.Inflate (Resource.Menu.ScreenDetailMenu, menu);
+			inflater.Inflate (Resource.Menu.GameDetailScreenMenu, menu);
 
 			menuMap = menu.FindItem (Resource.Id.menu_screen_detail_map);
 
@@ -200,7 +200,7 @@ namespace WF.Player.Game
 
 		void OnTargetListClicked (object sender, DialogClickEventArgs e)
 		{
-			com.Execute(targets[e.Which]);
+			_com.Execute(targets[e.Which]);
 		}
 
 		#endregion
@@ -209,15 +209,18 @@ namespace WF.Player.Game
 
 		void CommandSelected(Command c)
 		{
-			if (c.CmdWith) 
+			// Save for later use if there are more than one target
+			_com = c;
+
+			if (_com.CmdWith) 
 			{
 				// Display WorksWith list to user
-				targets = c.TargetObjects;
+				targets = _com.TargetObjects;
 				if (targets.Count == 0) {
 					// We don't have any target, so display empty text
 					AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
 					builder.SetTitle(c.Text);
-					builder.SetMessage(c.EmptyTargetListText);
+					builder.SetMessage(_com.EmptyTargetListText);
 					builder.SetNeutralButton(Resource.String.ok, (sender, e) => {});
 					builder.Show();
 				} else {
@@ -235,7 +238,7 @@ namespace WF.Player.Game
 			else
 			{
 				// Execute command
-				c.Execute ();
+				_com.Execute ();
 			}
 		}
 
@@ -317,10 +320,7 @@ namespace WF.Player.Game
 						_textDirection.Text = direction.Distance.BestMeasureAs(DistanceUnit.Meters);
 						Bitmap bm;
 						if (direction.Distance.Value == 0) {
-							bm = ctrl.DrawCenter ();
-							_imageDirection.SetImageBitmap (null);
-							_imageDirection.SetImageBitmap (bm);
-							bm = null;
+							_imageDirection.SetImageBitmap (BitmapFactory.DecodeResource(Resources, Resource.Drawable.ic_direction_position));
 						} else {
 							bm = ctrl.DrawArrow (direction.Bearing.Value + Main.GPS.Bearing);
 							_imageDirection.SetImageBitmap (bm);

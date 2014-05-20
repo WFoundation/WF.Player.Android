@@ -97,6 +97,7 @@
     <Compile Include="Preferences\IntListPreference.cs" />
     <Compile Include="Preferences\FloatListPreference.cs" />
     <Compile Include="Location\Converters.cs" />
+    <Compile Include="FileImportActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -153,7 +154,6 @@
     <AndroidResource Include="Resources\layout\DetailDescription.axml" />
     <AndroidResource Include="Resources\layout\DetailLogs.axml" />
     <AndroidResource Include="Resources\layout\DetailInfoItem.axml" />
-    <AndroidResource Include="Resources\menu\ScreenDetailMenu.xml" />
     <AndroidResource Include="Resources\layout\Splash.axml" />
     <AndroidResource Include="Resources\values-de\strings.xml" />
     <AndroidResource Include="Resources\layout\CheckLocation.axml" />
@@ -245,7 +245,6 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_locations.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_tasks.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_yousee.png" />
-    <AndroidResource Include="Resources\menu\ScreenMainMenu.xml" />
     <AndroidResource Include="Resources\drawable-hdpi\ic_save.png" />
     <AndroidResource Include="Resources\drawable-mdpi\ic_save.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_save.png" />
@@ -262,7 +261,6 @@
     <AndroidResource Include="Resources\drawable-hdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_position.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_position.png" />
-    <AndroidResource Include="Resources\menu\ScreenListMenu.xml" />
     <AndroidResource Include="Resources\values\array.xml" />
     <AndroidResource Include="Resources\values-de\vernacular_strings.xml" />
     <AndroidResource Include="Resources\layout\GameMainScreen.axml" />
@@ -531,6 +529,13 @@
     <AndroidResource Include="Resources\layout\GameListScreen.axml" />
     <AndroidResource Include="Resources\layout\GameListScreenItem.axml" />
     <AndroidResource Include="Resources\layout\GameControllerScreen.axml" />
+    <AndroidResource Include="Resources\menu\GameMainScreenMenu.xml" />
+    <AndroidResource Include="Resources\menu\GameDetailScreenMenu.xml" />
+    <AndroidResource Include="Resources\menu\GameListScreenMenu.xml" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_direction_position.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_direction_position.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_direction_position.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_direction_position.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

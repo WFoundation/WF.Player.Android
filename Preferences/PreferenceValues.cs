@@ -18,6 +18,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using WF.Player.Types;
@@ -26,6 +27,8 @@ namespace WF.Player.Preferences
 {
 	partial class PreferenceValues
 	{
+		string _defaultFilePath = Path.Combine(global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath, "WF.Player");
+
 		#region Members
 
 		public bool FeedbackSound 

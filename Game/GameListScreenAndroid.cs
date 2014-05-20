@@ -102,7 +102,7 @@ namespace WF.Player.Game
 
 		public override void OnCreateOptionsMenu(IMenu menu, MenuInflater inflater) 
 		{
-			inflater.Inflate (Resource.Menu.ScreenListMenu, menu);
+			inflater.Inflate (Resource.Menu.GameListScreenMenu, menu);
 
 			menuMap = menu.FindItem (Resource.Id.menu_screen_list_map);
 
@@ -288,9 +288,7 @@ namespace WF.Player.Game
 							imageDirection.Visibility = ViewStates.Visible;
 							textDistance.Text = ((Thing)owner.Items[position]).VectorFromPlayer.Distance.BestMeasureAs(DistanceUnit.Meters);
 							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0) {
-								bm = ctrl.DrawCenter ();
-								imageDirection.SetImageBitmap (bm);
-								bm = null;
+								imageDirection.SetImageBitmap (BitmapFactory.DecodeResource(owner.Activity.Resources, Resource.Drawable.ic_direction_position));
 							} else {
 								bm = ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + Main.GPS.Bearing);
 								imageDirection.SetImageBitmap (bm);

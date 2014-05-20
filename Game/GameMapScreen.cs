@@ -412,13 +412,15 @@ namespace WF.Player.Game
 					distanceLine.Remove ();
 					distanceLine = null;
 				}
-				// Draw line
-				PolylineOptions po = new PolylineOptions();
-				po.Points.Add (new LatLng (Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
-				po.Points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
-				po.InvokeColor(Color.Cyan);
-				po.InvokeWidth(2);
-				distanceLine = _map.AddPolyline(po);
+				if (activeObject is Zone && ((Zone)activeObject).State != PlayerZoneState.Inside) {
+					// Draw line
+					PolylineOptions po = new PolylineOptions();
+					po.Points.Add (new LatLng (Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
+					po.Points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
+					po.InvokeColor(Color.Cyan);
+					po.InvokeWidth(4);
+					distanceLine = _map.AddPolyline(po);
+				}
 			}
 		}
 

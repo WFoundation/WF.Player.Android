@@ -201,7 +201,7 @@ namespace WF.Player.Game
 
 					var gps = Main.GPS;
 					var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
-					var altitude = gps.Location.HasAltitude ? String.Format("{0:0}", gps.Location.Altitude) : "\u0335";
+					var altitude = gps.Location.HasAltitude ? String.Format("{0:0} m", gps.Location.Altitude) : GetString(Resource.String.unknown);
 					var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0}", gps.Location.Accuracy) : Strings.Infinite;
 					var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
 
@@ -211,8 +211,7 @@ namespace WF.Player.Game
 					sb.AppendLine("");
 					sb.Append(Catalog.GetString("Altitude"));
 					sb.Append(":\t\t\t\t");
-					sb.Append(altitude);
-					sb.AppendLine(" m");
+					sb.AppendLine(altitude);
 					sb.Append(Catalog.GetString("Accuracy"));
 					sb.Append(":\t\t");
 					sb.Append(accuracy);
@@ -228,18 +227,18 @@ namespace WF.Player.Game
 				if (position < 4)
 					header = String.Format("{0} [{1}]", header, itemsList.Count);
 
-				if (itemsList.Count == 0)
+				if (position < 4 && itemsList.Count == 0)
 					items = empty;
-				else
+				else if (position < 4)
 				{
-				StringBuilder itemsText = new StringBuilder();
-				foreach(string s in itemsList)
-				{
-					if (itemsText.Length != 0)
-						itemsText.Append(System.Environment.NewLine);
-					itemsText.Append(s);
-				}
-				items = itemsText.ToString();
+					StringBuilder itemsText = new StringBuilder();
+					foreach(string s in itemsList)
+					{
+						if (itemsText.Length != 0)
+							itemsText.Append(System.Environment.NewLine);
+						itemsText.Append(s);
+					}
+					items = itemsText.ToString();
 				}
 			}
 		}
