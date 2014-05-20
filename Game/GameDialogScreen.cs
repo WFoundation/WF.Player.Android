@@ -113,7 +113,7 @@ namespace WF.Player.Game
 			if (container == null)
 				return null;
 
-			var view = inflater.Inflate(Resource.Layout.ScreenDialog, container, false);
+			var view = inflater.Inflate(Resource.Layout.GameDialogScreen, container, false);
 
 			imageView = view.FindViewById<ImageView> (Resource.Id.imageView);
 			textDescription = view.FindViewById<TextView> (Resource.Id.textDescription);
@@ -250,7 +250,6 @@ namespace WF.Player.Game
 				textDescription.Gravity = Main.Prefs.TextAlignment.ToSystem();
 				textDescription.SetTextSize(global::Android.Util.ComplexUnitType.Sp, (float)Main.Prefs.TextSize);
 				if (input.Image != null) {
-					imageView.SetImageBitmap(null);
 					using (Bitmap bm = ctrl.ConvertMediaToBitmap(input.Image)) {
 						imageView.SetImageBitmap (bm);
 					}

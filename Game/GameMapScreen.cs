@@ -358,37 +358,35 @@ namespace WF.Player.Game
 		void SetMapType (int type)
 		{
 			if (type == 0) {
-				_tileOverlay.Remove();
+				RemoveTile ();
 				_map.MapType = GoogleMap.MapTypeNormal;
 			}
 			if (type == 1) {
-				_tileOverlay.Remove();
+				RemoveTile ();
 				_map.MapType = GoogleMap.MapTypeSatellite;
 			}
 			if (type == 2) {
-				_tileOverlay.Remove();
+				RemoveTile ();
 				_map.MapType = GoogleMap.MapTypeTerrain;
 			}
 			if (type == 3) {
-				_tileOverlay.Remove();
+				RemoveTile ();
 				_map.MapType = GoogleMap.MapTypeHybrid;
 			}
 			if (type == 4) {
-				if (_tileOverlay != null)
-					_tileOverlay = null;
+				RemoveTile ();
 				var tileOptions = new TileOverlayOptions ();
 				_tileOverlay = _map.AddTileOverlay (tileOptions.InvokeTileProvider (_osmTileLayer));
 				_map.MapType = GoogleMap.MapTypeNone;
 			}
 			if (type == 5) {
-				if (_tileOverlay != null)
-					_tileOverlay = null;
+				RemoveTile ();
 				var tileOptions = new TileOverlayOptions ();
 				_tileOverlay = _map.AddTileOverlay (tileOptions.InvokeTileProvider (_ocmTileLayer));
 				_map.MapType = GoogleMap.MapTypeNone;
 			}
 			if (type == 6) {
-				_tileOverlay.Remove();
+				RemoveTile ();
 				_map.MapType = GoogleMap.MapTypeNone;
 			}
 		}
@@ -465,6 +463,14 @@ namespace WF.Player.Game
 			_map.MoveCamera(cu);
 		}
 
+
+		void RemoveTile ()
+		{
+			if (_tileOverlay != null) {
+				_tileOverlay.Remove ();
+				;
+			}
+		}
 		#endregion
 
 	}

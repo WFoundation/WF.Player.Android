@@ -63,6 +63,7 @@ namespace WF.Player
 			ListView list = FindViewById<ListView>(Resource.Id.listView);
 			list.Adapter = new CartridgesAdapter(this, ((MainApp)this.Application).Cartridges);
 			list.ItemClick += OnItemClick;
+			list.Recycler += OnRecycling;
 		}
 
 		/// <summary>
@@ -77,6 +78,24 @@ namespace WF.Player
 			intent.PutExtra("cartridge", e.Position);
 
 			StartActivity(intent);
+		}
+
+		/// <summary>
+		/// Raises the recycling event.
+		/// </summary>
+		/// <remarks>
+		/// This functions is called, when a list entry is removed from screen.
+		/// So it is possible to release the memory on heap, which is occupied
+		/// by the bitmap.
+		/// </remarks>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		void OnRecycling (object sender, AbsListView.RecyclerEventArgs e)
+		{
+			ImageView iv = e.View.FindViewById<ImageView>(Resource.Id.imageIcon);
+			// if there is a image view, than release the memory
+			if (iv != null)
+				iv.SetImageBitmap(null);
 		}
 
 		/// <summary>

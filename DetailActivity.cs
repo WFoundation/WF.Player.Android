@@ -139,9 +139,6 @@ namespace WF.Player
 				return false;
 			}
 
-			if (HasRouting())
-				StartRouting(0, 0);
-
 			//This uses the imported MenuItem from ActionBarSherlock
 			switch(item.ItemId) {
 				case Resource.Id.menu_detail_save:
@@ -168,7 +165,7 @@ namespace WF.Player
 					// TODO: Works this also on devices with API < 14 (Pre 4.0)
 					// var test = Build.VERSION.SdkInt;
 					// builder.SetNeutralButton(Resource.String.screen_save_before_quit_cancel, delegate { });
-				builder.SetNegativeButton(Catalog.GetString("No"), delegate { });
+					builder.SetNegativeButton(Catalog.GetString("No"), delegate { });
 					builder.Show();
 					break;
 				case Resource.Id.menu_detail_navigate:

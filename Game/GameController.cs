@@ -115,7 +115,7 @@ namespace WF.Player.Game
 			base.OnCreate (bundle);
 
 			// Load content of activity
-			SetContentView (Resource.Layout.ScreenActivity);
+			SetContentView (Resource.Layout.GameControllerScreen);
 
 			// Get main layout to replace with fragments
 			var layoutMain = FindViewById<LinearLayout> (Resource.Id.layoutMain);

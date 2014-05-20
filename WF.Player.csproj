@@ -143,10 +143,6 @@
     <AndroidResource Include="Resources\layout\Cartridges.axml" />
     <AndroidResource Include="Resources\layout\CartridgesItem.axml" />
     <AndroidResource Include="Resources\layout\Main.axml" />
-    <AndroidResource Include="Resources\layout\ScreenActivity.axml" />
-    <AndroidResource Include="Resources\layout\ScreenDetail.axml" />
-    <AndroidResource Include="Resources\layout\ScreenList.axml" />
-    <AndroidResource Include="Resources\layout\ScreenListItem.axml" />
     <AndroidResource Include="Resources\layout\Search.axml" />
     <AndroidResource Include="Resources\menu\CartridgesMenu.xml" />
     <AndroidResource Include="Resources\values\Colors.xml" />
@@ -158,7 +154,6 @@
     <AndroidResource Include="Resources\layout\DetailLogs.axml" />
     <AndroidResource Include="Resources\layout\DetailInfoItem.axml" />
     <AndroidResource Include="Resources\menu\ScreenDetailMenu.xml" />
-    <AndroidResource Include="Resources\layout\ScreenDialog.axml" />
     <AndroidResource Include="Resources\layout\Splash.axml" />
     <AndroidResource Include="Resources\values-de\strings.xml" />
     <AndroidResource Include="Resources\layout\CheckLocation.axml" />
@@ -234,7 +229,6 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\apptheme_btn_default_pressed_holo_light_green.9.png" />
     <AndroidResource Include="Resources\drawable\actionbar_bottom_background.9.png" />
     <AndroidResource Include="Resources\drawable\actionbar_top_background.9.png" />
-    <AndroidResource Include="Resources\layout\ScreenMap.axml" />
     <AndroidResource Include="Resources\drawable-hdpi\ic_inventory.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ic_locations.png" />
     <AndroidResource Include="Resources\drawable-hdpi\ic_tasks.png" />
@@ -532,6 +526,11 @@
     <AndroidResource Include="Resources\drawable-xhdpi\ic_action_content_split.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_action_content_split.png" />
     <AndroidResource Include="Resources\layout\DetailHistory.axml" />
+    <AndroidResource Include="Resources\layout\GameDetailScreen.axml" />
+    <AndroidResource Include="Resources\layout\GameDialogScreen.axml" />
+    <AndroidResource Include="Resources\layout\GameListScreen.axml" />
+    <AndroidResource Include="Resources\layout\GameListScreenItem.axml" />
+    <AndroidResource Include="Resources\layout\GameControllerScreen.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />

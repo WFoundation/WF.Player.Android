@@ -77,7 +77,7 @@ namespace WF.Player.Game
 			if (container == null)
 				return null;
 
-			var view = inflater.Inflate(Resource.Layout.ScreenDetail, container, false);
+			var view = inflater.Inflate(Resource.Layout.GameDetailScreen, container, false);
 
 			_layoutDefault = view.FindViewById<ScrollView> (Resource.Id.scrollView);
 
@@ -257,7 +257,6 @@ namespace WF.Player.Game
 
 				if (what.Equals ("") || what.Equals ("Media")) {
 					if (activeObject.Image != null) {
-						_imageView.SetImageBitmap(null);
 						using (Bitmap bm = ctrl.ConvertMediaToBitmap(activeObject.Image)) {
 							_imageView.SetImageBitmap (bm);
 						}

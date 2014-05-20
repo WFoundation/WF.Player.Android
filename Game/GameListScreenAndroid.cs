@@ -66,11 +66,12 @@ namespace WF.Player.Game
 			if (container == null)
 				return null;
 
-			var view = inflater.Inflate(Resource.Layout.ScreenList, container, false);
+			var view = inflater.Inflate(Resource.Layout.GameListScreen, container, false);
 
 			listView = view.FindViewById<ListView> (Resource.Id.listView);
 			listView.Adapter = new GameListScreenAdapter (this, ctrl, type);
 			listView.ItemClick += OnItemClick;
+			listView.Recycler += OnRecycling;
 
 			ctrl.SupportActionBar.Title = GetContent ();
 
@@ -129,6 +130,17 @@ namespace WF.Player.Game
 			}
 
 			return base.OnOptionsItemSelected(item);
+		}
+
+		void OnRecycling (object sender, AbsListView.RecyclerEventArgs e)
+		{
+			ImageView iv = e.View.FindViewById<ImageView>(Resource.Id.imageIcon);
+			// if there is a image view, than release the memory
+			if (iv != null)
+				iv.SetImageBitmap(null);
+			iv = e.View.FindViewById<ImageView> (Resource.Id.imageDirection);
+			if (iv != null)
+				iv.SetImageBitmap(null);
 		}
 
 		public override void OnResume()
@@ -227,7 +239,7 @@ namespace WF.Player.Game
 			// Try to reuse convertView if it's not  null, otherwise inflate it from our item layout
 			// This gives us some performance gains by not always inflating a new view
 			// This will sound familiar to MonoTouch developers with UITableViewCell.DequeueReusableCell()
-			var view = (convertView ?? ctrl.LayoutInflater.Inflate(Resource.Layout.ScreenListItem, parent, false)) as RelativeLayout;
+			var view = (convertView ?? ctrl.LayoutInflater.Inflate(Resource.Layout.GameListScreenItem, parent, false)) as RelativeLayout;
 
 			var layout = view.FindViewById<LinearLayout>(Resource.Id.linearLayoutItemText);
 			var imageIcon = view.FindViewById<ImageView>(Resource.Id.imageIcon);
@@ -277,7 +289,6 @@ namespace WF.Player.Game
 							textDistance.Text = ((Thing)owner.Items[position]).VectorFromPlayer.Distance.BestMeasureAs(DistanceUnit.Meters);
 							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0) {
 								bm = ctrl.DrawCenter ();
-								imageDirection.SetImageBitmap (null);
 								imageDirection.SetImageBitmap (bm);
 								bm = null;
 							} else {
