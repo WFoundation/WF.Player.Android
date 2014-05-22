@@ -326,33 +326,85 @@ namespace WF.Player.Game
 		/// </summary>
 		void CreateZones ()
 		{
-			// Remove all active zones
-			while (zones.Count > 0) {
-				zones.ElementAt (0).Value.Remove ();
-				zones.Remove (zones.ElementAt (0).Key);
+			var activeZones = ctrl.Engine.ActiveVisibleZones;
+			List<int> objIndexOfActiveZones = new List<int>();
+			List<int> objIndexOfInactiveZones = new List<int>();
+
+			// Get all zones, which are active
+			foreach (Zone z in activeZones) {
+				objIndexOfActiveZones.Add(z.ObjIndex);
 			}
-			// Now create all zones new
-			foreach (Zone z in ctrl.Engine.ActiveVisibleZones) {
-				CreateZone (z);
+
+			// Get all zones, that have changed from active to inactive
+			foreach(var z in zones) {
+				if (!objIndexOfActiveZones.Contains(z.Key))
+					objIndexOfInactiveZones.Add(z.Key);
+			}
+
+			// Remove all inactive zones
+			foreach(var i in objIndexOfInactiveZones)
+				zones.Remove (i);
+
+				// Now create all active zones new
+			foreach (Zone z in activeZones) {
+				if (zones.ContainsKey(z.ObjIndex)) {
+					if (!ComparePoints(zones[z.ObjIndex].Points, z.Points))
+						CreateZone (z, zones[z.ObjIndex]);
+					if (activeObject == z)
+						UpdateDistanceLine();
+				} else {
+					CreateZone (z);
+				}
 			}
 		}
 
 		/// <summary>
-		/// Creates a visible zone.
+		/// Compares the points from polygon and zone.
+		/// </summary>
+		/// <returns><c>true</c>, if points from polygon and zone are the same, <c>false</c> otherwise.</returns>
+		/// <param name="polygonPoints">Polygon points.</param>
+		/// <param name="zonePoints">Zone points.</param>
+		bool ComparePoints(IList<LatLng> polygonPoints, WherigoCollection<ZonePoint> zonePoints)
+		{
+			if (polygonPoints.Count != zonePoints.Count)
+				return false;
+
+			for (int i = 0; i < polygonPoints.Count; i++) {
+				if (polygonPoints[i].Latitude != zonePoints[i].Latitude || polygonPoints[i].Longitude != zonePoints[i].Longitude)
+					return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
+		/// Replaces the already visible zone or creates a new one.
 		/// </summary>
 		/// <param name="z">The z coordinate.</param>
-		void CreateZone (Zone z)
+		/// <param name="replace">The z coordinate.</param>
+		void CreateZone (Zone z, Polygon replace = null)
 		{
-			// Create new polygon for zone
-			PolygonOptions po = new PolygonOptions ();
-			foreach (var zp in z.Points) {
-				po.Points.Add (new LatLng (zp.Latitude, zp.Longitude));
+			IList<LatLng> points = new List<LatLng>(z.Points.Count);
+			if (replace != null) {
+				// Replace the points from the old polygon
+				foreach (var zp in z.Points) {
+					points.Add(new LatLng(zp.Latitude, zp.Longitude));
+					replace.Points = points;
+				}
+			} else {
+				// Create a new polygon for zone
+				PolygonOptions po = new PolygonOptions ();
+				foreach (var zp in z.Points) {
+					po.Points.Add (new LatLng (zp.Latitude, zp.Longitude));
+				}
+				po.InvokeStrokeColor (Color.Argb (160, 255, 0, 0));
+				po.InvokeStrokeWidth (2);
+				po.InvokeFillColor (Color.Argb (80, 255, 0, 0));
+				po.InvokeZIndex(1);
+
+				// Add polygon to list of active zones
+				zones.Add (z.ObjIndex, _map.AddPolygon (po));
 			}
-			po.InvokeStrokeColor (Color.Argb (160, 255, 0, 0));
-			po.InvokeStrokeWidth (2);
-			po.InvokeFillColor (Color.Argb (80, 255, 0, 0));
-			// Add polygon to list of active zones
-			zones.Add (z.ObjIndex, _map.AddPolygon (po));
 		}
 
 		void SetMapType (int type)
@@ -407,19 +459,35 @@ namespace WF.Player.Game
 		void UpdateDistanceLine ()
 		{
 			if (activeObject != null && activeObject is Zone) {
+				if (activeObject is Zone && ((Zone)activeObject).State != PlayerZoneState.Inside) {
+					if (distanceLine == null) {
+						// Draw line
+						PolylineOptions po = new PolylineOptions();
+						po.Points.Add (new LatLng (Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
+						po.Points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
+						po.InvokeColor(Color.Cyan);
+						po.InvokeWidth(4);
+						po.InvokeZIndex(2);
+						distanceLine = _map.AddPolyline(po);
+					} else {
+						// Set new line points
+						List<LatLng> points = new List<LatLng>(2);
+						points.Add (new LatLng (Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
+						points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
+						distanceLine.Points = points;
+					}
+				} else {
+					// Delete line
+					if (distanceLine != null) {
+						distanceLine.Remove ();
+						distanceLine = null;
+					}
+				}
+			} else {
 				// Delete line
 				if (distanceLine != null) {
 					distanceLine.Remove ();
 					distanceLine = null;
-				}
-				if (activeObject is Zone && ((Zone)activeObject).State != PlayerZoneState.Inside) {
-					// Draw line
-					PolylineOptions po = new PolylineOptions();
-					po.Points.Add (new LatLng (Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
-					po.Points.Add (new LatLng (((Zone)activeObject).ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude)); //.ObjectLocation.Latitude, ((Zone)activeObject).ObjectLocation.Longitude));
-					po.InvokeColor(Color.Cyan);
-					po.InvokeWidth(4);
-					distanceLine = _map.AddPolyline(po);
 				}
 			}
 		}
