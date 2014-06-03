@@ -46,8 +46,11 @@ namespace WF.Player.Game
 	{
 		GameController ctrl;
 		UIObject activeObject;
-		float zoom = 16f;
+		float _zoom = 16f;
 		bool headingOrientation = false;
+		bool _followLocation = true;
+		double _lastLatitude;
+		double _lastLongitude;
 		Thing thing;
 		View mapView;
 		GoogleMap _map;
@@ -103,9 +106,12 @@ namespace WF.Player.Game
 //			mapView.OnCreate(savedInstanceState);
 //
 			// Set all relevant data for map
+
+			_zoom = (float)Main.Prefs.GetDouble("MapZoom", 16);
+
 			_map = this.Map;
 			_map.MapType = GoogleMap.MapTypeNormal;
-			_map.MoveCamera(CameraUpdateFactory.NewLatLngZoom(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude), (float)Main.Prefs.GetDouble("MapZoom", 16)));
+			_map.MoveCamera(CameraUpdateFactory.NewLatLngZoom(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude), _zoom));
 			_map.MyLocationEnabled = true;
 			_map.BuildingsEnabled = true;
 			_map.UiSettings.ZoomControlsEnabled = false;
@@ -113,6 +119,7 @@ namespace WF.Player.Game
 			_map.UiSettings.CompassEnabled = false;
 			_map.UiSettings.TiltGesturesEnabled = false;
 			_map.UiSettings.RotateGesturesEnabled = false;
+			_map.MapClick += OnMapClick;
 
 			// Create tile layers
 			_osmTileLayer = new OsmTileProvider("http://a.tile.openstreetmap.org/{0}/{1}/{2}.png");
@@ -248,6 +255,8 @@ namespace WF.Player.Game
 
 		void OnLocationChanged (object sender, WF.Player.Location.LocationChangedEventArgs e)
 		{
+			if (_followLocation)
+				this.FocusOnLocation();
 			UpdateDistanceLine();
 		}
 
@@ -258,7 +267,15 @@ namespace WF.Player.Game
 
 		void OnCameraChange (object sender, GoogleMap.CameraChangeEventArgs e)
 		{
-			Main.Prefs.SetDouble("MapZoom", e.P0.Zoom);
+			if (_zoom != e.P0.Zoom) {
+				Main.Prefs.SetDouble("MapZoom", e.P0.Zoom);
+				_zoom = e.P0.Zoom;
+			}
+		}
+
+		void OnMapClick (object sender, GoogleMap.MapClickEventArgs e)
+		{
+			_followLocation = false;
 		}
 
 		void OnMapCenterButtonClick (object sender, EventArgs args)
@@ -269,10 +286,14 @@ namespace WF.Player.Game
 			AlertDialog.Builder builder = new AlertDialog.Builder(ctrl);
 			builder.SetTitle(Resource.String.menu_screen_map_location_header);
 			builder.SetItems(items.ToArray(), delegate(object s, DialogClickEventArgs e) {
-				if (e.Which == 0)
+				if (e.Which == 0) {
+					_followLocation = true;
 					FocusOnLocation();
-				if (e.Which == 1)
+				}
+				if (e.Which == 1) {
+					_followLocation = false;
 					FocusOnGame();
+				}
 			});
 			AlertDialog alert = builder.Create();
 			alert.Show();
@@ -528,9 +549,12 @@ namespace WF.Player.Game
 		/// </summary>
 		void FocusOnLocation()
 		{
-			CameraUpdate cu = CameraUpdateFactory.NewLatLng(new LatLng(Main.GPS.Location.Latitude, Main.GPS.Location.Longitude));
-
-			_map.MoveCamera(cu);
+			if (_lastLatitude != Main.GPS.Location.Latitude || _lastLongitude != Main.GPS.Location.Longitude) {
+				_lastLatitude = Main.GPS.Location.Latitude;
+				_lastLongitude = Main.GPS.Location.Longitude;
+				CameraUpdate cu = CameraUpdateFactory.NewLatLng(new LatLng(_lastLatitude, _lastLongitude));
+				_map.MoveCamera(cu);
+			}
 		}
 
 
