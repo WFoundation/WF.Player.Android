@@ -98,6 +98,14 @@
     <Compile Include="Preferences\FloatListPreference.cs" />
     <Compile Include="Location\Converters.cs" />
     <Compile Include="FileImportActivity.cs" />
+    <Compile Include="Utils\BitmapHelpersAndroid.cs" />
+    <Compile Include="Utils\AsyncImageFromFile.cs" />
+    <Compile Include="Utils\AsyncImageFromDirection.cs" />
+    <Compile Include="Utils\AsyncImageFromURL.cs" />
+    <Compile Include="Utils\AsyncDrawable.cs" />
+    <Compile Include="Utils\AsyncImageTask.cs" />
+    <Compile Include="Utils\BitmapArrowAndroid.cs" />
+    <Compile Include="Utils\CallDelayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

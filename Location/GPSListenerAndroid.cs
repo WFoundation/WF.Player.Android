@@ -80,7 +80,8 @@ namespace WF.Player.Location
 				PowerRequirement = Power.Low
 			};
 
-			locationProvider = _locManager.GetBestProvider(locationCriteria, true);
+//			locationProvider = _locManager.GetBestProvider(locationCriteria, true);
+			locationProvider = LocationManager.GpsProvider;
 
 			if (locationProvider == null)
 				throw new Exception("No location provider found");
@@ -98,7 +99,7 @@ namespace WF.Player.Location
 				}
 			}
 
-			// If we have an old location, than use this a first location
+			// If we have an old location, than use this as first location
 			if (loc != null)
 			{
 				_location = new GPSLocation(loc);
@@ -130,7 +131,7 @@ namespace WF.Player.Location
 			_sensorManager.RegisterListener(this, _orientationSensor, SensorDelay.Game);
 			_sensorManager.RegisterListener(this, _accelerometerSensor, SensorDelay.Game);
 
-			_valid = false;
+//			_valid = true;
 		}
 
 		public void Stop()
@@ -171,10 +172,14 @@ namespace WF.Player.Location
 			_sensorManager.UnregisterListener(this);
 
 			_valid = false;
+			_location.IsValid = false;
 
 			timer.Stop();
 			timer.Elapsed -= OnTimerTick;
 			timer = null;
+
+			if (LocationChanged != null)
+				LocationChanged (this, new LocationChangedEventArgs (_location));
 		}
 
 		#endregion
@@ -195,6 +200,9 @@ namespace WF.Player.Location
 					_lastGPSAzimuth = _location.Bearing;
 					SendOrientation(_lastPitch, _lastRoll);
 				}
+			} else {
+				_valid = false;
+				_location.IsValid = false;
 			}
 
 			if (LocationChanged != null)
@@ -212,6 +220,10 @@ namespace WF.Player.Location
 		public void OnProviderDisabled (string provider)
 		{
 			_valid = false;
+			_location.IsValid = false;
+
+			if (LocationChanged != null)
+				LocationChanged (this, new LocationChangedEventArgs (_location));
 		}
 
 		/// <summary>
@@ -221,7 +233,7 @@ namespace WF.Player.Location
 		///  update.</param>
 		public void OnProviderEnabled (string provider)
 		{
-			_valid = false;
+			// It's ok, but we don't have to do anything.
 		}
 
 		/// <summary>
@@ -235,11 +247,13 @@ namespace WF.Player.Location
 		{
 			if (status == Availability.Available)
 				_valid = true;
-			else
+			else {
 				_valid = false;
+				_location.IsValid = false;
 
-			// TODO: Remove
-			Console.WriteLine ("Status changed: {0} is {1}",provider,status.ToString());
+				if (LocationChanged != null)
+					LocationChanged (this, new LocationChangedEventArgs (_location));
+			}
 		}
 
 		#endregion
@@ -371,7 +385,7 @@ namespace WF.Player.Location
 		/// <returns>The filter value.</returns>
 		double GetFilterValue() 
 		{
-			switch (Main.Prefs.GetInt("sensor_orientation_filter", 0)) 
+			switch (Main.Prefs.GetInt("sensor_orientation_filter", 2)) 
 			{
 			case 1: // PreferenceValues.VALUE_SENSORS_ORIENT_FILTER_LIGHT:
 				return 0.20;

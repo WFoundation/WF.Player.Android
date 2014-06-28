@@ -38,11 +38,11 @@ namespace WF.Player.Game
 
 		string[] properties = {"Name", "Visible"};
 
-		object iconLocation;
-		object iconYouSee;
-		object iconInventory;
-		object iconTask;
-		object iconPosition;
+		object _iconLocation;
+		object _iconYouSee;
+		object _iconInventory;
+		object _iconTask;
+		object _iconPosition;
 
 		ScreenTypes Type = ScreenTypes.Main;
 
@@ -162,7 +162,7 @@ namespace WF.Player.Game
 				case 0:
 					header = Catalog.GetString("Locations");
 					empty = Catalog.GetString(engine.Cartridge.EmptyZonesListText);
-					image = iconLocation;
+					image = _iconLocation;
 					foreach (UIObject o in engine.ActiveVisibleZones)
 					{
 						itemsList.Add(o.Name == null ? "" : o.Name);
@@ -171,7 +171,7 @@ namespace WF.Player.Game
 				case 1:
 					header = Catalog.GetString("You see");
 					empty = Catalog.GetString(engine.Cartridge.EmptyYouSeeListText);
-					image = iconYouSee;
+					image = _iconYouSee;
 					foreach (UIObject o in engine.VisibleObjects)
 					{
 						itemsList.Add(o.Name == null ? "" : o.Name);
@@ -180,7 +180,7 @@ namespace WF.Player.Game
 				case 2:
 					header = Catalog.GetString("Inventory");
 					empty = Catalog.GetString(engine.Cartridge.EmptyInventoryListText);
-					image = iconInventory;
+					image = _iconInventory;
 					foreach (UIObject o in engine.VisibleInventory)
 					{
 						itemsList.Add(o.Name == null ? "" : o.Name);
@@ -189,47 +189,19 @@ namespace WF.Player.Game
 				case 3:
 					header = Catalog.GetString("Tasks");
 					empty = Catalog.GetString(engine.Cartridge.EmptyTasksListText);
-					image = iconTask;
+					image = _iconTask;
 					foreach (UIObject o in engine.ActiveVisibleTasks)
 					{
 						itemsList.Add((((Task)o).Complete ? (((Task)o).CorrectState == TaskCorrectness.NotCorrect ? Strings.TaskNotCorrect : Strings.TaskCorrect) + " " : "") + (o.Name == null ? "" : o.Name));
 					}
 					break;
-				case 4:
-					header = Catalog.GetString("Position");
-					image = iconPosition;
-
-					var gps = Main.GPS;
-					var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
-					var altitude = gps.Location.HasAltitude ? String.Format("{0:0} m", gps.Location.Altitude) : GetString(Resource.String.unknown);
-					var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0}", gps.Location.Accuracy) : Strings.Infinite;
-					var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
-
-					StringBuilder sb = new StringBuilder();
-
-					sb.AppendLine(location);
-					sb.AppendLine("");
-					sb.Append(Catalog.GetString("Altitude"));
-					sb.Append(":\t\t\t\t");
-					sb.AppendLine(altitude);
-					sb.Append(Catalog.GetString("Accuracy"));
-					sb.Append(":\t\t");
-					sb.Append(accuracy);
-					sb.AppendLine(" m");
-					sb.Append(Catalog.GetString("Status"));
-					sb.Append(":\t\t\t\t");
-					sb.AppendLine(status);
-
-					items = sb.ToString();
-					break;
 				}
 
-				if (position < 4)
-					header = String.Format("{0} [{1}]", header, itemsList.Count);
+				header = String.Format("{0} [{1}]", header, itemsList.Count);
 
-				if (position < 4 && itemsList.Count == 0)
+				if (itemsList.Count == 0)
 					items = empty;
-				else if (position < 4)
+				else
 				{
 					StringBuilder itemsText = new StringBuilder();
 					foreach(string s in itemsList)
@@ -252,7 +224,6 @@ namespace WF.Player.Game
 			engine.AttributeChanged += OnPropertyChanged;
 			engine.InventoryChanged += OnPropertyChanged;
 			engine.ZoneStateChanged += OnPropertyChanged;
-
 			engine.PropertyChanged += OnPropertyChanged;
 
 			Main.GPS.AddLocationListener(OnLocationChanged);
@@ -272,7 +243,6 @@ namespace WF.Player.Game
 			engine.AttributeChanged -= OnPropertyChanged;
 			engine.InventoryChanged -= OnPropertyChanged;
 			engine.ZoneStateChanged -= OnPropertyChanged;
-
 			engine.PropertyChanged -= OnPropertyChanged;
 		}
 
@@ -280,16 +250,23 @@ namespace WF.Player.Game
 
 		#region Events
 
+		/// <summary>
+		/// Raises the location changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void OnLocationChanged (object sender, WF.Player.Location.LocationChangedEventArgs e)
 		{
-			CommonRefresh();
+			RefreshLocation();
 		}
 
 		public void OnPropertyChanged(object sender, EventArgs e)
 		{
 			// Check, if one of the visible entries changed
-			if (!(e is PropertyChangedEventArgs) || (e is PropertyChangedEventArgs && properties.Contains(((PropertyChangedEventArgs)e).PropertyName)))
-				Refresh();
+			if(e is PropertyChangedEventArgs && !properties.Contains(((PropertyChangedEventArgs)e).PropertyName))
+				return;
+
+			CommonRefresh();
 		}
 
 		#endregion

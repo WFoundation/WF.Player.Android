@@ -36,6 +36,9 @@ namespace WF.Player.Location
 			double latDecimalMin = 0;
 			double lonDecimalMin = 0;
 
+			if(double.IsNaN(lat) || double.IsNaN(lon))
+				return "";
+
 			latDirect = lat > 0 ? Catalog.GetString("N", comment: "Direction North") : Catalog.GetString("S", comment: "Direction South");
 			lonDirect = lon > 0 ? Catalog.GetString("E", comment: "Direction East") : Catalog.GetString("W", comment: "Direction West");
 

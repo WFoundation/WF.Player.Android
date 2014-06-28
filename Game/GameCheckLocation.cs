@@ -88,7 +88,7 @@ namespace WF.Player.Game
 			SetTitle(Catalog.GetString("GPS Check"));
 
 			textDescription.Text = Catalog.GetString("For much fun with the cartridge, you should wait for a good accuracy of your GPS signal.");
-			if (Main.GPS.IsValid) {
+			if (Main.GPS.Location.IsValid) {
 				textCoordinates.Text = Catalog.Format(Catalog.GetString("Current Coordinates\n{0}"), Main.GPS.Location.ToString());
 				textAccuracy.Text = Catalog.Format(Catalog.GetString("Current Accuracy\n{0}"), Main.GPS.Location.ToAccuracyString());
 			} else {
@@ -96,7 +96,7 @@ namespace WF.Player.Game
 				textAccuracy.Text = Catalog.Format(Catalog.GetString("Current Accuracy\n{0} m"), Strings.Infinite);
 			}
 
-			if (Main.GPS.IsValid && Main.GPS.Location.Accuracy < 30) {
+			if (Main.GPS.Location.IsValid && Main.GPS.Location.Accuracy < 30) {
 				button.Text = Catalog.GetString("Start");
 				MakeButtonGreen();
 			} else {

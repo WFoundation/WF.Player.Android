@@ -38,10 +38,13 @@ namespace WF.Player.Location
 			_lon = loc.Longitude;
 
 			// Copy Altitude only if exists
-			if (loc.HasAltitude)
+			if (loc.HasAltitude) {
 				_alt = loc.Altitude;
-			else
+				_hasAltitude = true;
+			} else {
 				_alt = double.NaN;
+				_hasAltitude = false;
+			}
 
 			// Copy Accruracy only if exists
 			if (loc.HasAccuracy) {

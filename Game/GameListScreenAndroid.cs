@@ -34,6 +34,8 @@ using WF.Player.Core;
 using WF.Player.Core.Engines;
 using WF.Player.Location;
 using WF.Player.Types;
+using Android.Util;
+using Vernacular;
 
 namespace WF.Player.Game
 {
@@ -41,8 +43,14 @@ namespace WF.Player.Game
 
 	public partial class GameListScreen : global::Android.Support.V4.App.Fragment
 	{
-		ListView listView;
+		TextView _textLatitude;
+		TextView _textLongitude;
+		TextView _textAltitude;
+		TextView _textAccuracy;
+		LinearLayout _layoutBottom;
+		ListView _listView;
 		IMenuItem menuMap;
+		int _lastAzimuth;
 
 		#region Constructor
 
@@ -50,6 +58,8 @@ namespace WF.Player.Game
 		{
 			this.type = screen;
 			this.engine = engine;
+
+			_refresh = new CallDelayer(100, 500, (obj) => Refresh());
 		}
 
 		#endregion
@@ -68,14 +78,29 @@ namespace WF.Player.Game
 
 			var view = inflater.Inflate(Resource.Layout.GameListScreen, container, false);
 
-			listView = view.FindViewById<ListView> (Resource.Id.listView);
-			listView.Adapter = new GameListScreenAdapter (this, ctrl, type);
-			listView.ItemClick += OnItemClick;
-			listView.Recycler += OnRecycling;
+			// Don't know a better way :(
+			_layoutBottom = view.FindViewById<LinearLayout> (Resource.Id.layoutBottom);
+			_layoutBottom.SetBackgroundResource(Main.BottomBackground);
+
+			// Get views
+			_textLatitude = view.FindViewById<TextView>(Resource.Id.textLatitude);
+			_textLongitude = view.FindViewById<TextView>(Resource.Id.textLongitude);
+			_textAltitude = view.FindViewById<TextView>(Resource.Id.textAltitude);
+			_textAccuracy = view.FindViewById<TextView>(Resource.Id.textAccuracy);
+
+			// Create list adapter and list events
+			_listView = view.FindViewById<ListView> (Resource.Id.listView);
+			_listView.Adapter = new GameListScreenAdapter (this, ctrl, type);
+			_listView.ItemClick += OnItemClick;
+			_listView.Recycler += OnRecycling;
 
 			ctrl.SupportActionBar.Title = GetContent ();
 
 			HasOptionsMenu = (type == ScreenTypes.Locations || type == ScreenTypes.Items);
+
+			_refresh.Abort();
+
+			RefreshLocation();
 
 			return view;
 		}
@@ -95,6 +120,9 @@ namespace WF.Player.Game
 
 		public void OnItemClick(object sender, AdapterView.ItemClickEventArgs e)
 		{
+			// Update ListView anymore 
+			_refresh.Abort();
+			// Send feedback to user, if it is selected
 			ctrl.Feedback();
 
 			EntrySelected(e.Position);
@@ -132,6 +160,14 @@ namespace WF.Player.Game
 			return base.OnOptionsItemSelected(item);
 		}
 
+		/// <summary>
+		/// Raised when a list entry is recycled.
+		/// </summary>
+		/// <remarks>
+		/// We had to free bitmap resource to not get a out of memory error.
+		/// </remarks>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
 		void OnRecycling (object sender, AbsListView.RecyclerEventArgs e)
 		{
 			ImageView iv = e.View.FindViewById<ImageView>(Resource.Id.imageIcon);
@@ -157,39 +193,83 @@ namespace WF.Player.Game
 			if (type == ScreenTypes.Locations || type == ScreenTypes.Items)
 				Main.GPS.AddOrientationListener(OnOrientationChanged);
 
-			Refresh(true);
+			Refresh();
 		}
 
 		public override void OnPause()
 		{
-			base.OnStop();
+			StopEvents();
 
 			if (type == ScreenTypes.Locations || type == ScreenTypes.Items)
 				Main.GPS.RemoveOrientationListener(OnOrientationChanged);
 
-			StopEvents();
+			base.OnStop();
 		}
 
 		void OnOrientationChanged (object sender, OrientationChangedEventArgs e)
 		{
-			if (ShowDirections)
-				Refresh(false);
+			if (ShowDirections && Math.Abs(_lastAzimuth - e.Azimuth) > 2) {
+				_lastAzimuth = (int)e.Azimuth;
+				_refresh.Call();
+			}
 		}
 
 		#endregion
 
 		#region Private Functions
 
-		void Refresh(bool itemsChanged)
+		void Refresh()
 		{
 			if (Activity == null)
 				return;
 
-			if (itemsChanged && Activity != null)
+			Activity.RunOnUiThread(() => {
+				if (Activity == null)
+					return;
 				((ActionBarActivity)Activity).SupportActionBar.Title = GetContent ();
+				if (_listView != null) {
+					((GameListScreenAdapter)_listView.Adapter).NotifyDataSetChanged();
+				}
+			});
+		}
 
-			if (listView != null)
-				Activity.RunOnUiThread(() => ((GameListScreenAdapter)listView.Adapter).NotifyDataSetChanged());
+		/// <summary>
+		/// Raised, when the screen should be updated.
+		/// </summary>
+		void RefreshLocation()
+		{
+			if(Activity == null)
+				return;
+
+			Activity.RunOnUiThread(() => {
+				if (Activity == null)
+					return;
+				var gps = Main.GPS;
+				var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
+				var altitude = gps.Location.HasAltitude ? String.Format("{0:0} m", gps.Location.Altitude) : GetString(Resource.String.unknown);
+				var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0} m", gps.Location.Accuracy) : Strings.Infinite;
+				var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
+
+				if(gps.IsValid) {
+					_textLatitude.Visibility = ViewStates.Visible;
+					_textLatitude.Text = location.Split(location.Contains("W") ? 'W' : 'E')[0];
+					_textLongitude.Visibility = ViewStates.Visible;
+					_textLongitude.Text = location.Substring(location.IndexOf(location.Contains("W") ? "W" : "E"));
+					if(gps.Location.HasAltitude) {
+						_textAltitude.Visibility = ViewStates.Visible;
+						_textAltitude.Text = altitude + " Hm";
+					} else {
+						_textAltitude.Visibility = ViewStates.Invisible;
+					}
+					_textAccuracy.Visibility = ViewStates.Visible;
+					_textAccuracy.Text = accuracy + "Ac";
+				} else {
+					_textLatitude.Visibility = ViewStates.Gone;
+					_textLongitude.Visibility = ViewStates.Gone;
+					_textAltitude.Visibility = ViewStates.Gone;
+					_textAccuracy.Visibility = ViewStates.Gone;
+				}
+			});
 		}
 
 		#endregion
@@ -204,6 +284,7 @@ namespace WF.Player.Game
 		GameController ctrl;
 		GameListScreen owner;
 		ScreenTypes screen;
+		int _directionSize;
 
 		#region Constructor
 
@@ -212,6 +293,9 @@ namespace WF.Player.Game
 			this.ctrl = ctrl;
 			this.owner = owner;
 			this.screen = screen;
+
+			_directionSize = (int)(ctrl.Resources.DisplayMetrics.Density * 32.0);
+
 		}
 
 		#endregion
@@ -290,9 +374,8 @@ namespace WF.Player.Game
 							if (((Thing)owner.Items[position]).VectorFromPlayer.Distance.Value == 0) {
 								imageDirection.SetImageBitmap (BitmapFactory.DecodeResource(owner.Activity.Resources, Resource.Drawable.ic_direction_position));
 							} else {
-								bm = ctrl.DrawArrow (((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + Main.GPS.Bearing);
-								imageDirection.SetImageBitmap (bm);
-								bm = null;
+								imageDirection.SetImageBitmap(BitmapArrow.Draw(_directionSize, ((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + Main.GPS.Bearing));
+//								AsyncImageFromDirection.LoadBitmap(imageDirection, ((Thing)owner.Items[position]).VectorFromPlayer.Bearing.Value + Main.GPS.Bearing, imageDirection.Width, imageDirection.Height);
 							}
 						} else {
 							textDistance.Visibility = ViewStates.Gone;

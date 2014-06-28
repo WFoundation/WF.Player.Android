@@ -25,6 +25,7 @@ using Vernacular;
 using WF.Player.Core;
 using WF.Player.Core.Engines;
 using WF.Player.Types;
+using Android.Util;
 
 namespace WF.Player.Game
 {
@@ -33,6 +34,7 @@ namespace WF.Player.Game
 		GameController ctrl;
 		Engine engine;
 		ScreenTypes type;
+		CallDelayer _refresh;
 		string[] properties = {"Name", "Icon", "Active", "Visible", "ObjectLocation", "VisibleObjects", "VisibleInventory", "ActiveVisibleTasks", "ActiveVisibleZones"};
 
 		public List<UIObject> Items = new List<UIObject>();
@@ -114,8 +116,6 @@ namespace WF.Player.Game
 
 			StartEvents();
 
-			Refresh(false);
-
 			return header;
 		}
 
@@ -124,41 +124,57 @@ namespace WF.Player.Game
 			foreach(UIObject o in Items)
 				o.PropertyChanged += OnPropertyChanged;
 
-			engine.AttributeChanged += OnPropertyChanged;
+//			engine.AttributeChanged += OnPropertyChanged;
 			engine.InventoryChanged += OnPropertyChanged;
-			engine.ZoneStateChanged += OnPropertyChanged;
+//			engine.ZoneStateChanged += OnPropertyChanged;
+//			engine.PropertyChanged += OnPropertyChanged;
 
-			engine.PropertyChanged += OnPropertyChanged;
+			Main.GPS.AddLocationListener(OnLocationChanged);
 		}
 
 		void StopEvents()
 		{
+			Main.GPS.RemoveLocationListener(OnLocationChanged);
+
+			_refresh.Abort();
+
 			foreach(UIObject o in Items)
 				o.PropertyChanged -= OnPropertyChanged;
 
-			engine.AttributeChanged -= OnPropertyChanged;
+//			engine.AttributeChanged -= OnPropertyChanged;
 			engine.InventoryChanged -= OnPropertyChanged;
-			engine.ZoneStateChanged -= OnPropertyChanged;
+//			engine.ZoneStateChanged -= OnPropertyChanged;
+//			engine.PropertyChanged -= OnPropertyChanged;
+		}
 
-			engine.PropertyChanged -= OnPropertyChanged;
+		/// <summary>
+		/// Raises the location changed event.
+		/// </summary>
+		/// <param name="sender">Sender.</param>
+		/// <param name="e">E.</param>
+		void OnLocationChanged (object sender, WF.Player.Location.LocationChangedEventArgs e)
+		{
+			RefreshLocation();
 		}
 
 		public void OnPropertyChanged(object sender, EventArgs e)
 		{
+			// We dont't want any busy events
+			if(e is PropertyChangedEventArgs && ((PropertyChangedEventArgs)e).PropertyName.Equals("IsBusy"))
+				return;
+
 			bool newItems = false;
 
-			newItems |= e is InventoryChangedEventArgs;
-			newItems |= e is AttributeChangedEventArgs && ((AttributeChangedEventArgs)e).PropertyName.Equals("Active");
-			newItems |= e is AttributeChangedEventArgs && ((AttributeChangedEventArgs)e).PropertyName.Equals("Visible");
+			newItems |= e is InventoryChangedEventArgs && type == ScreenTypes.Inventory;
 			newItems |= e is PropertyChangedEventArgs && ((PropertyChangedEventArgs)e).PropertyName.Equals("Active");
 			newItems |= e is PropertyChangedEventArgs && ((PropertyChangedEventArgs)e).PropertyName.Equals("Visible");
 
 			// Check, if one of the visible entries changed
-			if (!(e is PropertyChangedEventArgs) || (e is PropertyChangedEventArgs && properties.Contains(((PropertyChangedEventArgs)e).PropertyName)))
-				Refresh(newItems);
+			if (!(e is PropertyChangedEventArgs) || (e is PropertyChangedEventArgs && properties.Contains(((PropertyChangedEventArgs)e).PropertyName))) {
+				_refresh.Call(newItems);
+			}
 		}
 
 		#endregion
-
 	}
 }

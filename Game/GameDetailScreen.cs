@@ -32,6 +32,7 @@ namespace WF.Player.Game
 	public partial class GameDetailScreen
 	{
 		GameController ctrl;
+		CallDelayer _refresh;
 		UIObject activeObject;
 		WherigoCollection<Command> commands;
 		WherigoCollection<Thing> targets;
@@ -49,7 +50,7 @@ namespace WF.Player.Game
 			set {
 				if (activeObject != value) {
 					activeObject = value;
-					Refresh ();
+					_refresh.Call();
 				}
 			}
 		}
@@ -80,7 +81,7 @@ namespace WF.Player.Game
 
 			// Check, if one of the visible entries changed
 			if (!(e is PropertyChangedEventArgs) || (e is PropertyChangedEventArgs && properties.Contains(((PropertyChangedEventArgs)e).PropertyName)))
-				Refresh(e.PropertyName);
+				_refresh.Call(e.PropertyName);
 
 			// The object is set to not visible or not active, so it should removed from screen
 			if (e.PropertyName.Equals("Visible") || e.PropertyName.Equals("Active"))

@@ -25,7 +25,7 @@ namespace WF.Player.Location
 {
 	public partial class GPSListener
 	{
-		bool _valid;
+		bool _valid = false;
 
 		// Public events
 		event EventHandler<LocationChangedEventArgs> LocationChanged;

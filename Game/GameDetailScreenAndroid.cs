@@ -62,6 +62,8 @@ namespace WF.Player.Game
 			if (this.activeObject != null) {
 				this.activeObject.PropertyChanged += OnPropertyChanged;
 			}
+
+			_refresh = new CallDelayer(100, 500, (o) => Refresh(o));
 		}
 
 		#endregion
@@ -168,7 +170,7 @@ namespace WF.Player.Game
 		{
 			if (Math.Abs(Main.GPS.Bearing - _lastBearing) > 2) {
 				_lastBearing = Main.GPS.Bearing;
-				Refresh();
+				_refresh.Call();
 			}
 		}
 
@@ -178,6 +180,8 @@ namespace WF.Player.Game
 			ctrl.Feedback();
 
 			if (commands.Count == 1) {
+				// Don't update anymore
+				_refresh.Abort();
 				// We have only one command, so we don't need an extra dialog
 				CommandSelected(commands[0]);
 			} else {
@@ -195,11 +199,17 @@ namespace WF.Player.Game
 
 		void OnCommandListClicked (object sender, DialogClickEventArgs e)
 		{
+			// Don't update anymore
+			_refresh.Abort();
+
 			CommandSelected(commands[e.Which]);
 		}
 
 		void OnTargetListClicked (object sender, DialogClickEventArgs e)
 		{
+			// Don't update anymore
+			_refresh.Abort();
+
 			_com.Execute(targets[e.Which]);
 		}
 
@@ -242,9 +252,17 @@ namespace WF.Player.Game
 			}
 		}
 
-		void Refresh(string what = "")
+		void Refresh(object o = null)
 		{
-			if (activeObject != null && this.Activity != null) {
+			string what = o == null ? "" : (string)o;
+
+			if (activeObject == null || this.Activity == null)
+				return;
+
+			Activity.RunOnUiThread(() => {
+				if(Activity == null)
+					return;
+
 				// Assign this item's values to the various subviews
 				ctrl.SupportActionBar.SetDisplayShowHomeEnabled(true);
 
@@ -322,16 +340,20 @@ namespace WF.Player.Game
 						if (direction.Distance.Value == 0) {
 							_imageDirection.SetImageBitmap (BitmapFactory.DecodeResource(Resources, Resource.Drawable.ic_direction_position));
 						} else {
-							bm = ctrl.DrawArrow (direction.Bearing.Value + Main.GPS.Bearing);
-							_imageDirection.SetImageBitmap (bm);
-							bm = null;
+							_imageDirection.SetImageBitmap(BitmapArrow.Draw(Math.Min(_imageDirection.Width, _imageDirection.Height), direction.Bearing.Value + Main.GPS.Bearing));
+	//							AsyncImageFromDirection.LoadBitmap(_imageDirection, direction.Bearing.Value + Main.GPS.Bearing, 48, 48);
+							// TODO:
+							// Remove
+	//							bm = ctrl.DrawArrow (direction.Bearing.Value + Main.GPS.Bearing);
+	//							_imageDirection.SetImageBitmap (bm);
+	//							bm = null;
 						}
 					}
 				}
 
 				// Resize scrollview
 				_layoutDefault.Invalidate();
-			}
+			});
 		}
 
 		#endregion

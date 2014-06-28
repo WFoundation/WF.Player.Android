@@ -64,25 +64,11 @@ namespace WF.Player.Game
 //		global::Android.Support.V4.App.Fragment removeVisibleScreen;
 		Stack<global::Android.Support.V4.App.Fragment> screenStack = new Stack<global::Android.Support.V4.App.Fragment>();
 		bool cartRestore;
-		Paint light = new Paint (PaintFlags.AntiAlias);
-		Paint dark = new Paint (PaintFlags.AntiAlias);
-		Paint black = new Paint (PaintFlags.AntiAlias);
 
 		#region Constructor
 
 		public GameController()
 		{
-			light.Color = new Color (128, 0, 0, 255);
-			light.StrokeWidth = 0f;
-			light.SetStyle (Paint.Style.FillAndStroke);
-
-			dark.Color = new Color (255, 0, 0, 255);
-			dark.StrokeWidth = 0f;
-			dark.SetStyle (Paint.Style.FillAndStroke);
-
-			black.Color = new Color (0, 0, 0, 255);
-			black.StrokeWidth = 0f;
-			black.SetStyle (Paint.Style.Stroke);
 		}
 
 		#endregion
@@ -95,11 +81,10 @@ namespace WF.Player.Game
 		public override void OnBackPressed()
 		{
 			if (SupportFragmentManager.Fragments [0] is GameListScreen || SupportFragmentManager.Fragments [0] is GameDetailScreen 
-				|| SupportFragmentManager.Fragments [0] is GameMapScreen || SupportFragmentManager.Fragments[0] is GameDialogScreen)
+				|| SupportFragmentManager.Fragments [0] is GameMapScreen)
 				RemoveScreen (SupportFragmentManager.Fragments [0]);
-			else if (SupportFragmentManager.Fragments [0] is GameMainScreen)
-				Quit();
-			else
+			// No go back for MainScreen and DialogScreen
+			else if(!(SupportFragmentManager.Fragments [0] is GameMainScreen) && !(SupportFragmentManager.Fragments [0] is GameDialogScreen))
 				base.OnBackPressed ();
 		}
 
@@ -741,99 +726,6 @@ namespace WF.Player.Game
 		#region Private functions
 
 		/// <summary>
-		/// Draws image for inside of a zone.
-		/// </summary>
-		/// <returns>Bitmap of inside.</returns>
-		internal Bitmap DrawCenter ()
-		{
-			int w = 48;
-			int h = 48;
-
-			Bitmap b = Bitmap.CreateBitmap(w, h, Bitmap.Config.Argb8888);
-
-			using(Canvas c = new Canvas(b)) {
-				light.Color = new Color (128, 0, 0, 255);
-				light.StrokeWidth = 0f;
-				light.SetStyle (Paint.Style.Stroke);
-
-				dark.Color = new Color (255, 0, 0, 255);
-				dark.StrokeWidth = 0f;
-				dark.SetStyle (Paint.Style.FillAndStroke);
-
-				int cx = c.Width / 2 - 1;
-				int cy = c.Height / 2 - 1;
-
-				c.DrawCircle (cx, cy, w / 8, light);
-				c.DrawCircle (cx, cy, w / 32 * 3, dark);
-			}
-
-			return b;
-		}
-
-		/// <summary>
-		/// Draws image of arrow with given direction.
-		/// </summary>
-		/// <returns>Bitmap of arrow.</returns>
-		/// <param name="direction">Direction of the arrow.</param>
-		internal Bitmap DrawArrow (double direction)
-		{
-			int w = 48;
-			int h = 48;
-			int w2 = w / 2;
-			int h2 = w / 2;
-
-			// Values of direction are between 0° and 360°, but for drawing we need -180° to +180°
-			direction -= 180.0;
-
-			double rad1 = direction / 180.0 * Math.PI;
-			double rad2 = (direction + 180.0 + 30.0) / 180.0 * Math.PI;
-			double rad3 = (direction + 180.0 - 30.0) / 180.0 * Math.PI; 
-			double rad4 = (direction + 180.0) / 180.0 * Math.PI; 
-
-			PointF p1 = new PointF((float) (w2 + w2 * Math.Sin (rad1)), (float) (h2 + h2 * Math.Cos (rad1)));
-			PointF p2 = new PointF((float) (w2 + w2 * Math.Sin (rad2)), (float) (h2 + h2 * Math.Cos (rad2)));
-			PointF p3 = new PointF((float) (w2 + w2 * Math.Sin (rad3)), (float) (h2 + h2 * Math.Cos (rad3)));
-			PointF p4 = new PointF((float) (w2 + w / 3 * Math.Sin (rad4)), (float) (h2 + h / 3 * Math.Cos (rad4)));
-
-			Bitmap b = Bitmap.CreateBitmap(w, h, Bitmap.Config.Argb8888);
-			using(Canvas c = new Canvas(b)) {
-				int cx = c.Width / 2 - 1;
-				int cy = c.Height / 2 - 1;
-
-				global::Android.Graphics.Path path1 = new global::Android.Graphics.Path ();
-				global::Android.Graphics.Path path2 = new global::Android.Graphics.Path ();
-				global::Android.Graphics.Path path3 = new global::Android.Graphics.Path ();
-
-				path1.MoveTo (p1.X,p1.Y);
-				path1.LineTo (p2.X,p2.Y);
-				path1.LineTo (p4.X,p4.Y);
-				path1.LineTo (p1.X,p1.Y);
-
-				path2.MoveTo (p1.X,p1.Y);
-				path2.LineTo (p3.X,p3.Y);
-				path2.LineTo (p4.X,p4.Y);
-				path2.LineTo (p1.X,p1.Y);
-
-				path3.MoveTo (p1.X,p1.Y);
-				path3.LineTo (p2.X,p2.Y);
-				path3.LineTo (p4.X,p4.Y);
-				path3.LineTo (p1.X,p1.Y);
-				path3.LineTo (p3.X,p3.Y);
-				path3.LineTo (p4.X,p4.Y);
-
-				light.Color = new Color (128, 0, 0, 255);
-				dark.Color = new Color (255, 0, 0, 255);
-				black.Color = new Color (0, 0, 0, 255);
-
-				c.DrawPath (path1, light);
-				c.DrawPath (path2, dark);
-				c.DrawPath (path3, black);
-			}
-
-			return b;
-		}
-
-		/// <summary>
 		/// Creates the engine and sets all event handlers.
 		/// </summary>
 		/// <returns>The engine.</returns>
@@ -964,8 +856,8 @@ namespace WF.Player.Game
 		/// </summary>
 		void Refresh()
 		{
-			var view = this.FindViewById(Resource.Id.fragment);
-			view.Invalidate ();
+//			var view = this.FindViewById(Resource.Id.fragment);
+//			view.Invalidate ();
 		}
 
 		#endregion

@@ -43,7 +43,12 @@ namespace WF.Player.Game
 	/// </summary>
 	public partial class GameMainScreen : global::Android.Support.V4.App.Fragment
 	{
-		ListView listView;
+		TextView _textLatitude;
+		TextView _textLongitude;
+		TextView _textAltitude;
+		TextView _textAccuracy;
+		LinearLayout _layoutBottom;
+		ListView _listView;
 		IMenuItem menuSave;
 		IMenuItem menuQuit;
 
@@ -101,19 +106,31 @@ namespace WF.Player.Game
 			ctrl = ((GameController)this.Activity);
 
 			// Set images for icons
-			iconLocation = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_locations);
-			iconYouSee = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_yousee);
-			iconInventory = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_inventory);
-			iconTask = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_tasks);
-			iconPosition = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_position);
+			_iconLocation = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_locations);
+			_iconYouSee = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_yousee);
+			_iconInventory = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_inventory);
+			_iconTask = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_tasks);
+			_iconPosition = BitmapFactory.DecodeResource(ctrl.Resources, Resource.Drawable.ic_position);
 
 			// Load layout
 			var view = inflater.Inflate(Resource.Layout.GameMainScreen, container, false);
 
+			// Don't know a better way :(
+			_layoutBottom = view.FindViewById<LinearLayout> (Resource.Id.layoutBottom);
+			_layoutBottom.SetBackgroundResource(Main.BottomBackground);
+
+			// Get views
+			_textLatitude = view.FindViewById<TextView>(Resource.Id.textLatitude);
+			_textLongitude = view.FindViewById<TextView>(Resource.Id.textLongitude);
+			_textAltitude = view.FindViewById<TextView>(Resource.Id.textAltitude);
+			_textAccuracy = view.FindViewById<TextView>(Resource.Id.textAccuracy);
+
 			// Create list adapter and list events
-			listView = view.FindViewById<ListView>(Resource.Id.listView);
-			listView.Adapter = new GameMainScreenAdapter(this, ctrl);
-			listView.ItemClick += OnItemClick;
+			_listView = view.FindViewById<ListView>(Resource.Id.listView);
+			_listView.Adapter = new GameMainScreenAdapter(this, ctrl);
+			_listView.ItemClick += OnItemClick;
+
+			RefreshLocation();
 
 			return view;
 		}
@@ -169,9 +186,9 @@ namespace WF.Player.Game
 		/// </summary>
 		public override void OnStop()
 		{
-			base.OnStop();
-
 			CommonPause();
+
+			base.OnStop();
 		}
 
 		#endregion
@@ -183,8 +200,40 @@ namespace WF.Player.Game
 		/// </summary>
 		void Refresh()
 		{
-			if (listView != null)
-				((GameMainScreenAdapter)listView.Adapter).NotifyDataSetChanged();
+			if (_listView != null)
+				((GameMainScreenAdapter)_listView.Adapter).NotifyDataSetChanged();
+		}
+
+		/// <summary>
+		/// Raised, when the screen should be updated.
+		/// </summary>
+		void RefreshLocation()
+		{
+			var gps = Main.GPS;
+			var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
+			var altitude = gps.Location.HasAltitude ? String.Format("{0:0} m", gps.Location.Altitude) : GetString(Resource.String.unknown);
+			var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0} m", gps.Location.Accuracy) : Strings.Infinite;
+			var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
+
+			if(gps.IsValid) {
+				_textLatitude.Visibility = ViewStates.Visible;
+				_textLatitude.Text = location.Split(location.Contains("W") ? 'W' : 'E')[0];
+				_textLongitude.Visibility = ViewStates.Visible;
+				_textLongitude.Text = location.Substring(location.IndexOf(location.Contains("W") ? "W" : "E"));
+				if(gps.Location.HasAltitude) {
+					_textAltitude.Visibility = ViewStates.Visible;
+					_textAltitude.Text = altitude + " Hm";
+				} else {
+					_textAltitude.Visibility = ViewStates.Invisible;
+				}
+				_textAccuracy.Visibility = ViewStates.Visible;
+				_textAccuracy.Text = accuracy + " Ac";
+			} else {
+				_textLatitude.Visibility = ViewStates.Gone;
+				_textLongitude.Visibility = ViewStates.Gone;
+				_textAltitude.Visibility = ViewStates.Gone;
+				_textAccuracy.Visibility = ViewStates.Gone;
+			}
 		}
 
 		#endregion
@@ -224,7 +273,7 @@ namespace WF.Player.Game
 		{
 			get 
 			{ 
-				return 5; 
+				return 4; 
 			}
 		}
 

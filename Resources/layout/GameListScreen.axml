@@ -1,14 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:minWidth="25px"
     android:minHeight="25px">
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:id="@+id/layoutLocation"
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="40px"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:top="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_height="52dp">
+            <TextView
+                android:id="@+id/textLatitude"
+                android:text="Latitude"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="2dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white"
+                android:textSize="@dimen/medium_text" />
+            <TextView
+                android:id="@+id/textLongitude"
+                android:text="Longitude"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:gravity="left"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="4dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white"
+                android:textSize="@dimen/medium_text" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutAccuracy"
+            android:orientation="vertical"
+            android:minWidth="25px"
+            android:minHeight="48px"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_width="140dp"
+            android:layout_height="52dp">
+            <TextView
+                android:id="@+id/textAltitude"
+                android:text="99.9 km"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="2dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white"
+                android:textSize="@dimen/medium_text" />
+            <TextView
+                android:id="@+id/textAccuracy"
+                android:text="99.9 km"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:gravity="right"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="4dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/white"
+                android:textColorHighlight="@color/white"
+                android:textSize="@dimen/medium_text" />
+        </LinearLayout>
+    </LinearLayout>
     <ListView
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/layoutBottom"
         android:id="@+id/listView" />
-</LinearLayout>
+</RelativeLayout>
