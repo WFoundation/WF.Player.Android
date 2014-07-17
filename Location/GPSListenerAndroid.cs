@@ -233,7 +233,8 @@ namespace WF.Player.Location
 		///  update.</param>
 		public void OnProviderEnabled (string provider)
 		{
-			// It's ok, but we don't have to do anything.
+			if (LocationChanged != null)
+				LocationChanged (this, new LocationChangedEventArgs (_location));
 		}
 
 		/// <summary>

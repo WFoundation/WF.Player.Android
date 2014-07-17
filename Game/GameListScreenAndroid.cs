@@ -47,7 +47,9 @@ namespace WF.Player.Game
 		TextView _textLongitude;
 		TextView _textAltitude;
 		TextView _textAccuracy;
-		LinearLayout _layoutBottom;
+		ImageView _imageAltitude;
+		ImageView _imageAccuracy;
+		RelativeLayout _layoutBottom;
 		ListView _listView;
 		IMenuItem menuMap;
 		int _lastAzimuth;
@@ -79,7 +81,7 @@ namespace WF.Player.Game
 			var view = inflater.Inflate(Resource.Layout.GameListScreen, container, false);
 
 			// Don't know a better way :(
-			_layoutBottom = view.FindViewById<LinearLayout> (Resource.Id.layoutBottom);
+			_layoutBottom = view.FindViewById<RelativeLayout> (Resource.Id.layoutBottom);
 			_layoutBottom.SetBackgroundResource(Main.BottomBackground);
 
 			// Get views
@@ -87,6 +89,8 @@ namespace WF.Player.Game
 			_textLongitude = view.FindViewById<TextView>(Resource.Id.textLongitude);
 			_textAltitude = view.FindViewById<TextView>(Resource.Id.textAltitude);
 			_textAccuracy = view.FindViewById<TextView>(Resource.Id.textAccuracy);
+			_imageAltitude = view.FindViewById<ImageView>(Resource.Id.imageAltitude);
+			_imageAccuracy = view.FindViewById<ImageView>(Resource.Id.imageAccuracy);
 
 			// Create list adapter and list events
 			_listView = view.FindViewById<ListView> (Resource.Id.listView);
@@ -257,17 +261,22 @@ namespace WF.Player.Game
 					_textLongitude.Text = location.Substring(location.IndexOf(location.Contains("W") ? "W" : "E"));
 					if(gps.Location.HasAltitude) {
 						_textAltitude.Visibility = ViewStates.Visible;
-						_textAltitude.Text = altitude + " Hm";
+						_textAltitude.Text = altitude;
+						_imageAltitude.Visibility = ViewStates.Visible;
 					} else {
 						_textAltitude.Visibility = ViewStates.Invisible;
+						_imageAltitude.Visibility = ViewStates.Invisible;
 					}
 					_textAccuracy.Visibility = ViewStates.Visible;
-					_textAccuracy.Text = accuracy + "Ac";
+					_textAccuracy.Text = accuracy;
+					_imageAccuracy.Visibility = ViewStates.Visible;
 				} else {
 					_textLatitude.Visibility = ViewStates.Gone;
 					_textLongitude.Visibility = ViewStates.Gone;
 					_textAltitude.Visibility = ViewStates.Gone;
 					_textAccuracy.Visibility = ViewStates.Gone;
+					_imageAltitude.Visibility = ViewStates.Gone;
+					_imageAccuracy.Visibility = ViewStates.Gone;
 				}
 			});
 		}

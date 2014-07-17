@@ -35,6 +35,7 @@ using Vernacular;
 using WF.Player.Core;
 using WF.Player.Types;
 using WF.Player.Game;
+using Android.Graphics.Drawables;
 
 namespace WF.Player
 {
@@ -72,7 +73,7 @@ namespace WF.Player
 
 			// Get cartridge
 			Intent intent = this.Intent;
-			_cart = ((MainApp)Application).Cartridges [intent.GetIntExtra("cartridge",0)];
+			_cart = MainApp.Cartridges [intent.GetIntExtra("cartridge",0)];
 
 			if (_cart == null)
 				Finish ();
@@ -117,14 +118,15 @@ namespace WF.Player
 				_menuDelete.SetVisible (File.Exists (_cart.Filename));
 				if (_cart.StartingLocationLatitude != 360.0 && _cart.StartingLocationLongitude != 360.0 && HasRouting())
 					_menuNavigate.SetEnabled(true);
-				else
+				else 
 					_menuNavigate.SetEnabled(false);
+				_menuNavigate.Icon.SetAlpha(_menuNavigate.IsEnabled ? 204 : 96);
 				_menuResume.SetVisible (true);
 				_menuResume.SetEnabled(File.Exists (_cart.SaveFilename));
-				_menuResume.Icon.SetAlpha(_menuResume.IsEnabled ? 255 : 96);
+				_menuResume.Icon.SetAlpha(_menuResume.IsEnabled ? 204 : 96);
 				_menuStart.SetVisible (true);
 				_menuStart.SetEnabled(File.Exists (_cart.Filename));
-				_menuStart.Icon.SetAlpha(_menuStart.IsEnabled ? 255 : 96);
+				_menuStart.Icon.SetAlpha(_menuStart.IsEnabled ? 204 : 96);
 			}
 
 			return base.OnCreateOptionsMenu(menu);
@@ -145,7 +147,7 @@ namespace WF.Player
 					if (String.IsNullOrEmpty (_cart.Filename)) {
 					_cart.Filename = System.IO.Path.Combine (Main.Path, _cart.WGCode);
 						var pd = ProgressDialog.Show(this, "Download", "Please Wait...", false);
-					((MainApp)Application).Cartridges.DownloadCartridge (_cart, Main.Path, new FileStream (_cart.Filename, FileMode.Create));
+					MainApp.Cartridges.DownloadCartridge (_cart, Main.Path, new FileStream (_cart.Filename, FileMode.Create));
 						pd.Hide ();
 					}
 					break;
@@ -215,12 +217,18 @@ namespace WF.Player
 
 			_menuSave.SetVisible (!File.Exists (_cart.Filename));
 			_menuDelete.SetVisible (File.Exists (_cart.Filename));
+			if (_cart.StartingLocationLatitude != 360.0 && _cart.StartingLocationLongitude != 360.0 && HasRouting()) {
+				_menuNavigate.SetEnabled(true, this, Resource.Id.menu_detail_navigate);
+			} else {
+				_menuNavigate.SetEnabled(false, this, Resource.Id.menu_detail_navigate);
+			}
+			_menuNavigate.Icon.SetAlpha(_menuNavigate.IsEnabled ? 204 : 96);
 			_menuResume.SetVisible (true);
-			_menuResume.SetEnabled(File.Exists (_cart.SaveFilename));
-			_menuResume.Icon.SetAlpha(_menuResume.IsEnabled ? 255 : 96);
+			_menuResume.SetEnabled(File.Exists (_cart.SaveFilename), this, Resource.Id.menu_detail_resume);
+			_menuResume.Icon.SetAlpha(_menuResume.IsEnabled ? 204 : 96);
 			_menuStart.SetVisible (true);
 			_menuStart.SetEnabled(File.Exists (_cart.Filename));
-			_menuStart.Icon.SetAlpha(_menuStart.IsEnabled ? 255 : 96);
+			_menuStart.Icon.SetAlpha(_menuStart.IsEnabled ? 204 : 96);
 
 			return true;
 		}
@@ -537,6 +545,37 @@ namespace WF.Player
 
 	}
 
+	/// <summary>
+	/// Extensions for IMenuItem to change color of disabled icons.
+	/// </summary>
+	/// <remarks>
+	/// Found at http://blog.ostebaronen.dk/2014/01/disabling-actionbar-menu-items.html.
+	/// </remarks>
+	public static class MenuItemExtensions
+	{
+		public static IMenuItem SetEnabled(this IMenuItem item, bool enabled, Context context, int iconId)
+		{
+			return item.SetEnabled(enabled, context, iconId, Color.Gray);
+		}
+
+		public static IMenuItem SetEnabled(this IMenuItem item, bool enabled, Context context, int iconId, Color disabledColor)
+		{
+			Drawable resIcon;
+
+			try {
+				resIcon = context.Resources.GetDrawable(iconId);
+			} catch {
+//				resIcon = context.Resources.
+			}
+
+//			if (!enabled)
+//				resIcon.Mutate().SetColorFilter(disabledColor, PorterDuff.Mode.SrcIn);
+//
+//			item.SetEnabled(enabled);
+//			item.SetIcon(resIcon);
+			return item;
+		}
+	}
 }
 
 

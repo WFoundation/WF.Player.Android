@@ -279,7 +279,8 @@ namespace WF.Player.Game
 				if (what.Equals ("") || what.Equals ("Media")) {
 					if (activeObject.Image != null) {
 						using (Bitmap bm = ctrl.ConvertMediaToBitmap(activeObject.Image)) {
-							_imageView.SetImageBitmap (bm);
+							_imageView.SetImageBitmap(null);
+							_imageView.SetImageBitmap(bm);
 						}
 						_imageView.Visibility = ViewStates.Visible;
 					} else {
@@ -321,6 +322,7 @@ namespace WF.Player.Game
 						btnView.SetTextColor(Color.White);
 						btnView.SetHighlightColor(Color.White);
 						btnView.SetBackgroundResource(Resource.Drawable.apptheme_btn_default_holo_light);
+						btnView.LayoutChange += (object sender, View.LayoutChangeEventArgs e) => SetTextScale(btnView);
 						btnView.Click += OnButtonClicked;
 						// Set size of button
 						Android.Views.ViewGroup.LayoutParams lp = new Android.Views.ViewGroup.LayoutParams(Android.Views.ViewGroup.LayoutParams.FillParent, Android.Views.ViewGroup.LayoutParams.FillParent);
@@ -337,6 +339,7 @@ namespace WF.Player.Game
 						_imageDirection.Visibility = ViewStates.Visible;
 						_textDirection.Text = direction.Distance.BestMeasureAs(DistanceUnit.Meters);
 						Bitmap bm;
+						_imageDirection.SetImageBitmap(null);
 						if (direction.Distance.Value == 0) {
 							_imageDirection.SetImageBitmap (BitmapFactory.DecodeResource(Resources, Resource.Drawable.ic_direction_position));
 						} else {
@@ -354,6 +357,32 @@ namespace WF.Player.Game
 				// Resize scrollview
 				_layoutDefault.Invalidate();
 			});
+		}
+
+		void SetTextScale(Button button)
+		{
+			// Set default scale
+			button.TextScaleX = 1.0f;
+			// Calculate new scale of text
+			// Found at http://catchthecows.com/?p=72
+			Rect bounds = new Rect();
+			// ask the paint for the bounding rect if it were to draw this text.
+			string text = button.Text;
+			int length = button.Text.Length;
+			float buttonTextWidth = (float)(button.Right - button.Left - button.TotalPaddingLeft - button.TotalPaddingRight);
+			// get bounds of text
+			button.Paint.GetTextBounds(text, 0, text.Length, bounds);
+			// Calc scale
+			float scale = (float)(button.Right - button.Left - button.TotalPaddingLeft - button.TotalPaddingRight) / (bounds.Right - bounds.Left);
+			// When scale to small, shorten the string and append ...
+			while (scale < 0.6f) {
+				length -= 1;
+				text = button.Text.Substring(0, length) + "...";
+				button.Paint.GetTextBounds(text, 0, text.Length, bounds);
+				scale = buttonTextWidth / (bounds.Right - bounds.Left);
+			}
+			scale = scale > 1.0f ? 1.0f : scale;
+			button.TextScaleX = scale;
 		}
 
 		#endregion

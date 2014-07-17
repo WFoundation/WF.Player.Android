@@ -47,7 +47,9 @@ namespace WF.Player.Game
 		TextView _textLongitude;
 		TextView _textAltitude;
 		TextView _textAccuracy;
-		LinearLayout _layoutBottom;
+		ImageView _imageAltitude;
+		ImageView _imageAccuracy;
+		RelativeLayout _layoutBottom;
 		ListView _listView;
 		IMenuItem menuSave;
 		IMenuItem menuQuit;
@@ -116,7 +118,7 @@ namespace WF.Player.Game
 			var view = inflater.Inflate(Resource.Layout.GameMainScreen, container, false);
 
 			// Don't know a better way :(
-			_layoutBottom = view.FindViewById<LinearLayout> (Resource.Id.layoutBottom);
+			_layoutBottom = view.FindViewById<RelativeLayout> (Resource.Id.layoutBottom);
 			_layoutBottom.SetBackgroundResource(Main.BottomBackground);
 
 			// Get views
@@ -124,6 +126,8 @@ namespace WF.Player.Game
 			_textLongitude = view.FindViewById<TextView>(Resource.Id.textLongitude);
 			_textAltitude = view.FindViewById<TextView>(Resource.Id.textAltitude);
 			_textAccuracy = view.FindViewById<TextView>(Resource.Id.textAccuracy);
+			_imageAltitude = view.FindViewById<ImageView>(Resource.Id.imageAltitude);
+			_imageAccuracy = view.FindViewById<ImageView>(Resource.Id.imageAccuracy);
 
 			// Create list adapter and list events
 			_listView = view.FindViewById<ListView>(Resource.Id.listView);
@@ -209,31 +213,43 @@ namespace WF.Player.Game
 		/// </summary>
 		void RefreshLocation()
 		{
-			var gps = Main.GPS;
-			var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
-			var altitude = gps.Location.HasAltitude ? String.Format("{0:0} m", gps.Location.Altitude) : GetString(Resource.String.unknown);
-			var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0} m", gps.Location.Accuracy) : Strings.Infinite;
-			var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
+			if(Activity == null)
+				return;
 
-			if(gps.IsValid) {
-				_textLatitude.Visibility = ViewStates.Visible;
-				_textLatitude.Text = location.Split(location.Contains("W") ? 'W' : 'E')[0];
-				_textLongitude.Visibility = ViewStates.Visible;
-				_textLongitude.Text = location.Substring(location.IndexOf(location.Contains("W") ? "W" : "E"));
-				if(gps.Location.HasAltitude) {
-					_textAltitude.Visibility = ViewStates.Visible;
-					_textAltitude.Text = altitude + " Hm";
+			Activity.RunOnUiThread(() => {
+				if (Activity == null)
+					return;
+				var gps = Main.GPS;
+				var location = gps.IsValid ? gps.Location.ToString() : Catalog.GetString("Unknown");
+				var altitude = gps.Location.HasAltitude ? String.Format("{0:0} m", gps.Location.Altitude) : GetString(Resource.String.unknown);
+				var accuracy = gps.Location.HasAccuracy ? String.Format("{0:0} m", gps.Location.Accuracy) : Strings.Infinite;
+				var status = gps.IsValid ? Catalog.GetString("valid") : Catalog.GetString("invalid");
+
+				if(gps.IsValid) {
+					_textLatitude.Visibility = ViewStates.Visible;
+					_textLatitude.Text = location.Split(location.Contains("W") ? 'W' : 'E')[0];
+					_textLongitude.Visibility = ViewStates.Visible;
+					_textLongitude.Text = location.Substring(location.IndexOf(location.Contains("W") ? "W" : "E"));
+					if(gps.Location.HasAltitude) {
+						_textAltitude.Visibility = ViewStates.Visible;
+						_textAltitude.Text = altitude;
+						_imageAltitude.Visibility = ViewStates.Visible;
+					} else {
+						_textAltitude.Visibility = ViewStates.Invisible;
+						_imageAltitude.Visibility = ViewStates.Invisible;
+					}
+					_textAccuracy.Visibility = ViewStates.Visible;
+					_textAccuracy.Text = accuracy;
+					_imageAccuracy.Visibility = ViewStates.Visible;
 				} else {
-					_textAltitude.Visibility = ViewStates.Invisible;
+					_textLatitude.Visibility = ViewStates.Gone;
+					_textLongitude.Visibility = ViewStates.Gone;
+					_textAltitude.Visibility = ViewStates.Gone;
+					_textAccuracy.Visibility = ViewStates.Gone;
+					_imageAltitude.Visibility = ViewStates.Gone;
+					_imageAccuracy.Visibility = ViewStates.Gone;
 				}
-				_textAccuracy.Visibility = ViewStates.Visible;
-				_textAccuracy.Text = accuracy + " Ac";
-			} else {
-				_textLatitude.Visibility = ViewStates.Gone;
-				_textLongitude.Visibility = ViewStates.Gone;
-				_textAltitude.Visibility = ViewStates.Gone;
-				_textAccuracy.Visibility = ViewStates.Gone;
-			}
+			});
 		}
 
 		#endregion

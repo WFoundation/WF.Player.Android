@@ -42,11 +42,16 @@ namespace WF.Player
 	[Activity (Label = "WF.Player", Theme="@android:style/Theme.NoTitleBar")]			
 	public class MainActivity : Activity
 	{
+		const string HOCKEYAPP_APPID = "acc974c814cad87cf7e01b8e8c4d5ece";
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			Main.SetTheme(this);
 
 			base.OnCreate (bundle);
+
+			//Register to with the Update Manager
+			HockeyApp.UpdateManager.Register (this, HOCKEYAPP_APPID);
 
 			if (String.IsNullOrEmpty (Main.Path)) {
 				Finish ();
@@ -106,16 +111,26 @@ namespace WF.Player
 		{
 			base.OnResume ();
 
+			//Register for Crash detection / handling
+			// You should do this in your main activity
+			HockeyApp.CrashManager.Register (this, HOCKEYAPP_APPID);
+
+			//Start Tracking usage in this activity
+			HockeyApp.Tracking.StartUsage (this);
+
 			// Add to location listener
 			Main.GPS.AddLocationListener(OnLocationChanged);
 		}
 
 		protected override void OnPause()
 		{
-			base.OnPause ();
-
 			// Remove to location listener
 			Main.GPS.RemoveLocationListener(OnLocationChanged);
+
+			//Stop Tracking usage in this activity
+			HockeyApp.Tracking.StopUsage (this);
+
+			base.OnPause ();
 		}
 
 		public void buttonOfflineClick(object sender, EventArgs args)
@@ -160,7 +175,7 @@ namespace WF.Player
 			// Create CartridgesList
 			carts.GetByFileList (fileList);
 
-			((MainApp)this.Application).Cartridges = carts;
+			MainApp.Cartridges = carts;
 
 			Intent intent = new Intent (this, typeof(CartridgesActivity));
 			StartActivity (intent);
@@ -173,7 +188,7 @@ namespace WF.Player
 
 			carts.BeginGetByName (FindViewById<EditText> (Resource.Id.editWGCode).Text);
 
-			((MainApp)this.Application).Cartridges = carts;
+			MainApp.Cartridges = carts;
 
 			Intent intent = new Intent (this, typeof(CartridgesActivity));
 			StartActivity (intent);

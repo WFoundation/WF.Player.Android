@@ -36,18 +36,17 @@ using WF.Player.Core;
 using WF.Player.Core.Live;
 using WF.Player.Location;
 using WF.Player.Preferences;
+using Android.Hardware;
 
 namespace WF.Player
 {
 	[Application(Debuggable=true)]
 	public class MainApp : Application
 	{
-		Cartridges cartridges;
+		static Cartridges cartridges;
 
 		public MainApp(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
 		{
-			//			TestFlight.TakeOff(this, "0596e62a-e3cb-4107-8d05-96fa7ae0c26a");
-
 			// Catch unhandled exceptions
 			// Found at http://xandroid4net.blogspot.de/2013/11/how-to-capture-unhandled-exceptions.html
 			// Add an exception handler for all uncaught exceptions.
@@ -81,7 +80,7 @@ namespace WF.Player
 			}
 		}
 
-		public Cartridges Cartridges {
+		public static Cartridges Cartridges {
 			get {
 				return cartridges;
 			}
@@ -103,29 +102,18 @@ namespace WF.Player
 
 		void AndroidUnhandledExceptionHandler(object sender, RaiseThrowableEventArgs e)
 		{
-			//				
 			// When the UI Thread crashes this is the code that will be executed. There is no context at this point
 			// and no way to recover from the exception. This is where you would capture the error and log it to a
 			// file for example. You might be able to post to a web handler, I have not tried that.
 			//
 			// You can access the information about the exception in the args.Exception object.
-			//
 	
-			// Send the Exception to TestFlight.
-			//			TestFlight.SendCrash(e.Exception);
-
-			AlertDialog.Builder builder = new AlertDialog.Builder (this.ApplicationContext);
-			builder.SetTitle (GetString (Resource.String.main_error));
-			builder.SetMessage(e.Exception.Message);
-			builder.SetNeutralButton(Resource.String.ok,(obj,arg) => { });
-			builder.Show ();
-
-			//			throw e.Exception;
+			// Send the Exception to HockeyApp
+			HockeyApp.ManagedExceptionHandler.SaveException (e.Exception);
 		}
 
 		void ApplicationUnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
 		{
-			//				
 			// When a background thread crashes this is the code that will be executed. You can
 			// recover from this.
 			// You might for example:
@@ -139,8 +127,7 @@ namespace WF.Player
 			// It is up to the developer as to what he/she wants to do here.
 			//
 			// If you are requiring a minimum version less than API 14, you would have to set _CurrentActivity in each time
-			// the a different activity is brought to the foreground.
-			//
+			// a different activity is brought to the foreground.
 
 			// Send the Exception to TestFlight.
 			//			TestFlight.SendCrash(e.ToString());

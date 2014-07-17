@@ -33,6 +33,9 @@ using WF.Player.Core;
 using WF.Player.Core.Live;
 using WF.Player.Preferences;
 using Android.Content.PM;
+using WF.Player.Location;
+using Android.Locations;
+using Android.Hardware;
 
 namespace WF.Player
 {
@@ -45,6 +48,8 @@ namespace WF.Player
 		IMenuItem _menuSearch;
 		IMenuItem _menuSettings;
 		IMenuItem _menuAbout;
+
+		const string HOCKEYAPP_APPID = "acc974c814cad87cf7e01b8e8c4d5ece";
 
 		#region Android Events
 
@@ -63,10 +68,10 @@ namespace WF.Player
 			SetContentView(Resource.Layout.Cartridges);
 
 			SupportActionBar.Title = GetString(Resource.String.cartridges_title);
-			SupportActionBar.SetDisplayHomeAsUpEnabled(true);
+			SupportActionBar.SetDisplayHomeAsUpEnabled(false);
 
 			ListView list = FindViewById<ListView>(Resource.Id.listView);
-			list.Adapter = new CartridgesAdapter(this, ((MainApp)this.Application).Cartridges);
+			list.Adapter = new CartridgesAdapter(this, MainApp.Cartridges);
 			list.ItemClick += OnItemClick;
 			list.Recycler += OnRecycling;
 		}
@@ -155,10 +160,13 @@ namespace WF.Player
 
 		protected override void OnPause()
 		{
-			base.OnPause ();
-
 			// Remove from GPS
 			Main.GPS.RemoveLocationListener(OnRefreshLocation);
+
+			//Stop Tracking usage in this activity
+			HockeyApp.Tracking.StopUsage (this);
+
+			base.OnPause ();
 		}
 
 		/// <summary>
@@ -168,7 +176,18 @@ namespace WF.Player
 		{
 			base.OnResume();
 
+			//Register for Crash detection / handling
+			// You should do this in your main activity
+			HockeyApp.CrashManager.Register (this, HOCKEYAPP_APPID);
+
+			//Start Tracking usage in this activity
+			HockeyApp.Tracking.StartUsage (this);
+
 			// Add to GPS
+			if (Main.GPS == null)
+				// Create object for location listener
+				Main.GPS = new GPSListener (GetSystemService (Context.LocationService) as LocationManager, GetSystemService (Context.SensorService) as SensorManager, this.WindowManager);
+
 			Main.GPS.AddLocationListener(OnRefreshLocation);
 
 			Refresh();

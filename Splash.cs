@@ -30,6 +30,10 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using WF.Player.Preferences;
+using Vernacular;
+using Android.Content.PM;
+using WF.Player.Core.Live;
+using System.Threading.Tasks;
 
 namespace WF.Player
 {
@@ -62,8 +66,72 @@ namespace WF.Player
 
 			Main.Path = path;
 
-			// Show splash screen
-			StartActivity(typeof(MainActivity));
+			// Set our view from the "main" layout resource
+			SetContentView (Resource.Layout.Splash);
+
+			var textSubHeader = FindViewById<TextView> (Resource.Id.textSubHeader);
+			var textVersion = FindViewById<TextView> (Resource.Id.textVersion);
+			var textCopyright = FindViewById<TextView> (Resource.Id.textCopyright);
+
+			PackageInfo pInfo = this.PackageManager.GetPackageInfo(this.PackageName, 0);
+			string version = String.Format("{0}.{1}", pInfo.VersionName, pInfo.VersionCode);
+
+			textSubHeader.Text = String.Format(Catalog.GetString(this.Resources.GetString(Resource.String.splash_subheader)), version);
+			textVersion.Text = String.Format(Catalog.GetString(this.Resources.GetString(Resource.String.splash_version)), version);
+			textCopyright.Text = Catalog.GetString(this.Resources.GetString(Resource.String.splash_copyright));
+
+			LoadCartridges();
+		}
+
+		async void LoadCartridges()
+		{
+			await Task<bool>.Run(() => 
+				{
+					// Create Vernacular catalog for translation
+					Catalog.Implementation = new Vernacular.AndroidCatalog (Resources, typeof (Resource.String));
+
+					//
+					// TODO: Show MainActivity instead of local file list
+					//
+					Cartridges carts = new Cartridges();
+					List<string> fileList = new List<string>();
+					FileInfo[] files = null;
+					try {
+						// Read all GWC, GWZ, WFC and WFZ from default directory
+						files = new DirectoryInfo(global::Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + Java.IO.File.Separator + "WF.Player").GetFiles("*");
+					}
+					catch(Exception e) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(this);
+						builder.SetTitle(GetString(Resource.String.main_error));
+						builder.SetMessage(e.Message);
+						builder.SetCancelable(true);
+						builder.SetNeutralButton(Resource.String.ok, (obj, arg) =>  {
+						});
+						builder.Show();
+						return;
+					}
+					foreach(FileInfo fi in files) {
+						string ext = Path.GetExtension(fi.Name).ToUpper();
+						if(ext.Equals(".GWC") || ext.Equals(".GWZ") || ext.Equals("WFC") || ext.Equals("WFZ"))
+							fileList.Add(fi.FullName);
+					}
+					if(fileList.Count == 0) {
+						AlertDialog.Builder builder = new AlertDialog.Builder(this);
+						builder.SetTitle(GetString(Resource.String.main_error));
+						builder.SetMessage(String.Format(GetString(Resource.String.main_error_no_cartridges), Main.Path));
+						builder.SetCancelable(true);
+						builder.SetNeutralButton(Resource.String.ok, (obj, arg) =>  {
+						});
+						builder.Show();
+					}
+
+					// Create CartridgesList
+					carts.GetByFileList(fileList);
+					MainApp.Cartridges = carts;
+
+					// Show splash screen
+					StartActivity(typeof(CartridgesActivity));
+				});
 		}
 	}
 }

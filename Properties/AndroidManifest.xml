@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="WF.Player" android:installLocation="preferExternal" android:versionName="0.5" android:versionCode="2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="WF.Player" android:installLocation="preferExternal" android:versionName="0.5" android:versionCode="4">
 	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19" />
 	<application android:label="WF.Player" android:icon="@drawable/icon">
 		<!-- Put your Google Maps V2 API Key here. -->
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCgldJMI1uFzqYWU7kEjRz_-kVkDRZxBN0" />
 		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+		<activity android:name="net.hockeyapp.android.UpdateActivity" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

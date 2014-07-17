@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">WF.Player.Android</string>
+  <string name="app_name">WF.Player</string>
+  <string name="splash_subheader">für Android</string>
+  <string name="splash_version">Version {0}</string>
+  <string name="splash_copyright">Copyright 2012-2014 by Dirk Weltz, Brice Clocher, Wherigo Foundation</string>
   <string name="ok">Ok</string>
   <string name="done">Fertig</string>
   <string name="unknown">Unbekannt</string>
@@ -20,7 +23,7 @@
   <string name="main_error_no_cartridges">Verzeichnis {0} enthält keine Cartridges.</string>
   <string name="cartridges_title">Cartridges</string>
   <string name="cartridges_about">Über WF.Player</string>
-  <string name="cartridges_about_text">Version {0}</string>
+  <string name="cartridges_about_text">Version {0}\n\nCopyright 2012-2014 by Dirk Weltz, Brice Clocher, Wherigo Foundation</string>
   <string name="cartridges_title">Cartridges</string>
   <string name="detail_tab_overview">Überblick</string>
   <string name="detail_tab_description">Beschreibung</string>

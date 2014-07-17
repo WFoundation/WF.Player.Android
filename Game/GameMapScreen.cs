@@ -189,6 +189,9 @@ namespace WF.Player.Game
 		{
 			base.OnResume();
 
+			// Remove all existing zones
+			zones.Clear();
+
 			// Update all zones
 			CreateZones();
 
@@ -366,7 +369,7 @@ namespace WF.Player.Game
 			foreach(var i in objIndexOfInactiveZones)
 				zones.Remove (i);
 
-				// Now create all active zones new
+			// Now create all active zones new
 			foreach (Zone z in activeZones) {
 				if (zones.ContainsKey(z.ObjIndex)) {
 					if (!ComparePoints(zones[z.ObjIndex].Points, z.Points))

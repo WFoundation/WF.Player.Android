@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" />
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <TextView
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textVersion"
+        android:layout_centerInParent="true"
+        android:layout_above="@+id/textCopyright" />
+    <TextView
+        android:text="WF.Player"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textHeader"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:textStyle="bold"
+        android:textSize="40dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp" />
+    <ImageView
+        android:src="@drawable/icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageLogo"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:scaleType="center" />
+    <TextView
+        android:text="for Windows"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textHeader"
+        android:id="@+id/textSubHeader"
+        android:layout_centerInParent="true" />
+    <TextView
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textCopyright"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp" />
+</RelativeLayout>

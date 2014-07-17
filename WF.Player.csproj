@@ -58,6 +58,9 @@
     <Reference Include="Vernacular.Catalog.Android">
       <HintPath>lib\Vernacular.Catalog.Android.dll</HintPath>
     </Reference>
+    <Reference Include="HockeyApp.Android">
+      <HintPath>Components\hockeyappandroid-3.0.2\lib\android\HockeyApp.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -544,6 +547,14 @@
     <AndroidResource Include="Resources\drawable-mdpi\ic_direction_position.png" />
     <AndroidResource Include="Resources\drawable-xhdpi\ic_direction_position.png" />
     <AndroidResource Include="Resources\drawable-xxhdpi\ic_direction_position.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_accuracy.png" />
+    <AndroidResource Include="Resources\drawable-mdpi\ic_altitude.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_accuracy.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\ic_altitude.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_accuracy.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\ic_altitude.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_accuracy.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\ic_altitude.png" />
   </ItemGroup>
   <ItemGroup>
     <AndroidNativeLibrary Include="lib\armeabi\liblua5.1.so" />
@@ -553,6 +564,10 @@
   <ItemGroup>
     <XamarinComponentReference Include="googleplayservicesgingerbread">
       <Version>13.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="hockeyappandroid">
+      <Version>3.0.2</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
   </ItemGroup>

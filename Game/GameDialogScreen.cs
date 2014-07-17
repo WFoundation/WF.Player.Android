@@ -228,7 +228,8 @@ namespace WF.Player.Game
 				if (messageBox.Image != null) {
 					imageView.SetImageBitmap(null);
 					using (Bitmap bm = ctrl.ConvertMediaToBitmap(messageBox.Image)) {
-						imageView.SetImageBitmap (bm);
+						imageView.SetImageBitmap(null);
+						imageView.SetImageBitmap(bm);
 					}
 					imageView.Visibility = ViewStates.Visible;
 				} else {
@@ -237,11 +238,13 @@ namespace WF.Player.Game
 				if (!String.IsNullOrEmpty (messageBox.FirstButtonLabel)) {
 					btnView1.Visibility = ViewStates.Visible;
 					btnView1.Text = messageBox.FirstButtonLabel;
+					btnView1.LayoutChange += (object sender, View.LayoutChangeEventArgs e) => SetTextScale(btnView1);
 				} else
 					btnView1.Visibility = ViewStates.Gone;
 				if (!String.IsNullOrEmpty (messageBox.SecondButtonLabel)) {
 					btnView2.Visibility = ViewStates.Visible;
 					btnView2.Text = messageBox.SecondButtonLabel;
+					btnView2.LayoutChange += (object sender, View.LayoutChangeEventArgs e) => SetTextScale(btnView2);
 				} else
 					btnView2.Visibility = ViewStates.Gone;
 			} else {
@@ -273,6 +276,32 @@ namespace WF.Player.Game
 					}
 				}
 			}
+		}
+
+		void SetTextScale(Button button)
+		{
+			// Set default scale
+			button.TextScaleX = 1.0f;
+			// Calculate new scale of text
+			// Found at http://catchthecows.com/?p=72
+			Rect bounds = new Rect();
+			// ask the paint for the bounding rect if it were to draw this text.
+			string text = button.Text;
+			int length = button.Text.Length;
+			float buttonTextWidth = (float)(button.Right - button.Left - button.TotalPaddingLeft - button.TotalPaddingRight);
+			// get bounds of text
+			button.Paint.GetTextBounds(text, 0, text.Length, bounds);
+			// Calc scale
+			float scale = (float)(button.Right - button.Left - button.TotalPaddingLeft - button.TotalPaddingRight) / (bounds.Right - bounds.Left);
+			// When scale to small, shorten the string and append ...
+			while (scale < 0.6f) {
+				length -= 1;
+				text = button.Text.Substring(0, length) + "...";
+				button.Paint.GetTextBounds(text, 0, text.Length, bounds);
+				scale = buttonTextWidth / (bounds.Right - bounds.Left);
+			}
+			scale = scale > 1.0f ? 1.0f : scale;
+			button.TextScaleX = scale;
 		}
 
 		// Add this method to your class
